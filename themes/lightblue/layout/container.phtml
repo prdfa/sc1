@@ -17,12 +17,12 @@
 
 
 
-    if ($_GET['tab1'] == "welcome") {
+    /*if ($_GET['tab1'] == "welcome") {
         echo '<link href="' . $sk['config']['theme_url'] . '/css/welcome.css" rel="stylesheet">';
     }
     if ($_GET['tab1'] == "login") {
         echo '<link href="' . $sk['config']['theme_url'] . '/css/login.css" rel="stylesheet">';
-    }
+    }*/
 
     ?>
     <link href="<?php echo $sk['config']['theme_url']; ?>/css/font-awesome/font-awesome.css" rel="stylesheet">
@@ -159,14 +159,14 @@
         cookie: true, 
         xfbml: true
     }); 
-    //$('.js-lazyYT').lazyYT();     
+    $('.js-lazyYT').lazyYT();     
 </script> 
 <body<?php if ($sk['config']['smooth_links'] == true) { echo ' data-rewrite="1"'; } ?>>
     <?php echo FA_getPage('header/content'); ?>
-    <div class="page-loading-bar">
+    <!--<div class="page-loading-bar">
         <dd></dd>
         <dt></dt>
-    </div>
+    </div>-->
     
     <div class="page-wrapper">
         <?php echo $sk['content']; ?>

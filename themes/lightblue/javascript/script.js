@@ -4,9 +4,9 @@ current_msg_count = 0;
 current_followreq_count = 0;
 
 $(function () {
-    /*setInterval(function () {
+    setInterval(function () {
         FA_intervalUpdates();
-    }, 100000);*/
+    }, 10000000);
     
     if ($('.chat-wrapper').length == 1) {
         $('.chat-messages').scrollTop($(this).prop('scrollHeight'));

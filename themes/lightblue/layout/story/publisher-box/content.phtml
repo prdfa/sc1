@@ -10,6 +10,53 @@
             <textarea class="auto-grow-input" placeholder="<?php echo $sk['input']['placeholder']; ?>" data-placeholder="<?php echo $sk['input']['placeholder']; ?>" data-height="30" data-copy-to=".story-text-input"><?php echo $sk['input']['placeholder']; ?></textarea>
             
             <input class="story-text-input" type="hidden" name="text" value="">
+
+            <div class="input-wrapper_cat">
+
+                <div class="float-left span30">
+                    <div class="float-left">Category</div>
+                    <div class="float-left">
+                        <select name="dare_categories" id="dare_categories">
+                            <?php
+                            $dare_categories=FA_get_dare_categories();
+                            foreach($dare_categories as $dare_categories_k=>$dare_categories_v){
+                                echo "<option value='".$dare_categories_k."'>".$dare_categories_v."</option>";
+                            }
+                            ?>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="float-left span30">
+                    <div>Level</div>
+                    <div>
+                        <select name="dare_level" id="dare_level">
+                            <?php
+                            $dare_level=FA_get_dare_level();
+                            foreach($dare_level as $dare_level_k=>$dare_level_v){
+                                echo "<option value='".$dare_level_k."'>".$dare_level_v."</option>";
+                            }
+                            ?>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="float-left span30">
+                    <div>Category</div>
+                    <div>
+                        <select name="dare_condition" id="dare_condition">
+                            <?php
+                            $dare_condition=FA_get_dare_condition();
+                            foreach($dare_condition as $dare_condition_k=>$dare_condition_v){
+                                echo "<option value='".$dare_condition_k."'>".$dare_condition_v."</option>";
+                            }
+                            ?>
+                        </select>
+                    </div>
+                </div>
+
+
+            </div>
             
             <div class="input-wrapper photo-wrapper" data-group="A">
                 <div class="float-left">
@@ -37,11 +84,7 @@
                 <div class="input-result-wrapper"></div>
             </div>
             
-            <div class="input-wrapper google-map-wrapper" data-group="B">
-                <i class="icon-map-marker icon"></i>
-                <input type="text" value="<?php echo $lang['post_publisher_googlemap_placeholder']; ?>" placeholder="<?php echo $lang['post_publisher_googlemap_placeholder']; ?>" data-placeholder="<?php echo $lang['post_publisher_googlemap_placeholder']; ?>" data-copy-to=".google-map-input">
-                <input class="google-map-input" type="hidden" name="google_map_name" value="">
-            </div>
+
             
             <div class="input-wrapper emoticons-wrapper" data-group="C">
                 <?php
@@ -75,12 +118,6 @@
                 <td width="28px" align="center" valign="middle">
                     <span class="option" onclick="toggleMediaGroup('.story-publisher-box .youtube-wrapper');">
                         <i class="icon-film"></i>
-                    </span>
-                </td>
-                
-                <td width="28px" align="center" valign="middle">
-                    <span class="option" onclick="toggleMediaGroup('.story-publisher-box .google-map-wrapper');">
-                        <i class="icon-map-marker"></i>
                     </span>
                 </td>
                 
@@ -125,12 +162,14 @@ $('.story-publisher-box form').ajaxForm({
     beforeSend: function() {
         main_wrapper = $('.story-publisher-box');
         textarea = main_wrapper.find('textarea');
+        select = main_wrapper.find('select');
         inputs = main_wrapper.find('input[type="text"]');
         button = main_wrapper.find('button.submit-btn');
         
         button_default_text = button.find('span').text();
         
         textarea.attr('disabled', true);
+        select.attr('disabled', true);
         inputs.attr('disabled', true);
         button.attr('disabled', true);
         
@@ -183,7 +222,8 @@ $('.story-publisher-box form').ajaxForm({
         
         textarea.removeAttr('disabled');
         inputs.removeAttr('disabled');
-        
+        select.removeAttr('disabled');
+
         button
             .removeAttr('disabled')
             .find('span').text(button_default_text);
