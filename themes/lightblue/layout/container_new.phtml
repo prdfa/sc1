@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <!--[if IE]><meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'><![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="<?php echo $sk['config']['theme_url']; ?>/assets/img/ico/favicon.ico">
+    <link rel="apple-touch-icon" sizes="144x144" href="<?php echo $sk['config']['theme_url']; ?>/assets/img/ico/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="<?php echo $sk['config']['theme_url']; ?>/assets/img/ico/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="<?php echo $sk['config']['theme_url']; ?>/assets/img/ico/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" href="<?php echo $sk['config']['theme_url']; ?>/assets/img/ico/apple-touch-icon-57x57.png">
+
+    <title><?php echo $sk['config']['site_title']; ?></title>
+
+    <!-- CSS -->
+    <link href="<?php echo $sk['config']['theme_url']; ?>/assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="<?php echo $sk['config']['theme_url']; ?>/assets/css/animate.css" rel="stylesheet">
+    <link href="<?php echo $sk['config']['theme_url']; ?>/assets/css/style.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="<?php echo $sk['config']['theme_url']; ?>/assets/font-awesome-4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="<?php echo $sk['config']['theme_url']; ?>/assets/css/pe-icons.css" rel="stylesheet" type="text/css">
+<?php
+    // CSS for welcome page
+    if ($_GET['tab1'] == "welcome") {
+        echo '<link href="' . $sk['config']['theme_url'] . '/css/welcome.css" rel="stylesheet">';
+    }
+    ?>
+    <!-- jQuery -->
+ 	<script src="<?php echo $sk['config']['theme_url']; ?>/assets/js/jquery-1.11.0.js"></script>
+<script src="<?php echo $sk['config']['theme_url']; ?>/javascript/jquery.ui.touch-punch.min.js"></script>
+    <script src="<?php echo $sk['config']['theme_url']; ?>/javascript/jquery-timeago.js"></script>
+    <script src="<?php echo $sk['config']['theme_url']; ?>/javascript/jquery.form.min.js"></script>
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="../../../../https@oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="../../../../https@oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+<?php
+    if ($sk['config']['smooth_links'] == 1) {
+        echo '<script>
+    function FA_source(){
+        return \'' . $sk['config']['ajax_path'] . '\';
+    }
+    function FA_pageSource() {
+        return \'' . $sk['config']['page_path'] . '\';
+    }
+</script>';
+    } else {
+        echo '<script>
+    function FA_source(){
+        return \'request.php\';
+    }
+    function FA_pageSource() {
+        return \'page.php\';
+    }
+</script>';
+    }
+    
+    if ($sk['logged'] == true) {
+    ?>
+    <script src="<?php echo $sk['config']['theme_url']; ?>/javascript/script.js"></script>
+    <?php
+    } else {
+    ?>
+    <script src="<?php echo $sk['config']['theme_url']; ?>/javascript/welcome.js"></script>
+    <?php
+    }
+    
+    // Open chat automatically from session
+    if ($sk['config']['chat'] == 1) {
+        
+        if ($chat_recipient = FA_getChat()) {
+            echo '<script>$(function() { FA_getChat(' . $chat_recipient['id'] . ',\'' . $chat_recipient['name'] . '\'); });</script>';
+        }
+    }
+    ?>
+    <script>
+    /* Ajax Page Loader */
+    function FA_loadPage(pageurl) {
+        $.get(FA_pageSource() + pageurl, {}, function (data) {
+            $('.page-wrapper')
+                .html(data);
+            stopPageLoadingBar();
+
+            if (typeof window.history.pushState == "function") {
+                historyurl = pageurl;
+                
+                if ($("body").attr('data-rewrite') == 1) {
+                    historyurl = historyurl.replace(/\?tab1=timeline&tab2=([^\/]+)&tab3=([^\/]+)&recipient_id=([^\/]+)&id=([^\/]+)$/i, '<?php echo $sk['config']['site_url']; ?>/@$4/$1/$2/$3');
+                    historyurl = historyurl.replace(/\?tab1=timeline&tab2=([^\/]+)&tab3=([^\/]+)&id=([^\/]+)$/i, '<?php echo $sk['config']['site_url']; ?>/@$3/$1/$2');
+                    historyurl = historyurl.replace(/\?tab1=timeline&tab2=([^\/]+)&id=([^\/]+)$/i, '<?php echo $sk['config']['site_url']; ?>/@$2/$1');
+                    historyurl = historyurl.replace(/\?tab1=timeline&id=([^\/]+)$/i, '<?php echo $sk['config']['site_url']; ?>/@$1');
+
+                    historyurl = historyurl.replace(/\?tab1=messages&recipient_id=([A-Za-z0-9_]+)$/i, '<?php echo $sk['config']['site_url']; ?>/messages/$1');
+                    historyurl = historyurl.replace(/\?tab1=story&id=([0-9]+)$/i, '<?php echo $sk['config']['site_url']; ?>/story/$1');
+
+                    historyurl = historyurl.replace(/\?tab1=welcome&tab2=forgot_password$/i, '<?php echo $sk['config']['site_url']; ?>/forgot-password');
+                    historyurl = historyurl.replace(/\?tab1=welcome&tab2=password_reset&id=([A-Za-z0-9_]+)$/i, '<?php echo $sk['config']['site_url']; ?>/password-reset/$1');
+
+                    historyurl = historyurl.replace(/\?tab1=([^\/]+)&query=([^\/]+)$/i, '<?php echo $sk['config']['site_url']; ?>/$1/$2');
+
+                    historyurl = historyurl.replace(/\?tab1=([^\/]+)&tab2=([^\/]+)&tab3=([^\/]+)$/i, '<?php echo $sk['config']['site_url']; ?>/$1/$2/$3');
+                    historyurl = historyurl.replace(/\?tab1=([^\/]+)&tab2=([^\/]+)$/i, '<?php echo $sk['config']['site_url']; ?>/$1/$2');
+                    historyurl = historyurl.replace(/\?tab1=([^\/]+)$/i, '<?php echo $sk['config']['site_url']; ?>/$1');
+                }
+								//alert(historyurl);
+                history.replaceState({}, 'Daregang', historyurl);
+            }
+        });
+        
+        $('.dropdown-search-container').hide();
+        $('.dropdown-notification-container').hide();
+        $('.notification-nav').removeClass('header-nav-active');
+        $('.dropdown-more-container').hide();
+        $(".sc-lightbox-container").remove();
+    }
+
+    function startPageLoadingBar() {
+        $(".page-loading-bar")
+            .show()
+            .width((50 + Math.random() * 30) + "%");
+    }
+    function stopPageLoadingBar() {
+        $(".page-loading-bar")
+            .width("101%")
+            .delay(200)
+            .fadeOut(400, function() {
+                $(this).width("0");
+            });
+    }
+
+    $(document).on('click', '*[data-href]', function(e) {
+        e.preventDefault();
+        startPageLoadingBar();
+        FA_loadPage($(this).attr('data-href'));
+        $(document).scrollTop(0);
+    });
+    </script>
+</head>
+
+<body>
+<?php echo FA_getPage('header/content'); ?>
+	
+
+
+    <!-- Page Content -->
+
+    <div class="content-section">      
+
+	    <?php echo FA_getPage('header/search_text'); ?>
+
+		<?php echo $sk['content']; ?>
+
+    </div>
+    <!-- /.content-section -->
+
+	<!-- FOOTER
+	================================================== -->
+    
+
+    <?php echo FA_getPage('footer/content'); ?>
+
+    <!-- JS Files -->   
+    <script src="<?php echo $sk['config']['theme_url']; ?>/assets/js/plugins.js"></script>
+    <script src="<?php echo $sk['config']['theme_url']; ?>/assets/js/bootstrap.min.js"></script>    
+    <script src="<?php echo $sk['config']['theme_url']; ?>/assets/js/init.js"></script>
+		
+</body>
+
+</html>

@@ -1,0 +1,46 @@
+<div class="list-wrapper">
+    <div class="list-header">
+        <div class="float-left">
+            <?php echo $lang['manage_galleries_header_label']; ?>
+        </div>
+
+        <div class="float-right">
+            <a class="hover-line" href="<?php echo FA_smoothLink('index.php?tab1=create_gallery'); ?>" data-href="index.php?tab1=create_gallery">
+                <?php echo $lang['gallery_create_label']; ?>
+            </a>
+        </div>
+
+        <div class="float-clear"></div>
+    </div>
+    <?php
+    if (($managed_galleries_num = BLS_countManagedGalleries()) == 0) {
+    ?>
+    <div class="list-column">
+        <?php echo $lang['no_managed_galleries_label']; ?>.
+    </div>
+    <?php
+    } else {
+        foreach (BLS_getManagedGalleries() as $gallery) {
+    ?>
+    <div class="list-column">
+        <table border="0" width="100%" cellspacing="0" cellpadding="0">
+        <tr>
+            <td width="42px" align="left" valign="middle">
+                <a href="<?php echo $gallery['id']; ?>" data-href="?tab1=timeline&id=<?php echo $page['name']; ?>">
+                    <!-- <img width="36px" height="36px" class="radius3" src="<?php echo $page['avatar_url']; ?>" alt="<?php echo $gallery['name']; ?>"> -->
+                    <img width="36px" height="36px" class="radius3" src="themes/lightblue/images/default-page-avatar.png">                    
+                </a>
+            </td>
+            <td align="left" valign="middle">
+                <a class="bold-500" href="<?php echo $gallery['id']; ?>" data-href="?tab1=timeline&id=<?php echo $gallery['name']; ?>">
+                    <?php echo $gallery['name']; ?>
+                </a>
+            </td>
+        </tr>
+        </table>
+    </div>
+    <?php
+        } // end of foreach (BLS_getManagedGalleries() as $gallery).
+    } // end of else of if (($managed_galleries_num = BLS_countManagedGalleries()) == 0).
+    ?>
+</div>

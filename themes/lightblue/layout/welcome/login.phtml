@@ -1,0 +1,30 @@
+<div class="page-margin"></div>
+
+<form class="welcome-form login-form" method="post">
+        <div class="form-header">
+            <div class="float-left">
+                <?php echo $lang['log_in']; ?>
+            </div>
+            <div class="post-message">Invalid token!</div>
+            <div class="float-right">
+                <a href="<?php echo FA_smoothLink('index.php?tab1=welcome&tab2=forgot_password'); ?>"><?php echo $lang['forgot_password']; ?>?</a>
+            </div>
+            <div class="float-clear"></div>
+        </div>
+        <div class="form-content">
+            <div class="input-wrapper">
+                <input type="text" name="login_id" value="<?php echo $lang['login_id_label']; ?>" placeholder="<?php echo $lang['login_id_label']; ?>" data-placeholder="<?php echo $lang['login_id_label']; ?>" autocomplete="off">
+            </div>
+            
+            <div class="input-wrapper">
+                <input type="password" name="login_password" placeholder="Password" autocomplete="off">
+            </div>
+            
+            <div class="input-wrapper">
+                <input type="checkbox" name="keep_logged_in" value="1"> Keep me logged in
+            </div>
+            
+            <button class="submit-btn active"><i class="icon-signin progress-icon"></i> <?php echo $lang['log_in']; ?></button>
+        </div>
+    </form>
+<div class="float-clear"></div>

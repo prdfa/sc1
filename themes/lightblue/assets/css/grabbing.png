@@ -1,0 +1,67 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<title>Distinctive Themes | Theme : Quote</title>
+
+<!-- Mobile Specific -->
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<!-- CSS Style -->
+<link rel="stylesheet" href="style.css"> 
+ 
+<!-- Favicons -->
+<link rel="shortcut icon" href="../../../../../../www.distinctivethemes.com/wp-content/uploads/2013/06/favicon.ico" />
+<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+
+<!-- Used Fonts -->
+<link href="../../../../../../fonts.googleapis.com/css@family=Open+Sans_3A400,300,700_7CRoboto+Slab_3A400,700" rel="stylesheet" type="text/css">
+
+<!-- JavaScript -->
+<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+<script src="js/custom.js"></script> 
+</head>
+
+<body>
+
+    <div id="switcher">
+		<div class="center">
+            <div class="logo">
+                <a href="../../../../../../www.distinctivethemes.com/default.htm" target="_blank" title="Distinctive Themes"><h1 class="logo-text"><img src="dttash.png" /></h1></a>
+            </div>
+            
+                <ul>
+                    <li id="theme_list"><a id="theme_select" href="#">Select a theme...</a>
+                <ul>
+                    <li><a href="#" rel="http://themes.distinctivethemes.com/landing/quote/,http://themeforest.net/item/quote-responsive-multi-purpose-theme/8645997?ref=DistinctiveThemes">Quote <span>WordPress</span></a><img alt="" class="preview" src="product_previews/default.htm"></li><li><a href="#" rel="http://themes.distinctivethemes.com/landing/impact/,http://themeforest.net/item/impact-multipurpose-singlemulti-page-theme/7632411?ref=DistinctiveThemes">Impact <span>WordPress</span></a><img alt="" class="preview" src="../../../../../../www.distinctivethemes.com/wp-content/uploads/2014/06/01_main.__large_preview.png"></li><li><a href="#" rel="http://themes.distinctivethemes.com/landing/infinity/,http://themeforest.net/item/infinity-flexible-responsive-theme/7986667?ref=DistinctiveThemes">Infinity <span>WordPress</span></a><img alt="" class="preview" src="../../../../../../www.distinctivethemes.com/wp-content/uploads/2014/06/01_main1.jpg"></li><li><a href="#" rel="http://themes.distinctivethemes.com/landing/eivissa/,http://themeforest.net/item/eivissa-responsive-one-page-template/5062408?ref=DistinctiveThemes">Eivissa <span>WordPress</span></a><img alt="" class="preview" src="../../../../../../www.distinctivethemes.com/wp-content/uploads/2013/07/01_large_preview.jpg"></li><li><a href="#" rel="http://themes.distinctivethemes.com/landing/brightness/,http://themeforest.net/item/brightness-responsive-one-page-full-screen-theme/5133881?ref=DistinctiveThemes">Brightness <span>WordPress</span></a><img alt="" class="preview" src="../../../../../../www.distinctivethemes.com/wp-content/uploads/2013/07/01_large_preview1.jpg"></li><li><a href="#" rel="http://themes.distinctivethemes.com/landing/architects-and-engineers/,http://themeforest.net/item/architects-engineers-multi-purpose-theme/6610325?ref=DistinctiveThemes">AE <span>WordPress</span></a><img alt="" class="preview" src="../../../../../../www.distinctivethemes.com/wp-content/uploads/2013/11/01_preview.__large_preview.jpg"></li><li><a href="#" rel="http://themes.distinctivethemes.com/templates/quote/,http://themeforest.net/item/quote-flexible-responsive-template/8145852?ref=DistinctiveThemes">QuoteHTML <span>HTML</span></a><img alt="" class="preview" src="../../../../../../www.distinctivethemes.com/wp-content/uploads/2013/11/01_preview.__large_preview.jpg"></li>                </ul>
+                    </li>	
+                </ul>
+            
+                <div class="responsive">
+                    <a href="#" class="desktop active" title="View Desktop Version"></a> 
+                    <a href="#" class="tabletlandscape" title="View Tablet Landscape (1024x768)"></a> 
+                    <a href="#" class="tabletportrait" title="View Tablet Portrait (768x1024)"></a> 
+                    <a href="#" class="mobilelandscape" title="View Mobile Landscape (480x320)"></a>
+                    <a href="#" class="mobileportrait" title="View Mobile Portrait (320x480)"></a>
+                </div>
+                
+                <ul class="links">
+                    <li class="purchase" rel="http://themeforest.net/item/quote-responsive-multi-purpose-theme/8645997?ref=DistinctiveThemes">
+                    <a href="../../../../../../themeforest.net/item/quote-responsive-multi-purpose-theme/8645997@ref=DistinctiveThemes"><img src="images/purchase.png" alt="Web Design Tunes Themes" /> Download</a>
+                    </li>		
+                    <li class="close" rel="http://themes.distinctivethemes.com/landing/quote/">
+                    <a href="../../../../../landing/quote/default.htm"><img src="images/cross.png" alt="Web Design Tunes Themes" /> Close</a></li>		
+                </ul>
+        </div>
+    </div>
+
+    <iframe id="iframe" src="../../../../../landing/quote/default.htm" frameborder="0" width="100%"></iframe>
+
+</body>
+</html>
