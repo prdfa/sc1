@@ -714,23 +714,26 @@ if ($sk['timeline']['post_privacy'] == "following") {
     <div class="list-wrapper u-album-wrapper">
         <div class="list-header">
             <?php
-            echo $lang['albums'];
+            echo $lang['gallery_name'];
 
             if ($sk['timeline']['id'] == $sk['user']['id']) {
             ?>
-             (<a href="<?php echo FA_smoothLink('index.php?tab1=album&tab2=create'); ?>" data-href="?tab1=album&tab2=create"><?php echo $lang['create']; ?></a>)
+             (<a href="<?php echo FA_smoothLink('index.php?tab1=gallery&tab2=create'); ?>" data-href="?tab1=gallery&tab2=create"><?php echo $lang['create']; ?></a>)
             <?php
             }
             ?>
         </div>
         <div class="u-album-content">
             <?php
+            
+            $sk['timeline']['id'];
+            
             $albums = FA_getAlbums($sk['timeline']['id']);
             
             if (is_array($albums) && count($albums) > 0) {
                 
                 foreach ($albums as $album) {
-                    echo '<a class="list-column column-hover" href="' . FA_smoothLink('index.php?tab1=album&tab2=' . $album['id']) . '" data-href="?tab1=album&tab2=' . $album['id'] . '">
+                    echo '<a class="list-column column-hover" href="' . FA_smoothLink('index.php?tab1=gallery&tab2=' . $album['id']) . '" data-href="?tab1=gallery&tab2=' . $album['id'] . '">
                         ' . $album['name'] . '
                     </a>';
                 }

@@ -10,6 +10,7 @@ Date: 27/Nov/2014
 require_once('connect.php');
 require_once('timezones.php');
 include "SN_core.php";
+include "bls_core.php";
 
 /* Check Functions */
 function FA_isLogged() {

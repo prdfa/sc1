@@ -123,6 +123,7 @@ $lang['pages_message_privacy'] = 'Allow people to send messages to Page';
 $lang['pages_timeline_post_privacy'] = 'Allow people to post on Page\'s timeline';
 
 // Gallery (added by bls)
+$lang['gallery_name'] = 'Gallery';
 $lang['gallery_create_label'] = 'Create Gallery';
 $lang['gallery_name_label'] = 'Name';
 $lang['gallery_name_textarea_label'] = 'Name of your Gallery';

@@ -47,9 +47,15 @@ switch ($_GET['tab1']) {
         include('assets/sources/story.php');
     break;
     
+    /***
     // Album page source
     case 'album':
         include('assets/sources/album.php');
+    break;
+    ***/
+    // Gallery page source
+    case 'gallery':
+    	include('assets/sources/gallery.php');
     break;
     
     // Create page source
