@@ -389,7 +389,7 @@ color: #4e5665;
 margin: 45px auto 0;*/
 
 color: #4e5665;
-margin: 45px 10px 10px 10px;
+margin: 85px 10px 10px 10px;
 }
 .page-margin {
 padding-top: 20px;
@@ -835,6 +835,14 @@ background: white;
 color: #4e5665;
 border-top: 1px solid #e9eaeb;
 overflow: hidden;
+}
+.story-publisher-box .input-wrapper_cat {
+    position: relative;
+    width: 99.3%;
+    background: white;
+    color: #4e5665;
+    border-top: 1px solid #e9eaeb;
+    overflow: hidden;
 }
 .story-publisher-box .input-wrapper i {
 width: 27px;
@@ -2046,4 +2054,10 @@ padding: 0 7px;
 .story-wrapper-home .via-name:hover {
     color: #25ad9f;
     text-decoration: underline;
+}
+
+.header_search{
+    background-color: #000000;
+    padding: 10px;
+    text-align: center;
 }

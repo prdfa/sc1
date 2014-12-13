@@ -13,7 +13,9 @@
                     <?php echo $sk['comment']['publisher']['name']; ?>
                 </a>
                 <span class="comment-text">
-                    <?php echo $sk['comment']['text']; ?>
+                    <?php echo strip_tags($sk['comment']['text']) ?>
+
+                    
                 </span>
                 <?php
                 if ($sk['logged'] == true) {

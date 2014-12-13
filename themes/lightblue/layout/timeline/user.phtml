@@ -90,29 +90,29 @@ if ($sk['timeline']['post_privacy'] == "following") {
             <?php
             }
             
-            if ($sk['config']['friends'] == true) {
-            ?>
-            <td class="statistic" align="center" valign="middle">
-                <a href="<?php echo FA_smoothLink('index.php?tab1=timeline&tab2=friends&id='.$sk['timeline']['username']); ?>" data-href="?tab1=timeline&tab2=friends&id=<?php echo $sk['timeline']['username']; ?>">
-                    <?php echo FA_countFollowing($sk['timeline']['id']) . ' ' . $lang['friends_label']; ?>
-                </a>
-            </td>
-            <?php
-            } else {
-            ?>
-            <td class="statistic" align="center" valign="middle">
-                <a href="<?php echo FA_smoothLink('index.php?tab1=timeline&tab2=following&id='.$sk['timeline']['username']); ?>" data-href="?tab1=timeline&tab2=following&id=<?php echo $sk['timeline']['username']; ?>">
-                    <?php echo FA_countFollowing($sk['timeline']['id']) . ' ' . $lang['following_label']; ?>
-                </a>
-            </td>
-            <td class="statistic" align="center" valign="middle">
-                <a href="<?php echo FA_smoothLink('index.php?tab1=timeline&tab2=followers&id='.$sk['timeline']['username']); ?>" data-href="?tab1=timeline&tab2=followers&id=<?php echo $sk['timeline']['username']; ?>">
-                    <?php echo FA_countFollowers($sk['timeline']['id']) . ' ' . $lang['followers_label']; ?>
-                </a>
-            </td>
-            <?php
-            }
-            ?>
+//            if ($sk['config']['friends'] == true) {
+//            ?>
+<!--            <td class="statistic" align="center" valign="middle">-->
+<!--                <a href="--><?php //echo FA_smoothLink('index.php?tab1=timeline&tab2=friends&id='.$sk['timeline']['username']); ?><!--" data-href="?tab1=timeline&tab2=friends&id=--><?php //echo $sk['timeline']['username']; ?><!--">-->
+<!--                    --><?php //echo FA_countFollowing($sk['timeline']['id']) . ' ' . $lang['friends_label']; ?>
+<!--                </a>-->
+<!--            </td>-->
+<!--            --><?php
+//            } else {
+//            ?>
+<!--            <td class="statistic" align="center" valign="middle">-->
+<!--                <a href="--><?php //echo FA_smoothLink('index.php?tab1=timeline&tab2=following&id='.$sk['timeline']['username']); ?><!--" data-href="?tab1=timeline&tab2=following&id=--><?php //echo $sk['timeline']['username']; ?><!--">-->
+<!--                    --><?php //echo FA_countFollowing($sk['timeline']['id']) . ' ' . $lang['following_label']; ?>
+<!--                </a>-->
+<!--            </td>-->
+<!--            <td class="statistic" align="center" valign="middle">-->
+<!--                <a href="--><?php //echo FA_smoothLink('index.php?tab1=timeline&tab2=followers&id='.$sk['timeline']['username']); ?><!--" data-href="?tab1=timeline&tab2=followers&id=--><?php //echo $sk['timeline']['username']; ?><!--">-->
+<!--                    --><?php //echo FA_countFollowers($sk['timeline']['id']) . ' ' . $lang['followers_label']; ?>
+<!--                </a>-->
+<!--            </td>-->
+<!--            --><?php
+//            }
+//            ?>
             <td class="statistic" align="center" valign="middle">
                 <a href="<?php echo FA_smoothLink('index.php?tab1=timeline&tab2=likes&id='.$sk['timeline']['username']); ?>" data-href="?tab1=timeline&tab2=likes&id=<?php echo $sk['timeline']['username']; ?>">
                     <?php echo FA_countPageLikes($sk['timeline']['id']) . ' ' .$lang['likes_label']; ?>

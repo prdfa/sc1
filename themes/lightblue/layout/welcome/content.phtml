@@ -1,27 +1,47 @@
 <div class="page-margin"></div>
 <div class="desktop-only">
-    <h1>Welcome to <?php echo $sk['config']['site_name']; ?></h1>
+    <div class="banner">
 
-    <div class="stories-container">
-        <div class="stories-wrapper">
-            <?php
-            $stories = FA_getStories_all();
+    </div>
 
-            if (is_array($stories) && count($stories) > 0) {
-
-                foreach($stories as $sk['story']) {
-                    echo FA_getPage('story/content-home');
-                }
-            }
-            ?>
-        </div>
-        <div align="center">
-            <div class="load-btn" onclick="FA_loadOldStories();">
-                <i class="icon-reorder progress-icon hide"></i>
+    <div>
+        <div>Recent Posts</div>
+        <div class="stories-container">
+            <div class="stories-wrapper">
                 <?php
-                echo $lang['view_previous_posts_label'];
+                $stories = FA_getStories_recent();
+                //var_dump($stories);die();
+                if (is_array($stories) && count($stories) > 0) {
+
+                    foreach($stories as $sk['story']) {
+                        echo FA_getPage('story/content-home');
+                    }
+                }
                 ?>
             </div>
+
+        </div>
+    </div>
+
+    <div class="clearfix">
+
+    </div>
+    <div>
+        <div>Most Liked Posts</div>
+        <div class="stories-container">
+            <div class="stories-wrapper">
+                <?php
+                $stories = FA_getStories_most_like();
+                //var_dump($stories);die();
+                if (is_array($stories) && count($stories) > 0) {
+
+                    foreach($stories as $sk['story']) {
+                        echo FA_getPage('story/content-home');
+                    }
+                }
+                ?>
+            </div>
+
         </div>
     </div>
 

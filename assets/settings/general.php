@@ -1,10 +1,10 @@
 <?php
-$config['friends'] = true;
+$config['friends'] = false;
 $config['site_name'] = 'Sitename';
 $config['site_title'] = 'Site Title';
-$config['email'] = 'fakhru.ansari@gmail.com';
+$config['email'] = 'no-reply@website.com';
 $config['email_verification'] = false;
-$config['chat'] = false;
+$config['chat'] = true;
 $config['captcha'] = false;
 $config['language'] = 'english';
 $config['smooth_links'] = true;

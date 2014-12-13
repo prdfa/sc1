@@ -5,13 +5,8 @@
             <tr>
                 <td class="header-site-logo" align="left" valign="top">
                     <a href="<?php echo $sk['config']['site_url']; ?>" style="margin-left: 10px;">
-                        <img src="<?php echo $sk['config']['theme_url']; ?>/logo.png" alt="<?php echo $sk['config']['site_name']; ?>">
+                        <img src="<?php echo $sk['config']['theme_url']; ?>/images/logo.png" alt="<?php echo $sk['config']['site_name']; ?>">
                     </a>
-                </td>
-                <td align="left" valign="top">
-                    <div class="header-live-search">
-                        <input value="<?php echo $lang['header_search_textarea_label']; ?>" placeholder="<?php echo $lang['header_search_textarea_label']; ?>" data-placeholder="<?php echo $lang['header_search_textarea_label']; ?>" type="text" onkeyup="FA_headerSearch(this.value);">
-                    </div>
                 </td>
             </tr>
             </table>
@@ -107,6 +102,15 @@
             ?>
         </div>
         <div class="float-clear"></div>
+    </div>
+    <div class="header_search">
+        <div class="header-live-search">
+            <input value="<?php echo $lang['header_search_textarea_label']; ?>" placeholder="<?php echo $lang['header_search_textarea_label']; ?>" data-placeholder="<?php echo $lang['header_search_textarea_label']; ?>" type="text" onkeyup="FA_headerSearch(this.value);">
+            <button name="story_search_btn" class="submit-btn active">
+                <i class="icon-search progress-icon"></i>
+                <span>Search</span>
+            </button>
+        </div>
     </div>
 </div>
 <div class="dropdown-search-container">

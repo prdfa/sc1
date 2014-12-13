@@ -450,6 +450,9 @@ if ($t == "post") {
             'soundcloud_uri',
             'youtube_title',
             'youtube_video_id',
+            'dare_categories',
+            'dare_level',
+            'dare_condition',
             'google_map_name'
         );
         $array = array();
@@ -464,6 +467,9 @@ if ($t == "post") {
         
         if (isset($_FILES['photos']['name'])) {
             $array['photos'] = $_FILES['photos'];
+        }
+        if (isset($_FILES['videos']['name'])) {
+            $array['videos'] = $_FILES['videos'];
         }
         
         $post_id = FA_registerPost($array);
