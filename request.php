@@ -8,7 +8,6 @@ Date: 27/Nov/2014
 * * * * * * * * * * * * * */
 
 require_once('assets/includes/core.php');
-require_once('assets/includes/bls_core.php');
 
 $t = '';
 $a = '';
@@ -1209,6 +1208,7 @@ if ($t == "page") {
     }
 }
 
+/***
 // Gallery requests (added by bls)
 if ($t == "gallery") { // $t and $a are set in gallery/create.phtml
 
@@ -1238,7 +1238,7 @@ if ($t == "gallery") { // $t and $a are set in gallery/create.phtml
 	} // end of if ($a == "create").
 	
 } // end of if ($t == "gallery").
-
+***/
 
 // Group requests
 if ($t == "group") {
@@ -1384,6 +1384,7 @@ if ($t == "group") {
     }
 }
 
+/***
 // Album requests
 if ($t == "album") {
 
@@ -1597,6 +1598,222 @@ if ($t == "album") {
     mysqli_close($dbConnect);
     exit();
     }
+}
+***/
+
+// Gallery requests
+if ($t == "gallery") {
+
+	if ($a == "create") {
+
+		if (!empty($_POST['album_name']) && isset($_FILES['photos']['name'])) {
+			$album_name = FA_secureEncode($_POST['album_name']);
+			$album_descr = '';
+			$query_one = "INSERT INTO " . DB_MEDIA . " (timeline_id,active,name,descr,type,temp) VALUES (" . $user['id'] . ",1,'$album_name','$album_descr','album',0)";
+			$sql_query_one = mysqli_query($dbConnect, $query_one);
+
+			if (!empty($_POST['album_descr'])) {
+				$album_descr = FA_secureEncode($_POST['album_descr']);
+			}
+
+			if ($sql_query_one) {
+				$album_id = mysqli_insert_id($dbConnect);
+				$photos_count = count($_FILES['photos']['name']);
+
+				for ($i = 0; $i < $photos_count; $i++) {
+					$photo_param = array(
+							'tmp_name' => $_FILES['photos']['tmp_name'][$i],
+							'name' => $_FILES['photos']['name'][$i],
+							'size' => $_FILES['photos']['size'][$i]
+					);
+					$photo_data = FA_registerMedia($photo_param, $album_id);
+
+					if (!empty($photo_data['id'])) {
+						$query_two = "INSERT INTO " . DB_POSTS . " (active,hidden,media_id,time,timeline_id,type1,type2) VALUES (1,1," . $photo_data['id'] . "," . time() . "," . $user['id'] . ",'story','none')";
+						$sql_query_two = mysqli_query($dbConnect, $query_two);
+
+						if ($sql_query_two) {
+							$media_story_id = mysqli_insert_id($dbConnect);
+
+							mysqli_query($dbConnect, "UPDATE " . DB_POSTS . " SET post_id=id WHERE id=$media_story_id");
+							mysqli_query($dbConnect, "UPDATE " . DB_MEDIA . " SET post_id=$media_story_id WHERE id=" . $photo_data['id']);
+							FA_registerPostFollow($media_story_id);
+						}
+					}
+				}
+
+				$activity_text = 'added ' . $photos_count . ' new photos to the album [album]' . $album_id . '[/album]';
+				$query_three = "INSERT INTO " . DB_POSTS . " (active,media_id,activity_text,time,timeline_id,type1,type2) VALUES (1,$album_id,'$activity_text'," . time() . "," . $user['id'] . ",'story','none')";
+				$sql_query_three = mysqli_query($dbConnect, $query_three);
+
+				if ($sql_query_three) {
+					$post_id = mysqli_insert_id($dbConnect);
+					$query_four = "UPDATE " . DB_POSTS . " SET post_id=$post_id WHERE id=$post_id";
+					$sql_query_four = mysqli_query($dbConnect, $query_four);
+					FA_registerPostFollow($post_id);
+
+					if ($sql_query_four) {
+						$data = array(
+								'status' => 200,
+								'url' => FA_smoothLink('index.php?tab1=gallery&tab2=' . $album_id)
+						);
+					}
+				}
+			}
+		}
+
+		header("Content-type: application/json");
+		echo json_encode($data);
+		mysqli_close($dbConnect);
+		exit();
+	}
+
+	if ($a == "upload") {
+
+		if (!empty($_POST['album_id']) && isset($_FILES['photos']['name'])) {
+			$album_id = FA_secureEncode($_POST['album_id']);
+
+			if (is_numeric($album_id) && $album_id > 0) {
+				$query_one = "SELECT COUNT(id) AS count FROM " . DB_MEDIA . " WHERE id=$album_id AND timeline_id=" . $user['id'] . " AND type='album' AND temp=0 AND active=1";
+				$sql_query_one = mysqli_query($dbConnect, $query_one);
+
+				if ($sql_query_one) {
+					$sql_fetch_one = mysqli_fetch_assoc($sql_query_one);
+
+					if ($sql_fetch_one['count'] == 1) {
+						$photos_count = count($_FILES['photos']['name']);
+						$html = '';
+
+						for ($i = 0; $i < $photos_count; $i++) {
+							$photo_param = array(
+									'tmp_name' => $_FILES['photos']['tmp_name'][$i],
+									'name' => $_FILES['photos']['name'][$i],
+									'size' => $_FILES['photos']['size'][$i]
+							);
+							$photo_data = FA_registerMedia($photo_param, $album_id);
+
+							if (!empty($photo_data['id'])) {
+								$query_two = "INSERT INTO " . DB_POSTS . " (active,hidden,media_id,time,timeline_id,type1,type2) VALUES (1,1," . $photo_data['id'] . "," . time() . "," . $user['id'] . ",'story','none')";
+								$sql_query_two = mysqli_query($dbConnect, $query_two);
+
+								if ($sql_query_two) {
+									$media_story_id = mysqli_insert_id($dbConnect);
+
+									mysqli_query($dbConnect, "UPDATE " . DB_POSTS . " SET post_id=id WHERE id=$media_story_id");
+									mysqli_query($dbConnect, "UPDATE " . DB_MEDIA . " SET post_id=$media_story_id WHERE id=" . $photo_data['id']);
+									FA_registerPostFollow($media_story_id);
+								}
+								$sk['photo'] = $photo_data;
+								$sk['photo']['post_id'] = $media_story_id;
+								$sk['photo']['timeline_id'] = $user['id'];
+
+								$html .= FA_getPage('gallery/photo');
+							}
+						}
+
+						$data = array(
+								'status' => 200,
+								'html' => $html
+						);
+
+						$query_three = "DELETE FROM " . DB_POSTS . " WHERE media_id=$album_id AND timeline_id=" . $user['id'];
+						$sql_query_three = mysqli_query($dbConnect, $query_three);
+
+						$activity_text = 'added ' . $photos_count . ' new photos to the album [album]' . $album_id . '[/album]';
+						$query_four = "INSERT INTO " . DB_POSTS . " (active,media_id,activity_text,time,timeline_id,type1,type2) VALUES (1,$album_id,'$activity_text'," . time() . "," . $user['id'] . ",'story','none')";
+						$sql_query_four = mysqli_query($dbConnect, $query_four);
+
+						if ($sql_query_four) {
+							$post_id = mysqli_insert_id($dbConnect);
+							$query_five = "UPDATE " . DB_POSTS . " SET post_id=$post_id WHERE id=$post_id";
+							$sql_query_five = mysqli_query($dbConnect, $query_five);
+							FA_registerPostFollow($post_id);
+						}
+					}
+				}
+			}
+		}
+
+		header("Content-type: application/json");
+		echo json_encode($data);
+		mysqli_close($dbConnect);
+		exit();
+	}
+
+	// View gallery delete window
+	if ($a == "delete_window" && FA_isLogged()) {
+
+		if (!empty($_GET['album_id'])) {
+			$album_id = FA_secureEncode($_GET['album_id']);
+
+			if (is_numeric($album_id) && $album_id > 0) {
+				$query_one = "SELECT COUNT(id) AS count FROM " . DB_MEDIA . " WHERE id=$album_id AND timeline_id=" . $user['id'] . " AND type='album' AND temp=0 AND active=1";
+				$sql_query_one = mysqli_query($dbConnect, $query_one);
+
+				if ($sql_query_one) {
+					$sk['album']['id'] = $album_id;
+					$html = FA_getPage('window/delete-album');
+
+					if (!empty($html)) {
+						$data = array(
+								'status' => 200,
+								'html' => $html
+						);
+					}
+				}
+			}
+		}
+
+		header("Content-type: application/json");
+		echo json_encode($data);
+		mysqli_close($dbConnect);
+		exit();
+	}
+
+	// Delete gallery
+	if ($a == "delete" && FA_isLogged()) {
+
+		if (!empty($_GET['album_id'])) {
+			$album_id = FA_secureEncode($_GET['album_id']);
+
+			if (is_numeric($album_id) && $album_id > 0) {
+				$query_one = "SELECT COUNT(id) AS count FROM " . DB_MEDIA . " WHERE id=$album_id AND timeline_id=" . $user['id'] . " AND type='album' AND temp=0 AND active=1";
+				$sql_query_one = mysqli_query($dbConnect, $query_one);
+
+				if ($sql_query_one) {
+					$sql_fetch_two = FA_getAlbumPhotos($album_id);
+
+					foreach ($sql_fetch_two as $photo) {
+						$query_three = "DELETE FROM " . DB_MEDIA . " WHERE id=" . $photo['id'];
+						$sql_query_three = mysqli_query($dbConnect, $query_three);
+						$query_four = "DELETE FROM " . DB_POSTS . " WHERE media_id=" . $photo['id'];
+						$sql_query_four = mysqli_query($dbConnect, $query_four);
+						$dirimages = glob($photo['url'] . '*');
+
+						foreach ($dirimages as $dirimg) {
+							unlink($dirimg);
+						}
+					}
+
+					$query_five = "DELETE FROM " . DB_MEDIA . " WHERE id=$album_id";
+					$sql_query_five = mysqli_query($dbConnect, $query_five);
+
+					$query_six = "DELETE FROM " . DB_POSTS . " WHERE media_id=$album_id";
+					$sql_query_six = mysqli_query($dbConnect, $query_six);
+
+					$data = array(
+							'status' => 200,
+							'location' => FA_smoothLink('index.php?tab1=timeline&id=' . $user['username'])
+					);
+				}
+			}
+		}
+
+		header("Content-type: application/json");
+		echo json_encode($data);
+		mysqli_close($dbConnect);
+		exit();
+	}
 }
 
 // Notification requests
