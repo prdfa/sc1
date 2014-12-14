@@ -9,33 +9,35 @@
      <link href="<?php echo $sk['config']['theme_url']; ?>/css/style-1.1.css" rel="stylesheet">
     <link href="<?php echo $sk['config']['theme_url']; ?>/css/style-1.2.css" rel="stylesheet">
     <link href="<?php echo $sk['config']['theme_url']; ?>/css/jquery.share.css" rel="stylesheet">
-    <link href="<?php echo $sk['config']['theme_url']; ?>/css/lazyYT.css" rel="stylesheet">
+    
     <!--<link href="<?php /*echo $sk['config']['theme_url']; */?>/css/style-1.1.css" rel="stylesheet">
     <link href="<?php /*echo $sk['config']['theme_url']; */?>/css/style-1.2.css" rel="stylesheet">-->
+    <link href="<?php echo $sk['config']['theme_url']; ?>/css/login.css" rel="stylesheet">
     <?php
     // CSS for welcome page
 
 
 
-    /*if ($_GET['tab1'] == "welcome") {
+   if ($_GET['tab1'] == "welcome") {
         echo '<link href="' . $sk['config']['theme_url'] . '/css/welcome.css" rel="stylesheet">';
     }
-    if ($_GET['tab1'] == "login") {
+    /* if ($_GET['tab1'] == "login") {
         echo '<link href="' . $sk['config']['theme_url'] . '/css/login.css" rel="stylesheet">';
-    }*/
+    } */
 
     ?>
     <link href="<?php echo $sk['config']['theme_url']; ?>/css/font-awesome/font-awesome.css" rel="stylesheet">
     <!--[if IE 7]>
     <link href="<?php echo $sk['config']['theme_url']; ?>/css/font-awesome/font-awesome-ie7.css" rel="stylesheet">
     <![endif]-->
-    <script src="<?php echo $sk['config']['theme_url']; ?>/javascript/jquery.1.10.2.min.js"></script>
+    <script src="<?php echo $sk['config']['theme_url']; ?>/javascript/jquery-2.1.0.js"></script>
     <script src="<?php echo $sk['config']['theme_url']; ?>/javascript/jquery-ui-1.10.4.custom.min.js"></script>
     <script src="<?php echo $sk['config']['theme_url']; ?>/javascript/jquery.ui.touch-punch.min.js"></script>
     <script src="<?php echo $sk['config']['theme_url']; ?>/javascript/jquery-timeago.js"></script>
     <script src="<?php echo $sk['config']['theme_url']; ?>/javascript/jquery.form.min.js"></script>
     <script src="<?php echo $sk['config']['theme_url']; ?>/javascript/jquery.share.js"></script>
-    <script src="<?php echo $sk['config']['theme_url']; ?>/javascript/lazyYT.js"></script>
+    <link href="http://vjs.zencdn.net/4.11/video-js.css" rel="stylesheet">
+<script src="http://vjs.zencdn.net/4.11/video.js"></script>
     <?php
     if ($sk['config']['smooth_links'] == 1) {
         echo '<script>
@@ -159,7 +161,7 @@
         cookie: true, 
         xfbml: true
     }); 
-    $('.js-lazyYT').lazyYT();     
+    //$('.js-lazyYT').lazyYT();     
 </script> 
 <body<?php if ($sk['config']['smooth_links'] == true) { echo ' data-rewrite="1"'; } ?>>
     <?php echo FA_getPage('header/content'); ?>
@@ -184,9 +186,7 @@
         <source src="<?php echo $sk['config']['theme_url']; ?>/sounds/notification.mp3" type="audio/mpeg">
         <source src="<?php echo $sk['config']['theme_url']; ?>/sounds/notification.wav" type="audio/wav">
     </audio>
-    <script type="text/javascript">
-    $('.js-lazyYT').lazyYT();     
-    </script>
+    
     
 </body>
 </html>
