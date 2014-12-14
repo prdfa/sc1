@@ -78,10 +78,24 @@
                 <div class="input-result-wrapper"></div>
             </div>
             
-            <div class="input-wrapper youtube-wrapper" data-group="A">
+            <!--<div class="input-wrapper youtube-wrapper" data-group="A">
                 <i class="icon-film icon"></i>
-                <input class="youtube-input" type="text" onkeyup="FA_searchYoutube(this.value);" value="<?php echo $lang['post_publisher_youtube_placeholder']; ?>" placeholder="<?php echo $lang['post_publisher_youtube_placeholder']; ?>" data-placeholder="<?php echo $lang['post_publisher_youtube_placeholder']; ?>">
+                <input class="youtube-input" type="text" onkeyup="FA_searchYoutube(this.value);" value="<?php /*echo $lang['post_publisher_youtube_placeholder']; */?>" placeholder="<?php /*echo $lang['post_publisher_youtube_placeholder']; */?>" data-placeholder="<?php /*echo $lang['post_publisher_youtube_placeholder']; */?>">
                 <div class="input-result-wrapper"></div>
+            </div>-->
+
+            <div class="input-wrapper video-wrapper" data-group="A">
+                <div class="float-left">
+                    <div class="video-container">0 video(s) selected</div>
+                </div>
+
+                <div class="float-right">
+                    <div class="album-option">
+                        <a href="<?php echo $sk['config']['site_url']; ?>/album/create" data-href="?tab1=album&tab2=create">Create an album</a>
+                    </div>
+                </div>
+
+                <div class="float-clear"></div>
             </div>
             
 
@@ -109,14 +123,14 @@
                     </span>
                 </td>
                 
-                <td width="28px" align="center" valign="middle">
+                <!--<td width="28px" align="center" valign="middle">
                     <span class="option" onclick="toggleMediaGroup('.story-publisher-box .soundcloud-wrapper');">
                         <i class="icon-music"></i>
                     </span>
-                </td>
+                </td>-->
                 
                 <td width="28px" align="center" valign="middle">
-                    <span class="option" onclick="toggleMediaGroup('.story-publisher-box .youtube-wrapper');">
+                    <span class="option" onclick="javascript:$('.story-publisher-box').find('input.video-upload-input').click();">
                         <i class="icon-film"></i>
                     </span>
                 </td>
@@ -137,6 +151,8 @@
             </table>
         </div>
         <input class="photo-upload-input hidden" type="file" name="photos[]" multiple="yes" accept="image/jpeg,image/png" onchange="FA_writeStoryPhotoUpload(this);">
+
+        <input class="video-upload-input hidden" type="file" name="videos[]" multiple="yes" accept="video/flv,video/mkv,video/avi,video/mp4" onchange="FA_writeStoryvideoUpload(this);">
         <?php
         if (isset($sk['input']['timeline'])) {
         ?>
@@ -255,6 +271,16 @@ function FA_writeStoryPhotoUpload(input) {
     input_wrapper = parent_wrapper.find('.photo-wrapper');
     group_id = input_wrapper.attr('data-group');
     parent_wrapper.find('.photos-container').text(input.files.length + ' photo(s) selected');
+    $('.input-wrapper[data-group=' + group_id + ']').slideUp();
+    input_wrapper.slideDown();
+}
+
+// Video On-Upload Function
+function FA_writeStoryvideoUpload(input) {
+    parent_wrapper = $('.story-publisher-box');
+    input_wrapper = parent_wrapper.find('.video-wrapper');
+    group_id = input_wrapper.attr('data-group');
+    parent_wrapper.find('.video-container').text(input.files.length + ' video(s) selected');
     $('.input-wrapper[data-group=' + group_id + ']').slideUp();
     input_wrapper.slideDown();
 }

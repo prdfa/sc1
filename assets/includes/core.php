@@ -2009,6 +2009,7 @@ function FA_getStories($data=array( 'type' => 'all', 'after_post_id' => 0, 'publ
     }
     
     $query_text .= " AND active=1 GROUP BY post_id ORDER BY id DESC LIMIT " . $data['limit'];
+   // echo $query_text;
     
     if (isset($query_text))  {
         $get = array();
@@ -2147,17 +2148,28 @@ function FA_getStory($story_id=0, $view_all_comments=false) {
         $sql_query_three = mysqli_query($dbConnect, $query_three);
         
         if ($story['media_id'] > 0 && mysqli_num_rows($sql_query_three) > 0) {
+            $sql_query_three_res=mysqli_fetch_assoc($sql_query_three);
             $story['media_exists'] = true;
-            $story['media_type'] = 'photos';
+
             
             $query_four = "SELECT id,type,temp FROM " . DB_MEDIA . " WHERE id=" . $story['media_id'] . " AND active=1";
             $sql_query_four = mysqli_query($dbConnect, $query_four);
             $sql_fetch_four = mysqli_fetch_assoc($sql_query_four);
-            
+            $story['media_type'] = $sql_fetch_four['type'];
             if ($sql_fetch_four['type'] == "photo") {
                 $sql_fetch_four = FA_getMedia($sql_fetch_four['id']);
                 $story['media_num'] = 1;
                 
+                $story['media'][] = array(
+                    'id' => $sql_fetch_four['id'],
+                    'url' => $sk['config']['site_url'] . '/' . $sql_fetch_four['url'] . '.' . $sql_fetch_four['extension'],
+                    'post_id' => $story['id'],
+                    'post_url' => FA_smoothLink('index.php?tab1=story&id=' . $story['id'])
+                );
+            } else if ($sql_fetch_four['type'] == "video") {
+                $sql_fetch_four = FA_getMedia($sql_fetch_four['id']);
+                $story['media_num'] = 1;
+
                 $story['media'][] = array(
                     'id' => $sql_fetch_four['id'],
                     'url' => $sk['config']['site_url'] . '/' . $sql_fetch_four['url'] . '.' . $sql_fetch_four['extension'],
@@ -4158,7 +4170,7 @@ function FA_registerPost($data=array()) {
                     $photo_data = FA_registerMedia($photo_param, $media_id);
                     
                     if (!empty($photo_data['id'])) {
-                        $query_one = "INSERT INTO " . DB_POSTS . " (active,google_map_name,hidden,media_id,time,timeline_id,recipient_id,type1,type2) VALUES (1,'$google_map_name',1," . $photo_data['id'] . "," . time() . "," . $timeline['id'] . ",$recipient_id,'$type1','$type2')";
+                        $query_one = "INSERT INTO " . DB_POSTS . " (active,condition_id,category_id,level_id,google_map_name,hidden,media_id,time,timeline_id,recipient_id,type1,type2) VALUES (1,'$category_id','$condition_id','$level_id','$google_map_name',1," . $photo_data['id'] . "," . time() . "," . $timeline['id'] . ",$recipient_id,'$type1','$type2')";
                         $sql_query_one = mysqli_query($dbConnect, $query_one);
                         
                         if ($sql_query_one) {
@@ -4171,6 +4183,54 @@ function FA_registerPost($data=array()) {
                     }
                 }
                 
+                $other_media = true;
+                $post_ability = true;
+            }
+        }
+    } else if (isset($data['videos']['name'])) {
+
+        if (count($data['videos']['name']) == 1) {
+            $video_param = array(
+                'tmp_name' => $data['videos']['tmp_name'][0],
+                'name' => $data['videos']['name'][0],
+                'size' => $data['videos']['size'][0]
+            );
+            $video_data = FA_registervideoMedia($video_param);
+
+            if (isset($video_data['id'])) {
+                $media_id = $video_data['id'];
+                $other_media = true;
+                $post_ability = true;
+            }
+        } else {
+            $query_one = "INSERT INTO " . DB_MEDIA . " (timeline_id,active,name,type) VALUES (" . $timeline['id'] . ",1,'temp_" . FA_generateKey() . "','album')";
+            $sql_query_one = mysqli_query($dbConnect, $query_one);
+
+            if ($sql_query_one) {
+                $media_id = mysqli_insert_id($dbConnect);
+
+                for ($i = 0; $i < count($data['photos']['name']); $i++) {
+                    $video_param = array(
+                        'tmp_name' => $data['photos']['tmp_name'][$i],
+                        'name' => $data['photos']['name'][$i],
+                        'size' => $data['photos']['size'][$i]
+                    );
+                    $video_data = FA_registervideoMedia($video_param, $media_id);
+
+                    if (!empty($video_data['id'])) {
+                        $query_one = "INSERT INTO " . DB_POSTS . " (active,condition_id,category_id,level_id,google_map_name,hidden,media_id,time,timeline_id,recipient_id,type1,type2) VALUES (1,'$category_id','$condition_id','$level_id','$google_map_name',1," . $video_data['id'] . "," . time() . "," . $timeline['id'] . ",$recipient_id,'$type1','$type2')";
+                        $sql_query_one = mysqli_query($dbConnect, $query_one);
+
+                        if ($sql_query_one) {
+                            $media_story_id = mysqli_insert_id($dbConnect);
+
+                            mysqli_query($dbConnect, "UPDATE " . DB_POSTS . " SET post_id=id WHERE id=$media_story_id");
+                            mysqli_query($dbConnect, "UPDATE " . DB_MEDIA . " SET post_id=$media_story_id WHERE id=" . $video_data['id']);
+                            FA_registerPostFollow($media_story_id);
+                        }
+                    }
+                }
+
                 $other_media = true;
                 $post_ability = true;
             }
@@ -4882,6 +4942,63 @@ function FA_registerMedia($upload, $album_id=0) {
                             'url' => $original_file_name
                         );
                         
+                        return $get;
+                    }
+                }
+            }
+        }
+    }
+}
+
+function FA_registervideoMedia($upload, $album_id=0) {
+    if ($GLOBALS['logged'] !== true) {
+        return false;
+    }
+
+    global $dbConnect;
+    set_time_limit(0);
+
+    if (!file_exists('videos/' . date('Y'))) {
+        mkdir('videos/' . date('Y'), 0777, true);
+    }
+
+    if (!file_exists('videos/' . date('Y') . '/' . date('m'))) {
+        mkdir('videos/' . date('Y') . '/' . date('m'), 0777, true);
+    }
+
+    $photo_dir = 'videos/' . date('Y') . '/' . date('m');
+
+    if (is_uploaded_file($upload['tmp_name'])) {
+        $upload['name'] = FA_secureEncode($upload['name']);
+        $name = preg_replace('/([^A-Za-z0-9_\-\.]+)/i', '', $upload['name']);
+        $ext = strtolower(substr($upload['name'], strrpos($upload['name'], '.') + 1, strlen($upload['name']) - strrpos($upload['name'], '.')));
+
+        if ($upload['size'] > 51200) {
+
+            if (preg_match('/(mkv|avi|mp4|flv)/', $ext)) {
+
+                list($width, $height) = getimagesize($upload['tmp_name']);
+
+                $query_one = "INSERT INTO " . DB_MEDIA . " (extension,name,type) VALUES ('$ext','$name','video')";
+                $sql_query_one = mysqli_query($dbConnect, $query_one);
+
+                if ($sql_query_one) {
+                    $sql_id = mysqli_insert_id($dbConnect);
+                    $original_file_name = $photo_dir . '/' . FA_generateKey() . '_' . $sql_id . '_' . md5($sql_id);
+                    $original_file = $original_file_name . '.' . $ext;
+
+                    if (move_uploaded_file($upload['tmp_name'], $original_file)) {
+
+                        //Upload video
+                        mysqli_query($dbConnect, "UPDATE " . DB_MEDIA . " SET album_id=$album_id,url='$original_file_name',temp=0,active=1 WHERE id=$sql_id");
+                        $get = array(
+                            'id' => $sql_id,
+                            'active' => 1,
+                            'extension' => $ext,
+                            'name' => $name,
+                            'url' => $original_file_name
+                        );
+
                         return $get;
                     }
                 }

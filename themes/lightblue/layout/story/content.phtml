@@ -85,7 +85,7 @@
     
     if (!empty($sk['story']['text'])) {
     ?>
-    <div class="text-wrapper">
+    <div class="text-wrapper"  onclick="javascript:FA_openLightbox(<?php echo $sk['story']['id']; ?>);">
         <?php echo $sk['story']['text']; ?>
     </div>
     <?php
@@ -94,7 +94,7 @@
     if ($sk['story']['media_exists'] == true) {
         
         // If it is photos
-        if ($sk['story']['media_type'] == "photos") {
+        if ($sk['story']['media_type'] == "photo") {
         ?>
         <div class="photos-wrapper">
             <?php
@@ -120,11 +120,20 @@
             <iframe frameborder="0" src="https://w.soundcloud.com/player/?url=<?php echo $sk['story']['media']['url']; ?>&amp;color=f07b22" width="100%"></iframe>
         </div>
         <?php
-        } elseif ($sk['story']['media_type'] == "youtube") {
+        } elseif ($sk['story']['media_type'] == "video") {
         ?>
         <div class="youtube-wrapper" align="center">
+<<<<<<< HEAD
             <!-- <iframe src="https://www.youtube.com/embed/<?php echo $sk['story']['media']['id']; ?>?ap=%2526fmt%3D18&disablekb=1&rel=0" width="100%" height="300px" frameborder="0" allowfullscreen></iframe>-->
             <div class="js-lazyYT" data-youtube-id="<?php echo $sk['story']['media']['id']; ?>" data-width="100%" data-height="300px" data-parameters="rel=0" allowfullscreen="1" frameborder="1" ></div>
+=======
+            <?php
+            foreach ($sk['story']['media'] as $video) {
+                echo $video['url'];
+            }?>
+            <!--<iframe src="https://www.youtube.com/embed/<?php /*echo $sk['story']['media']['id']; */?>?ap=%2526fmt%3D18&disablekb=1&rel=0" width="100%" height="300px" frameborder="0" allowfullscreen></iframe>-->
+            <!-- <div class="js-lazyYT" data-youtube-id="<?php echo $sk['story']['media']['id']; ?>" data-width="100%" data-height="300px" data-parameters="rel=0" allowfullscreen="1" frameborder="1" ></div>-->
+>>>>>>> origin/SN_4
         </div>
         <?php
         }

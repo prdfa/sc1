@@ -450,10 +450,17 @@ if ($t == "post") {
             'soundcloud_uri',
             'youtube_title',
             'youtube_video_id',
+<<<<<<< HEAD
             'google_map_name',
             'dare_categories',
             'dare_condition',
             'dare_level',
+=======
+            'dare_categories',
+            'dare_level',
+            'dare_condition',
+            'google_map_name'
+>>>>>>> origin/SN_4
         );
         $array = array();
         $array['type'] = 'story';
@@ -468,12 +475,20 @@ if ($t == "post") {
         if (isset($_FILES['photos']['name'])) {
             $array['photos'] = $_FILES['photos'];
         }
+<<<<<<< HEAD
        // var_dump($array);
        // die();
         if($array['text']!=""){
             $post_id = FA_registerPost($array);
         }
 
+=======
+        if (isset($_FILES['videos']['name'])) {
+            $array['videos'] = $_FILES['videos'];
+        }
+        
+        $post_id = FA_registerPost($array);
+>>>>>>> origin/SN_4
         
         if (!empty($post_id)) {
             $sk['story'] = FA_getStory($post_id);

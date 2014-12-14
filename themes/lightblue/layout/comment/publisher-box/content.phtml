@@ -11,6 +11,42 @@
                 <textarea class="auto-grow-input" name="text" placeholder="<?php echo $lang['comment_textarea_label']; ?>" data-placeholder="<?php echo $lang['comment_textarea_label']; ?>" data-height="24" onkeyup="FA_registerComment(this.value,<?php echo $sk['input']['post']['id']; ?>,<?php echo $sk['input']['timeline']['id']; ?>,event);"><?php echo $lang['comment_textarea_label']; ?></textarea>
                 <i class="icon-lightbulb progress-icon hide"></i>
             </div>
+            <div class="more-wrapper">
+                <table border="0" width="100%" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td width="28px" align="center" valign="middle">
+                    <span class="option" onclick="javascript:$('.story-publisher-box').find('input.photo-upload-input').click();">
+                        <i class="icon-camera-retro"></i>
+                    </span>
+                        </td>
+
+                        <!--<td width="28px" align="center" valign="middle">
+                            <span class="option" onclick="toggleMediaGroup('.story-publisher-box .soundcloud-wrapper');">
+                                <i class="icon-music"></i>
+                            </span>
+                        </td>-->
+
+                        <td width="28px" align="center" valign="middle">
+                    <span class="option" onclick="javascript:$('.story-publisher-box').find('input.video-upload-input').click();">
+                        <i class="icon-film"></i>
+                    </span>
+                        </td>
+
+                        <td width="28px" align="center" valign="middle">
+                    <span class="option" onclick="toggleMediaGroup('.story-publisher-box .emoticons-wrapper');">
+                        <i class="icon-smile"></i>
+                    </span>
+                        </td>
+
+                        <td align="right" valign="middle">
+                            <button class="submit-btn active" name="story_submit_btn">
+                                <i class="icon-edit progress-icon"></i>
+                                <span><?php echo $lang['post_button']; ?></span>
+                            </button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
         </td>
     </tr>
     </table>
