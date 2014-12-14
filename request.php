@@ -37,11 +37,11 @@ if ($t == "login") {
         
         if (preg_match('/@/', $login_id)) {
             $db_query_part = "email='$login_id'";
-        } elseif (preg_match('/^[0-9]+$/', $login_id)) {
+        } /*elseif (preg_match('/^[0-9]+$/', $login_id)) {
             $db_query_part = "id=$login_id";
-        } /*else {
-            $db_query_part = "username='$login_id'";
-        }*/
+        }*/ else {
+            $db_query_part = "email=''";
+        }
         
         $query_one = "SELECT id FROM " . DB_ACCOUNTS . " WHERE $db_query_part AND password='$login_password_md5' AND type='user' AND active=1";
         $sql_query_one = mysqli_query($dbConnect, $query_one);
@@ -76,6 +76,9 @@ if ($t == "login") {
                 }
             }
         }
+    }
+    else{
+        $data['error_message'] = $lang['error_invalid_emailid'];
     }
     
     header("Content-type: application/json");
@@ -180,7 +183,7 @@ if ($t == "forgot_password") {
 }
 
 if ($t == "reset_password") {
-    
+
     if (!empty($_POST['pr_password']) && !empty($_POST['pr_token']) && !FA_isLogged()) {
         $password = trim($_POST['pr_password']);
         $token = FA_isValidPasswordResetToken($_POST['pr_token']);

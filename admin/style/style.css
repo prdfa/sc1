@@ -106,7 +106,7 @@ border-color: #b7b8b9;
 }
 input[type="submit"],input[type="button"],button {
 background: #3c7fb4;
-background: linear-gradient(#4a8ac2, #2e74a6);
+background: linear-gradient(#33aa9e, #2f9288);
 color: white;
 text-align: center;
 font-size: 13px;
@@ -131,8 +131,8 @@ cursor: default;
 position: fixed; z-index: 500;
 top: 0; right: 0; left: 0;
 height: 44px;
-background: #3c7fb4;
-background: linear-gradient(#4a8ac2, #2e74a6);
+background: #25ad9f;
+background: linear-gradient(#33aa9e, #2f9288);
 color: white;
 font-size: 13px; font-family: 'Roboto', 'Segoe UI', Tahoma, Segoe UI, Arial, sans-serif;
 border-bottom: 1px solid #25618c;

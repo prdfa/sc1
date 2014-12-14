@@ -13,7 +13,19 @@
                     <?php echo $sk['comment']['publisher']['name']; ?>
                 </a>
                 <span class="comment-text">
-                    <?php echo $sk['comment']['text']; ?>
+                    <?php echo strip_tags($sk['comment']['text']); 
+                    $url = strip_tags($sk['comment']['text']);
+                    parse_str( parse_url( $url, PHP_URL_QUERY ), $my_array_of_vars );
+                    //echo $my_array_of_vars['v'];
+                    if(isset($my_array_of_vars['v'])){
+                    ?>
+                    <div class="youtube-wrapper" align="center">
+                    <!-- >iframe src="https://www.youtube.com/embed/<?php echo $my_array_of_vars['v']; ?>?ap=%2526fmt%3D18&disablekb=1&rel=0" width="100%" height="300px" frameborder="0" allowfullscreen></iframe -->
+                    
+                    </div>
+                    <?php } else {
+                    echo strip_tags($sk['comment']['text']);
+                     }?>
                 </span>
                 <?php
                 if ($sk['logged'] == true) {

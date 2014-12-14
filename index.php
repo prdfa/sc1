@@ -22,9 +22,9 @@ switch ($_GET['tab1']) {
     case 'welcome':
         include('assets/sources/welcome.php');
     break;
-    case 'login':
+    /* case 'login':
     	include('assets/sources/login_page.php');
-    	break;
+    	break; */
     // Email verification source
     case 'email-verification':
         include('assets/sources/email_verification.php');
@@ -107,6 +107,10 @@ switch ($_GET['tab1']) {
 
     case 'login':
         include('assets/sources/login.php');
+        break;
+    
+    case 'signup':
+        include('assets/sources/signup.php');
         break;
 }
 

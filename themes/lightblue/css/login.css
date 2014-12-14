@@ -77,7 +77,7 @@ small {
 	height: 22px;
 }
 
-.login-form {
+.login-form1 {
 	background: white;
 	color: #4e5665;
 	margin-bottom: 20px;
@@ -85,14 +85,14 @@ small {
 	border-radius: 2px;
 	box-shadow: 0 0 0 1px rgba(0, 0, 0, .3);
 }
-.login-form .form-header {
+.login-form1 .form-header {
 	background: #f9fafb;
 	font-weight: 500;
 	padding: 10px;
 	border-bottom: 1px solid #e9eaeb;
 	border-radius: 3px 3px 0 0;
 }
-.login-form .post-message {
+.login-form1 .post-message {
 	background: #eff7b5;
 	color: #4e5665;
 	font-weight: 500;
@@ -100,34 +100,34 @@ small {
 	border-bottom: 1px solid #dfeb8a;
 	border-radius: 3px 3px 0 0;
 }
-.login-form .form-content {
+.login-form1 .form-content {
 	padding: 8px 10px;
 }
-.login-form .input-wrapper {
+.login-form1 .input-wrapper {
 	position: relative;
 	margin-bottom: 10px;
 }
-.login-form .input-wrapper img.captcha {
+.login-form1 .input-wrapper img.captcha {
 	vertical-align: middle;
 	border-radius: 3px;
 }
-.login-form input[type=text], .login-form input[type=password], .login-form textarea {
+.login-form1 input[type=text], .login-form1 input[type=password], .login-form1 textarea {
 	width: 96%;
 	color: #898f9c;
 	margin: 0;
 	border-color: #e5e6e7;
 }
-.login-form select {
+.login-form1 select {
 	width: 100%;
 	color: #898f9c;
 	margin: 0;
 	border-color: #e5e6e7;
 }
-.login-form button {
+.login-form1 button {
 	padding: 3px 7px;
 	margin: 0;
 }
-.login-form .check-username-result {
+.login-form1 .check-username-result {
 	position: absolute;
 	top: 5px; right: 5px;
 }

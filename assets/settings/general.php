@@ -1,11 +1,11 @@
 <?php
-$config['friends'] = false;
+$config['friends'] = true;
 $config['site_name'] = 'Sitename';
 $config['site_title'] = 'Site Title';
 $config['email'] = 'no-reply@website.com';
 $config['email_verification'] = false;
 $config['chat'] = true;
-$config['captcha'] = false;
+$config['captcha'] = true;
 $config['language'] = 'english';
 $config['smooth_links'] = true;
 $config['censored_words'] = 'racist,retard';
