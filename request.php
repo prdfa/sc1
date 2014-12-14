@@ -451,11 +451,14 @@ if ($t == "post") {
             'youtube_title',
             'youtube_video_id',
 <<<<<<< HEAD
+<<<<<<< HEAD
             'google_map_name',
             'dare_categories',
             'dare_condition',
             'dare_level',
 =======
+=======
+>>>>>>> SN_4
             'dare_categories',
             'dare_level',
             'dare_condition',
@@ -476,6 +479,7 @@ if ($t == "post") {
             $array['photos'] = $_FILES['photos'];
         }
 <<<<<<< HEAD
+<<<<<<< HEAD
        // var_dump($array);
        // die();
         if($array['text']!=""){
@@ -483,6 +487,8 @@ if ($t == "post") {
         }
 
 =======
+=======
+>>>>>>> SN_4
         if (isset($_FILES['videos']['name'])) {
             $array['videos'] = $_FILES['videos'];
         }
