@@ -123,25 +123,13 @@
         } elseif ($sk['story']['media_type'] == "video") {
         ?>
         <div class="youtube-wrapper" align="center">
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
             <!-- <iframe src="https://www.youtube.com/embed/<?php echo $sk['story']['media']['id']; ?>?ap=%2526fmt%3D18&disablekb=1&rel=0" width="100%" height="300px" frameborder="0" allowfullscreen></iframe>-->
-            <div class="js-lazyYT" data-youtube-id="<?php echo $sk['story']['media']['id']; ?>" data-width="100%" data-height="300px" data-parameters="rel=0" allowfullscreen="1" frameborder="1" ></div>
-=======
-=======
->>>>>>> SN_4
             <?php
             foreach ($sk['story']['media'] as $video) {
                 echo $video['url'];
             }?>
             <!--<iframe src="https://www.youtube.com/embed/<?php /*echo $sk['story']['media']['id']; */?>?ap=%2526fmt%3D18&disablekb=1&rel=0" width="100%" height="300px" frameborder="0" allowfullscreen></iframe>-->
             <!-- <div class="js-lazyYT" data-youtube-id="<?php echo $sk['story']['media']['id']; ?>" data-width="100%" data-height="300px" data-parameters="rel=0" allowfullscreen="1" frameborder="1" ></div>-->
->>>>>>> origin/SN_4
-=======
-            <!-- >iframe src="https://www.youtube.com/embed/<?php echo $sk['story']['media']['id']; ?>?ap=%2526fmt%3D18&disablekb=1&rel=0" width="100%" height="300px" frameborder="0" allowfullscreen></iframe -->
-           
->>>>>>> origin/FA_3
         </div>
         <?php
         }
