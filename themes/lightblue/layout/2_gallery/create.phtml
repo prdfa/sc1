@@ -1,0 +1,97 @@
+<div class="page-margin"></div>
+<div class="float-left span59">
+    <form class="create-gallery-form" method="post">
+        <div class="form-container">
+            <div class="form-header">
+                <?php
+                echo $lang['gallery_create_label']; // all $lang keys used in this file are set in english.php
+                ?>
+            </div>
+                        
+            <div class="form-input-wrapper">
+                <label class="float-left span25">
+                    <?php
+                    echo $lang['gallery_name_label'];
+                    ?>:
+                </label>
+                <div class="input float-left span65">
+                    <input type="text" value="<?php echo $lang['gallery_name_textarea_label']; ?>" placeholder="<?php echo $lang['gallery_name_textarea_label']; ?>" data-placeholder="<?php echo $lang['gallery_name_textarea_label']; ?>" onkeyup="FA_generateUsername(this.value);" data-copy-to=".gallery-name-input">
+                    
+                    <input class="gallery-name-input" type="hidden" name="gallery_name">
+                </div>
+                <div class="float-clear"></div>
+            </div>
+            
+            <div class="form-input-wrapper">
+                <label class="float-left span25">
+                    <?php
+                    echo $lang['gallery_description_label'];
+                    ?>:
+                </label>
+                
+                <div class="input float-left span65">
+                    <textarea class="auto-grow-input" valign="top" name="gallery_about" placeholder="<?php echo $lang['gallery_description_textarea_label']; ?>" data-placeholder="<?php echo $lang['gallery_description_textarea_label']; ?>"><?php echo $lang['gallery_description_textarea_label']; ?></textarea>
+                </div>
+                
+                <div class="float-clear"></div>
+            </div>
+            
+            <div class="form-input-wrapper">
+                <button class="active">
+                    <?php
+                    echo $lang['gallery_create_label'];
+                    ?>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- RHS text part commented
+<div class="float-right span40">
+    <div class="list-wrapper">
+        <div class="list-header"><?php  echo $lang['page_intro_header']; ?></div>
+        
+        <div class="list-column">
+            <strong class="bold-500"><?php echo $lang['page_intro_list1_header']; ?></strong>
+            <br>
+            <?php echo $lang['page_intro_list1_description']; ?>
+        </div>
+        
+        <div class="list-column">
+            <strong class="bold-500"><?php echo $lang['page_intro_list2_header']; ?></strong>
+            <br>
+            <?php echo $lang['page_intro_list2_description']; ?>
+        </div>
+    </div>
+</div> -->
+
+<div class="float-clear"></div>
+
+<script>
+$(function(){
+    $('form.create-gallery-form').ajaxForm({
+        url: FA_source() + '?t=gallery&a=create',
+        
+        beforeSend: function() {
+            $('form.create-gallery-form')
+                .find('button')
+                    .removeClass()
+                    .text('<?php echo $lang['creating']; ?>...');
+        },
+        
+        success: function(responseText) {
+            
+            if (responseText.status == 200) {
+                window.location = responseText.url;
+            }
+            else {
+                $('form.create-gallery-form')
+                .find('button')
+                    .addClass('active')
+                    .text('<?php echo $lang['gallery_create_label']; ?>');
+            }
+        }
+    });
+});
+</script>
