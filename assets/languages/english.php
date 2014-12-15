@@ -86,8 +86,8 @@ $lang['filter_label_likes'] = 'Likes';
 $lang['filter_label_shares'] = 'Shares';
 $lang['filter_label_post_by_others'] = 'Post by Others';
 
-$lang['post_textarea_header_label'] = 'What\'s going on?';
-$lang['post_textarea_label'] = 'Write something... #hashtags @mentions';
+$lang['post_textarea_header_label'] = 'What\'s on Your Mind?';
+$lang['post_textarea_label'] = 'Post Your Open Dare... #hashtags @mentions';
 $lang['comment_textarea_label'] = 'Write a comment... Press Enter to post';
 
 $lang['people_likes_this_label'] = 'people likes this';

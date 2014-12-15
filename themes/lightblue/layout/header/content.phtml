@@ -94,9 +94,13 @@
             <?php
             } else {
             ?>
-            <a class="header-join-wrapper" href="<?php echo FA_smoothLink('index.php?tab1=login'); ?>" title="<?php echo $lang['header_join_label']; ?>">
-                <i class="icon icon-signin"></i> <?php echo $lang['header_join_label']; ?>
-            </a> 
+            <a class="header-nav float-left" href="/login/" title="<?php echo $lang['home_label']; ?>">
+               <i class="icon icon-signin"></i> <?php echo $lang['header_join_label']; ?>
+            </a>
+            <a class="header-nav float-left" href="/signup/" title="<?php echo $lang['home_label']; ?>">
+                <i class="icon icon-sign-blank"></i> <?php echo $lang['sign_up_label']; ?>
+            </a>
+            
             <?php
             }
             ?>

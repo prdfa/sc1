@@ -13,6 +13,9 @@
     <!--<link href="<?php /*echo $sk['config']['theme_url']; */?>/css/style-1.1.css" rel="stylesheet">
     <link href="<?php /*echo $sk['config']['theme_url']; */?>/css/style-1.2.css" rel="stylesheet">-->
     <link href="<?php echo $sk['config']['theme_url']; ?>/css/login.css" rel="stylesheet">
+    <script type="text/javascript" src="<?php echo $sk['config']['theme_url']; ?>/flowplayer/flowplayer-3.2.13.min.js"></script>
+	 <!-- some minimal styling, can be removed -->
+	
     <?php
     // CSS for welcome page
 
@@ -36,8 +39,7 @@
     <script src="<?php echo $sk['config']['theme_url']; ?>/javascript/jquery-timeago.js"></script>
     <script src="<?php echo $sk['config']['theme_url']; ?>/javascript/jquery.form.min.js"></script>
     <script src="<?php echo $sk['config']['theme_url']; ?>/javascript/jquery.share.js"></script>
-    <link href="http://vjs.zencdn.net/4.11/video-js.css" rel="stylesheet">
-<script src="http://vjs.zencdn.net/4.11/video.js"></script>
+    
     <?php
     if ($sk['config']['smooth_links'] == 1) {
         echo '<script>
@@ -181,11 +183,21 @@
         //echo FA_getPage('chat/container');
     }
     ?>
-    <audio id="notification-sound" preload="auto">
-        <source src="<?php echo $sk['config']['theme_url']; ?>/sounds/notification.ogg" type="audio/ogg">
-        <source src="<?php echo $sk['config']['theme_url']; ?>/sounds/notification.mp3" type="audio/mpeg">
-        <source src="<?php echo $sk['config']['theme_url']; ?>/sounds/notification.wav" type="audio/wav">
-    </audio>
+    <!-- a  
+			 href="/1.flv"
+			 style="display:block;width:520px;height:330px"  
+			 id="player" class="player"> 
+		</a-->> 
+		 
+    <script type="text/javascript">
+    flowplayer(".player", "<?php echo $sk['config']['theme_url']; ?>/flowplayer/flowplayer-3.2.18.swf", {
+        clip:  {
+            autoPlay: false,
+            autoBuffering: true
+        }
+    });
+			
+		</script>
     
     
 </body>
