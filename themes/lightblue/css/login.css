@@ -132,7 +132,9 @@ small {
 	top: 5px; right: 5px;
 }
 .footer-wrapper {
-    margin: 15px 0;
+	background-color:#2f9288;
+    margin: 15px 0 0 0;
+	padding:10px 0;
 }
 .footer-wrapper a:hover {
     text-decoration: underline;
@@ -141,10 +143,17 @@ small {
     max-width: 920px;
     margin: 0 auto;
     padding: 0;
-    border-top: 1px solid #d4d5d6;
+    border-top: none;
 }
 .footer-line {
-    margin: 10px 0;
+    margin: 10px 0 0 0;
+}
+
+.footer-line {
+    color: #fff;
+}
+.footer-line > a {
+    color: #fff;
 }
 
 @media only screen and (max-device-width: 1920px), only screen and (max-width: 1920px) {

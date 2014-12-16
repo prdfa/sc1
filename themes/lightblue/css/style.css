@@ -82,19 +82,17 @@ input:disabled,textarea:disabled,select:disabled {
 cursor: default;
 }
 .header-wrapper {
-position: fixed;
-z-index: 500;
-top: 0;
-right: 0;
-left: 0;
-height: 44px;
+	position: fixed;
+	z-index: 500;
+	top: 0;
+	right: 0;
+	left: 0;
+	height: 45px;
     background: #25ad9f;
     background: linear-gradient(#33aa9e, #2f9288);
-
     border-color: #296b64;
-color: white;
-font-family: 'Roboto', 'Segoe UI', Tahoma, Segoe UI, Arial, sans-serif;
-
+	color: white;
+	font-family: 'Roboto', 'Segoe UI', Tahoma, Segoe UI, Arial, sans-serif;
 }
 .header-wrapper a {
 color: #fff;
@@ -838,7 +836,8 @@ overflow: hidden;
 }
 .story-publisher-box .input-wrapper_cat {
     position: relative;
-    width: 99.3%;
+    width: auto;
+	padding:10px;
     background: white;
     color: #4e5665;
     border-top: 1px solid #e9eaeb;
@@ -957,7 +956,7 @@ font-weight: 500;
 word-break: break-all;
 }
 .story-wrapper .publisher-wrapper .name:hover {
-color: #25ad9f;
+color: #000;
 text-decoration: underline;
 }
 .story-wrapper .publisher-wrapper .recipient-indicator-icon {
@@ -1973,9 +1972,10 @@ padding: 0 7px;
     color: #ffffff;
     font-weight: 500;
     word-break: break-all;
+	text-transform:capitalize;
 }
 .story-wrapper-home .publisher-wrapper .name:hover {
-    color: #25ad9f;
+    color: #000;
     text-decoration: underline;
 }
 .story-wrapper-home .publisher-wrapper .recipient-indicator-icon {
@@ -2016,6 +2016,7 @@ padding: 0 7px;
     margin: 10px;
     word-wrap: break-word;
     color: #666666;
+	text-transform:capitalize;
 }
 .story-wrapper-home .text-wrapper a:hover {
     text-decoration: underline;
@@ -2057,7 +2058,7 @@ padding: 0 7px;
 }
 
 .header_search{
-    background-color: #000000;
+    background-color: #fff;
     padding: 10px;
     text-align: center;
 }

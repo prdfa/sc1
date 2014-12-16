@@ -14,7 +14,7 @@
             <div class="input-wrapper_cat">
 
                 <div class="float-left span30">
-                    <div class="float-left">Category</div>
+                    <div>Category</div>
                     <div class="float-left">
                         <select name="dare_categories" id="dare_categories">
                             <?php
@@ -150,9 +150,9 @@
             </tr>
             </table>
         </div>
-        <input class="photo-upload-input hidden" type="file" name="photos[]" multiple="yes" accept="image/jpeg,image/png" onchange="FA_writeStoryPhotoUpload(this);">
+        <input class="photo-upload-input hidden" type="file" name="photos[]" multiple accept="image/jpeg,image/png" onchange="FA_writeStoryPhotoUpload(this);">
 
-        <input class="video-upload-input hidden" type="file" name="videos[]" multiple="yes" accept="video/flv,video/mkv,video/avi,video/mp4" onchange="FA_writeStoryvideoUpload(this);">
+        <input class="video-upload-input hidden" type="file" name="videos[]" multiple accept="video/flv,video/mkv,video/avi,video/mp4" onchange="FA_writeStoryvideoUpload(this);">
         <?php
         if (isset($sk['input']['timeline'])) {
         ?>
