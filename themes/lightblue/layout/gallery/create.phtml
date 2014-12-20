@@ -5,7 +5,7 @@
 		<div class="s-album-header">
 			Create an gallery
 		</div>
-
+<div class="album-field-wrap"><div class="post-message"></div></div>
 		<div class="album-field-wrap">
 			<div class="album-label">Name:</div>
 			<input type="text" name="album_name" placeholder="Name of gallery">
@@ -109,7 +109,11 @@ $(function () {
 
             if (responseText.status == 200) {
                 window.location = responseText.url;
-            } else {
+            } 
+            else if(responseText.status == 417){
+							$('.post-message').html(responseText.error_message);
+             }
+            else {
                 formButton.addClass('active').text('<?php echo $lang['gallery_create_label']; ?>').css('disabled', false);
             }
         }

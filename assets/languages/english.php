@@ -375,9 +375,12 @@ $lang['post_privacy'] = 'Who can see your posts';
 $lang['posted_on_timeline'] = 'posted on your timeline';
 $lang['shared_your_post'] = 'shared your post "{post}..."';
 
-/* New in v1.2.2 */
+
 $lang['site_description_paragraph'] = 'Never miss a thing out! Keep in touch with your fans, customers or loved ones all the time!';
 $lang['go_mobile_description'] = 'Heading Out? Go Mobile!';
 $lang['go_mobile_description_paragraph'] = 'One website for all devices. Whether you use desktop, tablet or smartphone, keep in touch with your friends!';
 $lang['trending_description'] = 'Know what\'s happening!';
 $lang['trending_description_paragraph'] = 'Stay ahead of the world. Keep an eye on what\'s trending around!';
+
+//Gellery 
+$lang['gellary_create_error'] = 'All Fields Are Compulsory';
