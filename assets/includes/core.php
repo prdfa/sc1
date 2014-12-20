@@ -2439,7 +2439,7 @@ function FA_getComments($post_id=0, $limit=3) {
 }
 
 function FA_getComment($comment_id=0) {
-    global $dbConnect, $user;
+    global $dbConnect, $user, $sk;
     $get = array();
     
     if (empty($comment_id) or !is_numeric($comment_id) or $comment_id < 1) {
@@ -2447,13 +2447,14 @@ function FA_getComment($comment_id=0) {
     }
     
     $comment_id = FA_secureEncode($comment_id);
-    $query_one = "SELECT id,active,post_id,text,time,timeline_id,type1,type2 FROM " . DB_POSTS . " WHERE id=$comment_id AND type1='story' AND type2='comment' AND active=1";
+    $query_one = "SELECT id,active,post_id,media_id,text,time,timeline_id,type1,type2 FROM " . DB_POSTS . " WHERE id=$comment_id AND type1='story' AND type2='comment' AND active=1";
     $sql_query_one = mysqli_query($dbConnect, $query_one);
     
     if (mysqli_num_rows($sql_query_one) == 1) {
         $sql_fetch_one = mysqli_fetch_assoc($sql_query_one);
         $sql_fetch_one['publisher'] = FA_getUser($sql_fetch_one['timeline_id']);
-        
+        //$sql_fetch_one['media'] = FA_getUser($sql_fetch_one['media_id']);
+
         $sql_fetch_one['text'] = FA_emoticonize($sql_fetch_one['text']);
         $sql_fetch_one['text'] = FA_getMarkup($sql_fetch_one['text']);
         
@@ -2468,6 +2469,24 @@ function FA_getComment($comment_id=0) {
             } elseif ($sql_fetch_one['publisher']['type'] == "group" && FA_isGroupAdmin($sql_fetch_one['publisher']['id'])) {
                 $sql_fetch_one['admin'] = true;
             }
+        }
+
+        $sql_fetch_one['media_exists'] = false;
+        $sql_fetch_one['media_type'] = false;
+        $query_three = "SELECT * FROM " . DB_MEDIA . " WHERE id=" . $sql_fetch_one['media_id'] . " AND active=1";
+        $sql_query_three = mysqli_query($dbConnect, $query_three);
+
+        if ($sql_fetch_one['media_id'] > 0 && mysqli_num_rows($sql_query_three) > 0) {
+            $sql_query_three_res=mysqli_fetch_assoc($sql_query_three);
+            $sql_fetch_one['media_exists'] = true;
+            $sql_fetch_one['media_type'] = $sql_query_three_res['type'];
+
+            $sql_fetch_one['media'][] = array(
+                'id' => $sql_query_three_res['id'],
+                'url' => $sk['config']['site_url'] . '/' . $sql_query_three_res['url'] . '.' . $sql_query_three_res['extension'],
+                'post_id' => $sql_query_three_res['id'],
+                'post_url' => FA_smoothLink('index.php?tab1=story&id=' . $sql_query_three_res['id'])
+            );
         }
         
         $get = $sql_fetch_one;
@@ -4437,15 +4456,56 @@ function FA_registerPostFollow($post_id=0) {
     }
 }
 
-function FA_registerPostComment($post_id=0, $timeline_id=0, $text='') {
+function FA_registerPostComment($post_id=0, $timeline_id=0, $text='',$array=null) {
     if ($GLOBALS['logged'] !== true) {
         return false;
     }
-    
+
     global $dbConnect, $config, $user;
     
     if (!isset($post_id) or empty($post_id) or !is_numeric($post_id) or $post_id < 1) {
         return false;
+    }
+
+
+    if($array!="null"){
+
+        if (isset($array['photos']['name'])) {
+            if (count($array['photos']['name']) == 1) {
+                $photo_param = array(
+                    'tmp_name' => $array['photos']['tmp_name'][0],
+                    'name' => $array['photos']['name'][0],
+                    'size' => $array['photos']['size'][0]
+                );
+                $photo_data = FA_registerMedia($photo_param);
+
+                if (isset($photo_data['id'])) {
+                    $media_id = $photo_data['id'];
+                    $other_media = true;
+                    $post_ability = true;
+                }
+            }
+        } else if (isset($array['videos']['name'])) {
+
+            if (count($array['videos']['name']) == 1) {
+                $video_param = array(
+                    'tmp_name' => $array['videos']['tmp_name'][0],
+                    'name' => $array['videos']['name'][0],
+                    'size' => $array['videos']['size'][0]
+                );
+                $video_data = FA_registervideoMedia($video_param);
+
+                if (isset($video_data['id'])) {
+                    $media_id  = $video_data['id'];
+                    $other_media = true;
+                    $post_ability = true;
+                }
+            }
+        }
+    }
+
+    if(empty($media_id)){
+        $media_id=0;
     }
     
     $post_id = FA_secureEncode($post_id);
@@ -4562,8 +4622,11 @@ function FA_registerPostComment($post_id=0, $timeline_id=0, $text='') {
     if ($continue == false) {
         return false;
     }
+
+
     
-    $query_two = "INSERT INTO " . DB_POSTS . " (timeline_id,active,post_id,text,time,type1,type2) VALUES ($timeline_id,1,$post_id,'$text'," . time() . ",'story','comment')";
+    $query_two = "INSERT INTO " . DB_POSTS . " (timeline_id,active,post_id,text,media_id,time,type1,type2) VALUES ($timeline_id,1,$post_id,'$text',$media_id," . time() . ",'story','comment')";
+
     $sql_query_two = mysqli_query($dbConnect, $query_two);
     
     if ($sql_query_two) {

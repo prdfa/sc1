@@ -85,9 +85,11 @@ if ($sk['logged'] == true) {
 
 if (!empty($sk['story']['text'])) {
     ?>
-    <div class="text-wrapper" onclick="javascript:FA_openLightbox(<?php echo $sk['story']['id']; ?>);" >
+    <a href="/index.php?tab1=story&id=<?php echo $sk['story']['id']; ?>" >
+        <div class="text-wrapper">
         <?php echo $sk['story']['text']; ?>
-    </div>
+        </div>
+    </a>
 <?php
 }
 

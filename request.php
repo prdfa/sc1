@@ -452,19 +452,12 @@ if ($t == "post") {
             'soundcloud_uri',
             'youtube_title',
             'youtube_video_id',
-
-
             'google_map_name',
             'dare_categories',
             'dare_condition',
             'dare_level',
-
-            'dare_categories',
-            'dare_level',
-            'dare_condition',
-            'google_map_name'
-
         );
+
         $array = array();
         $array['type'] = 'story';
         
@@ -478,19 +471,15 @@ if ($t == "post") {
         if (isset($_FILES['photos']['name'])) {
             $array['photos'] = $_FILES['photos'];
         }
-       // var_dump($array);
-       // die();
-        if($array['text']!=""){
-            $post_id = FA_registerPost($array);
-        }
 
         if (isset($_FILES['videos']['name'])) {
             $array['videos'] = $_FILES['videos'];
         }
-        
-        $post_id = FA_registerPost($array);
 
-        
+        if($array['text']!=""){
+            $post_id = FA_registerPost($array);
+        }
+
         if (!empty($post_id)) {
             $sk['story'] = FA_getStory($post_id);
             $html = FA_getPage('story/content');
@@ -618,15 +607,32 @@ if ($t == "post") {
             if ($a == "comment" && $sql_fetch_one['type'] == "story" && !empty($_POST['text']) && FA_isLogged()) {
                 
                 $timeline_id = $user['id'];
+
+
                 
                 if (!empty($_POST['timeline_id']) && is_numeric($_POST['timeline_id']) && $_POST['timeline_id'] > 0) {
                     $timeline_id = $_POST['timeline_id'];
                 }
-                
-                $return_data = FA_registerPostComment($post_id, $timeline_id, $_POST['text']);
-                
+                $array=array();
+                if (isset($_FILES['photos']['name'])) {
+                    $array['photos'] = $_FILES['photos'];
+                }
+
+                if (isset($_FILES['videos']['name'])) {
+                    $array['videos'] = $_FILES['videos'];
+                }
+                $comment_text=$_POST['text'];
+                if($comment_text=="Write a comment... Press Enter to post"){
+                    $comment_text="";
+                }
+                if((isset($_FILES['videos']['name'])) || (isset($_FILES['videos']['name'])) || (!empty($comment_text))){
+                      $return_data = FA_registerPostComment($post_id, $timeline_id, $_POST['text'],$array);
+                }
+
+
                 if (isset($return_data) && is_numeric($return_data)) {
                     $sk['comment'] = FA_getComment($return_data);
+
                     $html = FA_getPage('comment/content');
                     $data = array(
                         'status' => 200,

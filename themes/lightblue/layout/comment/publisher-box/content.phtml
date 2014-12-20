@@ -1,4 +1,5 @@
 <div class="comment-wrapper">
+    <form method="post" enctype="multipart/form-data">
     <table border="0" width="100%" cellspacing="0" cellpadding="0">
     <tr>
         <td width="40px" align="left" valign="top">
@@ -8,14 +9,61 @@
         </td>
         <td align="left" valign="top">
             <div class="comment-textarea">
-                <textarea class="auto-grow-input" name="text" placeholder="<?php echo $lang['comment_textarea_label']; ?>" data-placeholder="<?php echo $lang['comment_textarea_label']; ?>" data-height="24" onkeyup="FA_registerComment(this.value,<?php echo $sk['input']['post']['id']; ?>,<?php echo $sk['input']['timeline']['id']; ?>,event);"><?php echo $lang['comment_textarea_label']; ?></textarea>
+                <textarea class="auto-grow-input" name="text" placeholder="<?php echo $lang['comment_textarea_label']; ?>" data-placeholder="<?php echo $lang['comment_textarea_label']; ?>" data-height="24"><?php echo $lang['comment_textarea_label']; ?></textarea>
                 <i class="icon-lightbulb progress-icon hide"></i>
             </div>
+
+                        <div class="input-wrapper photo-wrapper" data-group="A">
+                            <div class="float-left">
+                                <div class="photos-container">0 photo(s) selected</div>
+                            </div>
+
+                            <div class="float-right">
+                                <div class="album-option">
+                                    <a href="<?php echo $sk['config']['site_url']; ?>/album/create" data-href="?tab1=album&tab2=create">Create an album</a>
+                                </div>
+                            </div>
+
+                            <div class="float-clear"></div>
+                        </div>
+
+
+                        <div class="input-wrapper video-wrapper" data-group="A">
+                            <div class="float-left">
+                                <div class="video-container">0 video(s) selected</div>
+                            </div>
+
+                            <div class="float-right">
+                                <div class="album-option">
+                                    <a href="<?php echo $sk['config']['site_url']; ?>/album/create" data-href="?tab1=album&tab2=create">Create an album</a>
+                                </div>
+                            </div>
+
+                            <div class="float-clear"></div>
+                        </div>
+
+
+
+                        <div class="input-wrapper emoticons-wrapper" data-group="C">
+                            <?php
+                            $emoticons = FA_getEmoticons();
+
+                            if (is_array($emoticons)) {
+
+                                foreach ($emoticons as $emo_code => $emo_icon) {
+                                    echo '<img src="' . $emo_icon . '" width="16px" onclick="addEmoToInput(\'' . $emo_code . '\',\'.story-publisher-box textarea\');">';
+                                }
+                            }
+                            ?>
+                        </div>
+
+
+
             <div class="more-wrapper">
                 <table border="0" width="100%" cellspacing="0" cellpadding="0">
                     <tr>
                         <td width="28px" align="center" valign="middle">
-                    <span class="option" onclick="javascript:$('.story-publisher-box').find('input.photo-upload-input').click();">
+                    <span class="option" onclick="javascript:$('.comment-wrapper').find('input.photo-upload-input-comment').click();">
                         <i class="icon-camera-retro"></i>
                     </span>
                         </td>
@@ -27,27 +75,173 @@
                         </td>-->
 
                         <td width="28px" align="center" valign="middle">
-                    <span class="option" onclick="javascript:$('.story-publisher-box').find('input.video-upload-input').click();">
+                    <span class="option" onclick="javascript:$('.comment-wrapper').find('input.video-upload-input-comment').click();">
                         <i class="icon-film"></i>
                     </span>
                         </td>
 
-                        <td width="28px" align="center" valign="middle">
-                    <span class="option" onclick="toggleMediaGroup('.story-publisher-box .emoticons-wrapper');">
+                        <!--<td width="28px" align="center" valign="middle">
+                    <span class="option" onclick="toggleMediaGroupcomment('.story-publisher-box .emoticons-wrapper');">
                         <i class="icon-smile"></i>
                     </span>
-                        </td>
+                        </td>-->
 
                         <td align="right" valign="middle">
-                            <button class="submit-btn active" name="story_submit_btn">
+                            <button class="submit-btn active" name="story_submit_btn" >
                                 <i class="icon-edit progress-icon"></i>
                                 <span><?php echo $lang['post_button']; ?></span>
                             </button>
                         </td>
                     </tr>
                 </table>
+                <input class="photo-upload-input-comment hidden" type="file" name="photos[]" multiple accept="image/jpeg,image/png" onchange="FA_writeStoryPhotoUploadcomment(this);">
+
+                <input class="video-upload-input-comment hidden" type="file" name="videos[]" multiple accept="video/flv,video/mkv,video/avi,video/mp4" onchange="FA_writeStoryvideoUploadcomment(this);">
+                <?php
+                if (isset($sk['input']['timeline'])) {
+                    ?>
+                    <input type="hidden" name="timeline_id" value="<?php echo $sk['input']['timeline']['id']; ?>">
+                <?php
+                }
+
+                if (isset($sk['input']['recipient'])) {
+                    ?>
+                    <input type="hidden" name="recipient_id" value="<?php echo $sk['input']['recipient']['id']; ?>">
+                <?php
+                }
+                ?>
             </div>
         </td>
     </tr>
-    </table>
+    </table onclick="FA_registerComment(this.value,<?php echo $sk['input']['post']['id']; ?>,<?php echo $sk['input']['timeline']['id']; ?>,event);">
+    </form>
 </div>
+<script>
+
+    $('.comment-wrapper form').ajaxForm({
+        url: FA_source() + '?t=post&a=comment&post_id=<?php echo $sk['input']['post']['id']; ?>',
+
+        beforeSend: function() {
+            main_wrapper = $('.story-publisher-box');
+            textarea = main_wrapper.find('textarea');
+            select = main_wrapper.find('select');
+            inputs = main_wrapper.find('input[type="text"]');
+            button = main_wrapper.find('button.submit-btn');
+
+            button_default_text = button.find('span').text();
+
+            textarea.attr('disabled', true);
+            select.attr('disabled', true);
+            inputs.attr('disabled', true);
+            button.attr('disabled', true);
+
+            FA_progressIconLoader(button);
+        },
+
+        uploadProgress: function(event, position, total, percentComplete) {
+            button
+                .find('span').text(percentComplete + '%');
+
+            if (percentComplete == 100) {
+                button
+                    .find('span').text('<?php echo $lang['processing']; ?>');
+            }
+        },
+
+        success: function(responseText) {
+
+            if (responseText.status == 200) {
+                main_wrapper = $('.story_<?php echo $sk['input']['post']['id']; ?>');
+                comment_textarea = main_wrapper.find('.comment-textarea');
+                textarea_wrapper = comment_textarea.find('textarea');
+                textarea_wrapper.val('');
+                FA_progressIconLoader(comment_textarea);
+
+                main_wrapper.find('.comment-wrapper:last').before(responseText.html);
+                main_wrapper.find('.story-comment-activity').html(responseText.activity_html);
+                FA_progressIconLoader(comment_textarea);
+
+                flowplayer(".player-comment", "<?php echo $sk['config']['theme_url']; ?>/flowplayer/flowplayer-3.2.18.swf", {
+                    clip:  {
+                        autoPlay: false,
+                        autoBuffering: true
+                    }
+                });
+            }
+
+            $('.comment-wrapper form').resetForm();
+
+            main_wrapper
+                .find('.story-text-input')
+                .val('')
+
+                .end().find('.result-container')
+                .remove()
+
+                .end().find('.input-wrapper')
+                .find('.result-container')
+                .remove()
+
+                .end()
+                .find('.input-result-wrapper')
+                .empty()
+
+                .end().find('input')
+                .show()
+                .val('')
+
+                .end().find('.remove-btn')
+                .remove()
+
+                .end().find('.youtube-link')
+                .remove()
+                .end().slideUp();
+
+            textarea.removeAttr('disabled');
+            inputs.removeAttr('disabled');
+            select.removeAttr('disabled');
+
+            button
+                .removeAttr('disabled')
+                .find('span').text(button_default_text);
+
+            FA_progressIconLoader(button);
+        }
+    });
+    function toggleMediaGroupcomment(chosen_input_selector) {
+        input_wrapper = $(chosen_input_selector);
+        group_id = input_wrapper.attr('data-group');
+        if (input_wrapper.css('display') == "none") {
+            $('.input-wrapper[data-group=' + group_id + ']')
+                .slideUp()
+                .find('input').val('').show()
+                .end()
+                .find('.result-container').remove()
+                .end()
+                .find('.remove-btn').remove();
+            input_wrapper.slideDown();
+        } else {
+            $('.input-wrapper[data-group=' + group_id + ']').slideUp();
+        }
+    }
+
+    // Photo On-Upload Function
+    function FA_writeStoryPhotoUploadcomment(input) {
+        parent_wrapper = $('.comment-wrapper');
+        input_wrapper = parent_wrapper.find('.photo-wrapper');
+        group_id = input_wrapper.attr('data-group');
+        parent_wrapper.find('.photos-container').text(input.files.length + ' photo(s) selected');
+        $('.input-wrapper[data-group=' + group_id + ']').slideUp();
+        input_wrapper.slideDown();
+    }
+
+    // Video On-Upload Function
+    function FA_writeStoryvideoUploadcomment(input) {
+        parent_wrapper = $('.comment-wrapper');
+        input_wrapper = parent_wrapper.find('.video-wrapper');
+        group_id = input_wrapper.attr('data-group');
+        parent_wrapper.find('.video-container').text(input.files.length + ' video(s) selected');
+        $('.input-wrapper[data-group=' + group_id + ']').slideUp();
+        input_wrapper.slideDown();
+    }
+</script>

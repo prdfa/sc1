@@ -74,7 +74,7 @@ function FA_getStories_recent($data=array( 'type' => 'all', 'after_post_id' => 0
         $data['limit'] = 10;
     }
 
-    $query_text .= " AND active=1 GROUP BY post_id ORDER BY id DESC LIMIT " . $data['limit'];
+    $query_text .= " AND active=1 and activity_text='' and hidden=0 and type2 in ".$default_type."  GROUP BY post_id ORDER BY id DESC LIMIT " . $data['limit'];
 
     //  echo $query_text;die();
     //  echo $query_text;die();
@@ -116,7 +116,7 @@ function FA_getStories_most_like($data=array( 'type' => 'all', 'after_post_id' =
 
     $query_text = "SELECT id FROM " . DB_POSTS . " AS p1 WHERE " . $subquery_one;
 
-
+    $default_type = "('none','share')";
 
 
 
@@ -124,7 +124,7 @@ function FA_getStories_most_like($data=array( 'type' => 'all', 'after_post_id' =
         $data['limit'] = 10;
     }
 
-    $query_text .= " and post_id in (".implode(",",$post_id).") AND active=1 GROUP BY post_id ORDER BY id DESC LIMIT " . $data['limit'];
+    $query_text .= " and post_id in (".implode(",",$post_id).") AND active=1 activity_text='' and hidden=0 and type2 in ".$default_type." GROUP BY post_id ORDER BY id DESC LIMIT " . $data['limit'];
 
     //  echo $query_text;die();
     //  echo $query_text;die();
