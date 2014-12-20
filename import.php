@@ -194,8 +194,8 @@ if (!empty($_GET['type'])) {
                             $headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
                             
                             $message = FA_getPage('emails/facebook-registration');
-                            mail($to, $subject, $message, $headers);
-                            
+                            //mail($to, $subject, $message, $headers);
+                            FA_send_mail($to, $subject, $message, $headers);
                             $redirect = true;
                             
                             if (!empty($getJson['cover']) && is_array($getJson['cover'])) {

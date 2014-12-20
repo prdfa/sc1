@@ -99,7 +99,7 @@ if ($t == "register") {
     
     if ($proceed == true) {
         $data['error_message'] = $lang['error_empty_registration'];
-        
+        //die(FA_registerUser($_POST) . "<hr>" . $_SESSION['signUp_msg']);
         if (($register = FA_registerUser($_POST)) != false) {
             $register['verification_link'] = $config['site_url'] . '/?tab1=email-verification&email=' . $register['email'] . '&key=' . $register['email_verification_key'];
             $sk['mail'] = $register;
@@ -112,8 +112,8 @@ if ($t == "register") {
             $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
             
             $message = FA_getPage('emails/email-verification');
-            mail($to, $subject, $message, $headers);
-            
+            //mail($to, $subject, $message, $headers);
+            FA_send_mail($to, $subject, $message, $headers);
             if ($config['email_verification'] == 0) {
                 $_SESSION['user_id'] = $register['id'];
                 $_SESSION['user_pass'] = md5(trim($_POST['password']));
@@ -123,6 +123,8 @@ if ($t == "register") {
             } else {
                 $data['error_message'] = $lang['verification_email_sent'];
             }
+        }else{
+        	$data['error_message'] = $_SESSION['signUp_msg'];
         }
     }
     
@@ -165,7 +167,9 @@ if ($t == "forgot_password") {
                 
                 $message = FA_getPage('emails/password-reset-email');
                 
-                if (mail($to, $subject, $message, $headers)) {
+                //if (mail($to, $subject, $message, $headers))
+                if(FA_send_mail($to, $subject, $message, $headers) == 'Success') 
+                {
                     $data = array(
                         'status' => 200,
                         'message' => $lang['password_reset_mail_confirm']
@@ -444,7 +448,7 @@ if ($t == "post") {
     
     // New story
     if ($a == "new" && FA_isLogged()) {
-        $parameters = array(
+    $parameters = array(
             'timeline_id',
             'recipient_id',
             'text',
@@ -452,19 +456,12 @@ if ($t == "post") {
             'soundcloud_uri',
             'youtube_title',
             'youtube_video_id',
-
-
             'google_map_name',
             'dare_categories',
             'dare_condition',
             'dare_level',
-
-            'dare_categories',
-            'dare_level',
-            'dare_condition',
-            'google_map_name'
-
         );
+
         $array = array();
         $array['type'] = 'story';
         
@@ -478,19 +475,14 @@ if ($t == "post") {
         if (isset($_FILES['photos']['name'])) {
             $array['photos'] = $_FILES['photos'];
         }
-       // var_dump($array);
-       // die();
-        if($array['text']!=""){
-            $post_id = FA_registerPost($array);
-        }
 
         if (isset($_FILES['videos']['name'])) {
             $array['videos'] = $_FILES['videos'];
         }
-        
-        $post_id = FA_registerPost($array);
 
-        
+        if($array['text']!=""){
+            $post_id = FA_registerPost($array);
+        }
         if (!empty($post_id)) {
             $sk['story'] = FA_getStory($post_id);
             $html = FA_getPage('story/content');
@@ -1654,7 +1646,9 @@ if ($t == "gallery") {
 				}
 			}
 		}
-
+		else{
+			$data['error_message'] = $lang['gellary_create_error'];
+		}
 		header("Content-type: application/json");
 		echo json_encode($data);
 		mysqli_close($dbConnect);

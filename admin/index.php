@@ -96,15 +96,15 @@ foreach ($tab_files as $tab_file) {
                 <div class="list-container">
                     <div class="list-header">Menu</div>
                     <a href="?tab1=general_settings" class="list-wrapper">General Settings</a>
-                    <!-- >a href="?tab1=user_settings" class="list-wrapper">User Settings</a>
+                    <a href="?tab1=user_settings" class="list-wrapper">User Settings</a>
                     <a href="?tab1=page_settings" class="list-wrapper">Page Settings</a>
-                    <a href="?tab1=group_settings" class="list-wrapper">Group Settings</a -->
+                    <a href="?tab1=group_settings" class="list-wrapper">Group Settings</a>
                     <a href="?tab1=announcements" class="list-wrapper">Announcements</a>
                     <a href="?tab1=themes" class="list-wrapper">Themes</a>
                     <a href="?tab1=statistics" class="list-wrapper">Statistics</a>
                     <a href="?tab1=manage_users" class="list-wrapper">Manage Users</a>
-                    <!-- >a href="?tab1=manage_pages" class="list-wrapper">Manage Pages</a>
-                    <a href="?tab1=manage_groups" class="list-wrapper">Manage Groups</a -->
+                    <a href="?tab1=manage_pages" class="list-wrapper">Manage Pages</a>
+                    <a href="?tab1=manage_groups" class="list-wrapper">Manage Groups</a>
                     <a href="?tab1=manage_reports" class="list-wrapper">Manage Reports <?php if ($new_reports > 0) echo '<span class="update-alert">' . $new_reports . '</span>'; ?></a>
 
                     <a href="?tab1=manage_ads" class="list-wrapper">Manage Ads</a>
@@ -209,7 +209,7 @@ foreach ($tab_files as $tab_file) {
     <div class="footer-wrapper">
         <div class="footer-content" align="center">
             <div class="footer-line">
-                Copyright &#169; <?php echo date('Y') . ' ' . $config['site_name']; ?>. All rights reserved. Powered by <a href="http://pradyogeek.com/">Pradyogeek</a>.
+                Copyright &#169; <?php echo date('Y') . ' ' . $config['site_name']; ?>. All rights reserved. Powered by <a href="http://daregang.com/">Daregang</a>.
             </div>
         </div>
     </div>

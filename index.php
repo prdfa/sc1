@@ -10,8 +10,8 @@ Date: 27/Nov/2014
 error_reporting(1);
 require_once('assets/includes/core.php');
 require_once('assets/includes/bls_core.php'); // added by bls
-
-
+//$msg = FA_send_mail('fakhru.ansari@gmail.com','mailer testing');
+//die($msg);
 if (!isset($_GET['tab1'])) {
     $_GET['tab1'] = 'welcome';
 }

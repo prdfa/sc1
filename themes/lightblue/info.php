@@ -6,4 +6,4 @@ $version = '1.2';
 
 $author = 'FA';
 
-$author_website = 'http://pradyogeek.com/';
+$author_website = 'http://daregang.com/';

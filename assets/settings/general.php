@@ -2,10 +2,10 @@
 $config['friends'] = true;
 $config['site_name'] = 'Sitename';
 $config['site_title'] = 'Site Title';
-$config['email'] = 'no-reply@website.com';
-$config['email_verification'] = false;
+$config['email'] = 'fakhru.ansari@gmail.com';
+$config['email_verification'] = true;
 $config['chat'] = false;
-$config['captcha'] = false;
+$config['captcha'] = true;
 $config['language'] = 'english';
 $config['smooth_links'] = true;
 $config['censored_words'] = 'racist,retard';

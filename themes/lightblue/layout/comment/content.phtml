@@ -13,12 +13,12 @@
                     <?php echo $sk['comment']['publisher']['name']; ?>
                 </a>
                 <span class="comment-text">
-<<<<<<< HEAD
-                    <?php echo strip_tags($sk['comment']['text']) ?>
+
+                    <?php echo strip_tags($sk['comment']['text']);
 
                     
-=======
-                    <?php echo strip_tags($sk['comment']['text']); 
+
+                   
                     $url = strip_tags($sk['comment']['text']);
                     parse_str( parse_url( $url, PHP_URL_QUERY ), $my_array_of_vars );
                     //echo $my_array_of_vars['v'];
@@ -31,7 +31,7 @@
                     <?php } else {
                     echo strip_tags($sk['comment']['text']);
                      }?>
->>>>>>> origin/FA_3
+
                 </span>
                 <?php
                 if ($sk['logged'] == true) {
