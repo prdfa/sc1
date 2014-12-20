@@ -206,6 +206,12 @@ $('.story-publisher-box form').ajaxForm({
         
         if (responseText.status == 200) {
             $('.stories-wrapper').prepend(responseText.html);
+            flowplayer(".player", "<?php echo $sk['config']['theme_url']; ?>/flowplayer/flowplayer-3.2.18.swf", {
+                clip:  {
+                    autoPlay: false,
+                    autoBuffering: true
+                }
+            });
         }
         
         $('.story-publisher-box form').resetForm();

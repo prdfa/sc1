@@ -14,6 +14,7 @@
                 </a>
                 <span class="comment-text">
 
+
                     <?php echo strip_tags($sk['comment']['text']);
 
                     
@@ -33,6 +34,56 @@
                      }?>
 
                 </span>
+                <?php
+                     if($sk['comment']['media_exists']){
+                         // If it is photos
+                         if ($sk['comment']['media_type'] == "photo") {
+                             ?>
+                             <div class="photos-wrapper">
+                                 <?php
+                                 $photo_class = 'width-' . $sk['comment']['media_num'];
+
+                                 if ($sk['comment']['media_num'] >= 3) {
+                                     $photo_class = 'width-3';
+                                 }
+                                  //  var_dump($sk['comment']['media']);
+                                 foreach ($sk['comment']['media'] as $photo) {
+                                     //echo $photo; die();
+                                     ?>
+                                     <a href="javascript:void(0);">
+                                         <img class="<?php echo $photo_class; ?>" src="<?php echo $photo['url']; ?>" alt="Photo" onclick="javascript:FA_openLightbox(<?php echo $photo['post_id']; ?>);">
+                                     </a>
+                                 <?php
+                                 }
+                                 ?>
+                             </div>
+                         <?php
+                         } elseif ($sk['comment']['media_type'] == "soundcloud") {
+                             ?>
+                             <div class="soundcloud-wrapper" align="center">
+                                 <iframe frameborder="0" src="https://w.soundcloud.com/player/?url=<?php echo $sk['comment']['media']['url']; ?>&amp;color=f07b22" width="100%"></iframe>
+                             </div>
+                         <?php
+                         } elseif ($sk['comment']['media_type'] == "video") {
+                             ?>
+                             <div class="youtube-wrapper" align="center">
+                                 <!-- <iframe src="https://www.youtube.com/embed/<?php echo $sk['comment']['media']['id']; ?>?ap=%2526fmt%3D18&disablekb=1&rel=0" width="100%" height="300px" frameborder="0" allowfullscreen></iframe>-->
+                                 <?php
+                                 foreach ($sk['comment']['media'] as $video) {
+                                     //echo $video['url'];
+                                     ?>
+                                     <a  href="<?php  echo $video['url']?>"  style="display:block;width:100%;height:200px" class="player-comment" id="player-comment"></a>
+                                 <?php
+                                 }?>
+                                 <!--<iframe src="https://www.youtube.com/embed/<?php /*echo $sk['comment']['media']['id']; */?>?ap=%2526fmt%3D18&disablekb=1&rel=0" width="100%" height="300px" frameborder="0" allowfullscreen></iframe>-->
+                                 <!-- <div class="js-lazyYT" data-youtube-id="<?php echo $sk['comment']['media']['id']; ?>" data-width="100%" data-height="300px" data-parameters="rel=0" allowfullscreen="1" frameborder="1" ></div>-->
+                             </div>
+                         <?php
+                         }
+
+                     }
+
+                ?>
                 <?php
                 if ($sk['logged'] == true) {
                 ?>
@@ -70,6 +121,7 @@
                     
                     <?php echo FA_getPostLikeActivityButton($sk['comment']['id']); ?>
                 </div>
+                <i class="mydiv"></i>
             </div>
         </td>
     </tr>
