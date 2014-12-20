@@ -120,6 +120,8 @@ function FA_getStories_most_like($data=array( 'type' => 'all', 'after_post_id' =
 
 
 
+
+
     if (empty($data['limit']) or !is_numeric($data['limit']) or $data['limit'] < 1) {
         $data['limit'] = 10;
     }
