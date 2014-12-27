@@ -67,9 +67,7 @@
 </div>
 
 <div class="float-left span35">
-    <?php
-    if (FA_isGroupAdmin($sk['timeline']['id'])) {
-    ?>
+
     <div class="timeline-buttons cover-resize-buttons">
         <table border="0" width="100%" cellspacing="0" cellpadding="0">
         <tr>
@@ -92,7 +90,14 @@
         <tr>
             <td align="center" valign="middle">
                 <?php
-                echo FA_getFollowButton($sk['timeline']['id']);
+                if (FA_isGroupAdmin($sk['timeline']['id'])) {
+                    echo "<a href=''> <i class='icon-ok progress-icon' data-icon='ok'></i>
+Joined </a>";
+                } else {
+
+                    echo FA_getFollowButton($sk['timeline']['id']);
+                }
+
                 ?>
             </td>
             <td align="center" valign="middle">
@@ -128,27 +133,11 @@
         <input class="cover-image-input hidden" type="file" name="image" accept="image/jpeg,image/png" onchange="javascript:$('form.cover-form').submit();">
         <input name="timeline_id" value="<?php echo $sk['timeline']['id']; ?>" type="hidden">
     </form>
-    <?php
-    } elseif ($sk['logged'] == true) {
-    ?>
-    <div class="timeline-buttons default-buttons">
-        <table border="0" width="100%" cellspacing="0" cellpadding="0">
-        <tr>
-            <td align="center" valign="middle">
-                <?php
-                echo FA_getFollowButton($sk['timeline']['id']);
-                ?>
-            </td>
-        </tr>
-        </table>
-    </div>
-    <?php
-    }
-    ?>
+
     <div class="timeline-sidebar">
-        <div class="sidebar-div">
-            <?php echo $lang['privacy_label'] . ': ' . ucfirst($sk['timeline']['group_privacy']) . ' ' . $lang['group_label']; ?>
-        </div>
+        <!--<div class="sidebar-div">
+            <?php /*echo $lang['privacy_label'] . ': ' . ucfirst($sk['timeline']['group_privacy']) . ' ' . $lang['group_label']; */?>
+        </div>-->
         <?php
         if (!empty($sk['timeline']['about'])) {
         ?>
@@ -450,7 +439,8 @@
         }
         </script>
         <?php
-        } elseif (isset($_GET['tab2']) && $_GET['tab2'] == "settings" && FA_isGroupAdmin($sk['timeline']['id'])) {
+      //  } elseif (isset($_GET['tab2']) && $_GET['tab2'] == "settings" && FA_isGroupAdmin($sk['timeline']['id'])) {
+        } elseif (isset($_GET['tab2']) && $_GET['tab2'] == "settings") {
         ?>
         <form class="update-group-settings-form" method="post">
         <div class="form-container">
@@ -493,79 +483,80 @@
                 </div>
                 <div class="float-clear"></div>
             </div>
-            <div class="form-input-wrapper">
+            <!--<div class="form-input-wrapper">
                 <label class="float-left span20">
                     <?php
-                    echo $lang['privacy_label'];
-                    ?>:
+/*                    echo $lang['privacy_label'];
+                    */?>:
                 </label>
                 <div class="input float-left span65">
                     <div style="margin-top: 5px;">
                         <?php
-                        $checked_attr = '';
+/*                        $checked_attr = '';
                         
                         if ($sk['timeline']['group_privacy'] == "open") {
                             $checked_attr = ' checked';
                         }
-                        ?>
-                        <input valign="top" type="radio" name="group_privacy" value="open"<?php echo $checked_attr; ?>>
-                        <i class="icon-globe" style="margin-right: 3px;"></i> <?php echo $lang['open_group']; ?>
+                        */?>
+                        <input valign="top" type="radio" name="group_privacy" value="open"<?php /*echo $checked_attr; */?>>
+                        <i class="icon-globe" style="margin-right: 3px;"></i> <?php /*echo $lang['open_group']; */?>
                         <br>
                         <small>
                             <?php
-                            echo $lang['open_group_description'];
-                            ?>.
+/*                            echo $lang['open_group_description'];
+                            */?>.
                         </small>
                     </div>
                     
                     <div style="margin-top: 15px;">
                         <?php
-                        $checked_attr = '';
+/*                        $checked_attr = '';
                         
                         if ($sk['timeline']['group_privacy'] == "closed") {
                             $checked_attr = ' checked';
                         }
-                        ?>
-                        <input valign="top" type="radio" name="group_privacy" value="closed"<?php echo $checked_attr; ?>>
-                        <i class="icon-lock" style="margin-right: 3px;"></i> <?php echo $lang['closed_group']; ?>
+                        */?>
+                        <input valign="top" type="radio" name="group_privacy" value="closed"<?php /*echo $checked_attr; */?>>
+                        <i class="icon-lock" style="margin-right: 3px;"></i> <?php /*echo $lang['closed_group']; */?>
                         <br>
                         <small>
                             <?php
-                            echo $lang['closed_group_description'];
-                            ?>.
+/*                            echo $lang['closed_group_description'];
+                            */?>.
                         </small>
                     </div>
                     
                     <div style="margin-top: 15px;">
                         <?php
-                        $checked_attr = '';
+/*                        $checked_attr = '';
                         
                         if ($sk['timeline']['group_privacy'] == "secret") {
                             $checked_attr = ' checked';
                         }
-                        ?>
-                        <input valign="top" type="radio" name="group_privacy" value="secret"<?php echo $checked_attr; ?>>
-                        <i class="icon-shield" style="margin-right: 3px;"></i> <?php echo $lang['secret_group']; ?>
+                        */?>
+                        <input valign="top" type="radio" name="group_privacy" value="secret"<?php /*echo $checked_attr; */?>>
+                        <i class="icon-shield" style="margin-right: 3px;"></i> <?php /*echo $lang['secret_group']; */?>
                         <br>
                         <small>
                             <?php
-                            echo $lang['secret_group_description'];
-                            ?>.
+/*                            echo $lang['secret_group_description'];
+                            */?>.
                         </small>
                     </div>
                 </div>
                 <div class="float-clear"></div>
-            </div>
-            <div class="form-input-wrapper">
+            </div>-->
+            <input type="hidden" name="group_privacy" value="secret">
+           <!-- <div class="form-input-wrapper">
                 <label class="float-left span20">
                     <?php
-                    echo $lang['group_add_privacy_label'];
-                    ?>:
+/*                    echo $lang['group_add_privacy_label'];
+                    */?>:
                 </label>
                 <div class="input float-left span65">
                     <select name="add_privacy">
                         <?php
-                        $add_privacy_members_selected_attr = '';
+/*                        $add_privacy_members_selected_attr = '';
                         $add_privacy_admins_selected_attr = '';
                         
                         if ($sk['timeline']['add_privacy'] == "members") {
@@ -575,31 +566,32 @@
                         if ($sk['timeline']['add_privacy'] == "admins") {
                             $add_privacy_admins_selected_attr = ' selected';
                         }
-                        ?>
-                        <option value="members"<?php echo $add_privacy_members_selected_attr; ?>>
+                        */?>
+                        <option value="members"<?php /*echo $add_privacy_members_selected_attr; */?>>
                             <?php
-                            echo $lang['group_members_label'];
-                            ?>
+/*                            echo $lang['group_members_label'];
+                            */?>
                         </option>
-                        <option value="admins"<?php echo $add_privacy_admins_selected_attr; ?>>
+                        <option value="admins"<?php /*echo $add_privacy_admins_selected_attr; */?>>
                             <?php
-                            echo $lang['group_admins_label'];
-                            ?>
+/*                            echo $lang['group_admins_label'];
+                            */?>
                         </option>
                     </select>
                 </div>
                 <div class="float-clear"></div>
-            </div>
-            <div class="form-input-wrapper">
+            </div>-->
+            <input type="hidden" name="add_privacy" value="admins">
+            <!--<div class="form-input-wrapper">
                 <label class="float-left span20">
                     <?php
-                    echo $lang['group_timeline_post_privacy_label'];
-                    ?>:
+/*                    echo $lang['group_timeline_post_privacy_label'];
+                    */?>:
                 </label>
                 <div class="input float-left span65">
                     <select name="timeline_post_privacy">
                         <?php
-                        $post_privacy_members_selected_attr = '';
+/*                        $post_privacy_members_selected_attr = '';
                         $post_privacy_admins_selected_attr = '';
                         
                         if ($sk['timeline']['timeline_post_privacy'] == "members") {
@@ -609,17 +601,18 @@
                         if ($sk['timeline']['timeline_post_privacy'] == "admins") {
                             $post_privacy_admins_selected_attr = ' selected';
                         }
-                        ?>
-                        <option value="members" <?php echo $post_privacy_members_selected_attr; ?>>
-                            <?php echo $lang['group_members_label']; ?>
+                        */?>
+                        <option value="members" <?php /*echo $post_privacy_members_selected_attr; */?>>
+                            <?php /*echo $lang['group_members_label']; */?>
                         </option>
-                        <option value="admins" <?php echo $post_privacy_admins_selected_attr; ?>>
-                            <?php echo $lang['group_admins_label']; ?>
+                        <option value="admins" <?php /*echo $post_privacy_admins_selected_attr; */?>>
+                            <?php /*echo $lang['group_admins_label']; */?>
                         </option>
                     </select>
                 </div>
                 <div class="float-clear"></div>
-            </div>
+            </div>-->
+            <input type="hidden" name="timeline_post_privacy" value="members">
             <div class="form-input-wrapper">
                 <button class="active">
                     <?php

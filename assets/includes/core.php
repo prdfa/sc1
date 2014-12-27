@@ -67,31 +67,65 @@ function FA_isGroupAdmin($group_id=0, $admin_id=0) {
     if ($GLOBALS['logged'] !== true) {
         return false;
     }
-    
+
     global $dbConnect, $user;
-    
+
     if (empty($group_id) or !is_numeric($group_id) or $group_id < 1) {
         return false;
     }
-    
+
     if (empty($admin_id) or $admin_id == 0) {
         $admin_id = $user['id'];
-        
+
         if (FA_isBlocked($group_id)) {
             return false;
         }
     }
-    
+
     if (!is_numeric($admin_id) or $admin_id < 1) {
         return false;
     }
-    
+
     $group_id = FA_secureEncode($group_id);
     $admin_id = FA_secureEncode($admin_id);
-    
+
     $query_one = "SELECT id FROM " . DB_GROUP_ADMINS . " WHERE admin_id=$admin_id AND group_id=$group_id AND active=1";
     $sql_query_one = mysqli_query($dbConnect, $query_one);
-    
+
+    if (mysqli_num_rows($sql_query_one) == 1) {
+        return true;
+    }
+}
+
+function FA_isGangAdmin($group_id=0, $admin_id=0) {
+    if ($GLOBALS['logged'] !== true) {
+        return false;
+    }
+
+    global $dbConnect, $user;
+
+    if (empty($group_id) or !is_numeric($group_id) or $group_id < 1) {
+        return false;
+    }
+
+    if (empty($admin_id) or $admin_id == 0) {
+        $admin_id = $user['id'];
+
+        if (FA_isBlocked($group_id)) {
+            return false;
+        }
+    }
+
+    if (!is_numeric($admin_id) or $admin_id < 1) {
+        return false;
+    }
+
+    $group_id = FA_secureEncode($group_id);
+    $admin_id = FA_secureEncode($admin_id);
+
+    $query_one = "SELECT id FROM " . DB_GANG_ADMINS . " WHERE admin_id=$admin_id AND group_id=$group_id AND active=1";
+    $sql_query_one = mysqli_query($dbConnect, $query_one);
+
     if (mysqli_num_rows($sql_query_one) == 1) {
         return true;
     }
@@ -681,7 +715,8 @@ function FA_getUsernameStatus($query='', $timeline_id=0) {
         } elseif ($timeline['type'] == "page" && !FA_isPageAdmin($timeline['id'])) {
             return false;
         } elseif ($timeline['type'] == "group" && !FA_isGroupAdmin($timeline['id'])) {
-            return false;
+
+            //return false;
         }
         
         if ($query == $timeline['username']) {
@@ -962,6 +997,22 @@ function FA_getUser($timeline_id=0, $all=false) {
                 $sql_fetch_three = mysqli_fetch_assoc($sql_query_three);
                 $sql_fetch_two['thumbnail_url'] = $sql_fetch_two['avatar_url'] = $sk['config']['theme_url'] . '/images/default-group-avatar.png';
                 
+                return array_merge($sql_fetch_two, $sql_fetch_three);
+            }
+        } elseif ($sql_fetch_two['type'] == "gang") {
+            $subquery_one = 'group_privacy';
+
+            if ($all == true) {
+                $subquery_one = '*';
+            }
+
+            $query_three = "SELECT $subquery_one FROM " . DB_GANGS . " WHERE id=" . $sql_fetch_two['id'];
+            $sql_query_three = mysqli_query($dbConnect, $query_three);
+
+            if (mysqli_num_rows($sql_query_three) == 1) {
+                $sql_fetch_three = mysqli_fetch_assoc($sql_query_three);
+                $sql_fetch_two['thumbnail_url'] = $sql_fetch_two['avatar_url'] = $sk['config']['theme_url'] . '/images/default-group-avatar.png';
+
                 return array_merge($sql_fetch_two, $sql_fetch_three);
             }
         }
@@ -1266,6 +1317,25 @@ function FA_getManagedGroups() {
         $get[] = FA_getUser($sql_fetch_one['id']);
     }
     
+    return $get;
+}
+
+function FA_getManagedGangs() {
+    if ($GLOBALS['logged'] !== true) {
+        return array();
+    }
+
+    global $dbConnect, $user;
+    $get = array();
+    $query_one = "SELECT id FROM " . DB_ACCOUNTS . " WHERE id IN (SELECT group_id FROM " . DB_GANG_ADMINS . " WHERE admin_id=" . $user['id'] . " AND group_id IN (SELECT id FROM " . DB_GANGS .") AND active=1) AND type='gang' AND active=1";
+
+
+    $sql_query_one = mysqli_query($dbConnect, $query_one);
+
+    while ($sql_fetch_one = mysqli_fetch_assoc($sql_query_one)) {
+        $get[] = FA_getUser($sql_fetch_one['id']);
+    }
+
     return $get;
 }
 
@@ -3024,6 +3094,7 @@ function FA_countFollowRequests($timeline_id=0) {
     
     $timeline_id = FA_secureEncode($timeline_id);
     $query = "SELECT COUNT(id) AS count FROM " . DB_ACCOUNTS . " WHERE id IN (SELECT follower_id FROM " . DB_FOLLOWERS . " WHERE following_id=$timeline_id AND follower_id<>$timeline_id AND active=0) AND active=1";
+
     $sql_query = mysqli_query($dbConnect, $query);
     $sql_fetch = mysqli_fetch_assoc($sql_query);
     
@@ -3060,6 +3131,21 @@ function FA_countGroupAdmins($group_id=0) {
     return $sql_fetch['count'];
 }
 
+function FA_countGangAdmins($group_id=0) {
+    global $dbConnect;
+
+    if (!isset($group_id) or empty($group_id) or !is_numeric($group_id) or $group_id < 1) {
+        return false;
+    }
+
+    $group_id = FA_secureEncode($group_id);
+    $query = "SELECT COUNT(DISTINCT admin_id) AS count FROM " . DB_GANG_ADMINS . " WHERE group_id=$group_id AND active=1";
+    $sql_query = mysqli_query($dbConnect, $query);
+    $sql_fetch = mysqli_fetch_assoc($sql_query);
+
+    return $sql_fetch['count'];
+}
+
 function FA_countManagedPages() {
     if ($GLOBALS['logged'] !== true) {
         return false;
@@ -3087,6 +3173,21 @@ function FA_countManagedGroups() {
     $sql_query_one = mysqli_query($dbConnect, $query_one);
     $sql_fetch = mysqli_fetch_assoc($sql_query_one);
     
+    return $sql_fetch['count'];
+}
+
+function FA_countManagedGangs() {
+    if ($GLOBALS['logged'] !== true) {
+        return false;
+    }
+
+    global $dbConnect, $user;
+    $get = array();
+
+    $query_one = "SELECT COUNT(id) AS count FROM " . DB_ACCOUNTS . " WHERE id IN (SELECT group_id FROM " . DB_GANG_ADMINS . " WHERE admin_id=" . $user['id'] . " AND group_id IN (SELECT id FROM " . DB_GANGS .") AND active=1) AND type='gang' AND active=1";
+    $sql_query_one = mysqli_query($dbConnect, $query_one);
+    $sql_fetch = mysqli_fetch_assoc($sql_query_one);
+
     return $sql_fetch['count'];
 }
 
@@ -3321,6 +3422,8 @@ function FA_registerNotification($data=array()) {
         return false;
     } elseif ($notifier['type'] == "group" && !FA_isGroupAdmin($notifier['id'])) {
         return false;
+    } elseif ($notifier['type'] == "gang" && !FA_isGangAdmin($notifier['id'])) {
+        return false;
     }
     
     if ($data['recipient_id'] == $data['notifier_id']) {
@@ -3447,9 +3550,30 @@ function FA_registerNotification($data=array()) {
     }
     
     if (!isset($data['undo']) or $data['undo'] != true) {
-        $query_three = "INSERT INTO " . DB_NOTIFICATIONS . " (timeline_id,active,notifier_id,post_id,text,time,type,url) VALUES (" . $recipient['id'] . ",1," . $notifier['id'] . "," . $data['post_id'] . ",'$text'," . time() . ",'$type','$url')";
-        $sql_query_three = mysqli_query($dbConnect, $query_three);
-        
+
+        $query_check="SELECT * FROM ".DB_ACCOUNTS." WHERE type='group' and id='" . $recipient['id'] . "'";
+        $query_check_cnt = mysqli_query($dbConnect, $query_check);
+
+        if (mysqli_num_rows($query_check_cnt) > 0) {
+            $query_check_res=mysqli_fetch_assoc($query_check_cnt);
+            $query_mem="SELECT * FROM ".DB_FOLLOWERS." WHERE following_id='" . $recipient['id'] . "' ";
+            $query_mem_res = mysqli_query($dbConnect, $query_mem);
+            $follow_id=array();
+            while($query_mem_res1=mysqli_fetch_array($query_mem_res)){
+                if($notifier['id']!=$query_mem_res1['follower_id']){
+                    $query_three = "INSERT INTO " . DB_NOTIFICATIONS . " (timeline_id,active,notifier_id,post_id,text,time,type,url) VALUES (" .$query_mem_res1['follower_id'] . ",1," . $notifier['id'] . "," . $data['post_id'] . ",'posted on group ".$query_check_res['name']."'," . time() . ",'$type','$url')";
+                    $sql_query_three = mysqli_query($dbConnect, $query_three);
+                }
+            }
+
+        } else {
+            $query_three = "INSERT INTO " . DB_NOTIFICATIONS . " (timeline_id,active,notifier_id,post_id,text,time,type,url) VALUES (" . $recipient['id'] . ",1," . $notifier['id'] . "," . $data['post_id'] . ",'$text'," . time() . ",'$type','$url')";
+            $sql_query_three = mysqli_query($dbConnect, $query_three);
+
+            if ($sql_query_three) {
+                return true;
+            }
+        }
         if ($sql_query_three) {
             return true;
         }
@@ -3620,7 +3744,57 @@ function FA_registerGroup($data=0) {
                 $query_three = "INSERT INTO " . DB_GROUP_ADMINS . " (active,admin_id,group_id) VALUES (1," . $user['id'] . ",$group_id)";
                 $sql_query_three = mysqli_query($dbConnect, $query_three);
                 
-                $query_four = "UPDATE " . DB_GROUPS . " SET group_privacy='$privacy' WHERE id=$group_id";
+                $query_four = "UPDATE " . DB_GROUPS . " SET group_privacy='$privacy', add_privacy='admins', timeline_post_privacy='members' WHERE id=$group_id";
+                $sql_query_four = mysqli_query($dbConnect, $query_four);
+                $get = array(
+                    'id' => $group_id,
+                    'username' => $username
+                );
+                return $get;
+            }
+        }
+    }
+}
+
+function FA_registerGang($data=0) {
+    if ($GLOBALS['logged'] !== true) {
+        return false;
+    }
+
+    global $dbConnect, $user;
+
+    if (!is_array($data)) {
+        return false;
+    }
+
+    if (!empty($data['name']) && !empty($data['username']) && !empty($data['about']) && !empty($data['privacy'])) {
+        $name = FA_secureEncode($data['name']);
+        $username = FA_secureEncode($data['username']);
+        $about = FA_secureEncode($data['about']);
+        $privacy = FA_secureEncode($data['privacy']);
+
+        if (!FA_validateUsername($username)) {
+            return false;
+        }
+
+        if (!preg_match('/(open|closed|secret)/', $privacy)) {
+            return false;
+        }
+
+        $query_one = "INSERT INTO " . DB_ACCOUNTS . " (about,active,cover_id,email,name,password,time,type,username) VALUES ('$about',1,0,'$username','$name','" . md5(FA_generateKey()) . "'," . time() . ",'gang','$username')";
+        $sql_query_one = mysqli_query($dbConnect, $query_one);
+
+        if ($sql_query_one) {
+            $group_id = mysqli_insert_id($dbConnect);
+            $query_two = "INSERT INTO " . DB_GANGS . " (id,group_privacy) VALUES ($group_id,'open')";
+            $sql_query_two = mysqli_query($dbConnect,$query_two);
+
+            if ($sql_query_two) {
+                FA_registerFollow($group_id);
+                $query_three = "INSERT INTO " . DB_GANG_ADMINS . " (active,admin_id,group_id) VALUES (1," . $user['id'] . ",$group_id)";
+                $sql_query_three = mysqli_query($dbConnect, $query_three);
+
+                $query_four = "UPDATE " . DB_GANGS . " SET group_privacy='$privacy', add_privacy='admins', timeline_post_privacy='members' WHERE id=$group_id";
                 $sql_query_four = mysqli_query($dbConnect, $query_four);
                 $get = array(
                     'id' => $group_id,
@@ -3679,6 +3853,8 @@ function FA_registerFollow($following_id=0, $timeline_id=0) {
         return false;
     } elseif ($timeline['type'] == "group" && !FA_isGroupAdmin($timeline['id'])) {
         return false;
+    }  elseif ($timeline['type'] == "gang" && !FA_isGangAdmin($timeline['id'])) {
+        return false;
     }
     
     if (FA_isFollowing($following['id'], $timeline_id)) {
@@ -3722,6 +3898,31 @@ function FA_registerFollow($following_id=0, $timeline_id=0) {
         if ($following['group_privacy'] == "secret") {
             
             if (FA_isGroupAdmin($following['id'])) {
+                $active = 1;
+            } else {
+                return false;
+            }
+        }
+    }
+
+    if ($following['type'] == "gang") {
+
+        if ($following['group_privacy'] == "open") {
+            $active = 1;
+        }
+
+        if ($following['group_privacy'] == "closed") {
+
+            if (FA_isGangAdmin($following['id'])) {
+                $active = 1;
+            } else {
+                $active = 0;
+            }
+        }
+
+        if ($following['group_privacy'] == "secret") {
+
+            if (FA_isGangAdmin($following['id'])) {
                 $active = 1;
             } else {
                 return false;
@@ -3912,6 +4113,95 @@ function FA_registerGroupMember($group_id=0, $member_id=0) {
     }
 }
 
+
+
+
+function FA_registerGangMember($gang_id=0, $member_id=0) {
+    if ($GLOBALS['logged'] !== true) {
+        return false;
+    }
+
+    global $dbConnect, $user, $lang;
+
+    if (!isset($gang_id) or empty($gang_id) or !is_numeric($gang_id) or $gang_id < 1) {
+        return false;
+    }
+
+    if (!isset($member_id) or !is_numeric($member_id) or $member_id < 1) {
+        return false;
+    }
+
+    $gang_id = FA_secureEncode($gang_id);
+    $member_id = FA_secureEncode($member_id);
+    $gang = FA_getUser($gang_id, true);
+    $continue = false;
+
+    if (!isset($gang['id']) or $gang['type'] != "gang") {
+        return false;
+    }
+
+    if ($member_id == $user['id']) {
+        $member = $user;
+    } else {
+        $member = FA_getUser($member_id);
+    }
+
+    if (!isset($member['id']) or $member['type'] != "user") {
+        return false;
+    }
+
+    if (FA_isFollowing($gang['id'], $member['id'])) {
+        return false;
+    }
+
+    if ($gang['add_privacy'] == "admins") {
+
+        if (FA_isGangAdmin($gang['id'])) {
+            $continue = true;
+        }
+    } elseif ($gang['add_privacy'] == "members") {
+
+        if (FA_isFollowing($gang['id'])) {
+            $continue = true;
+        }
+    }
+
+    if ($continue == true) {
+
+        if (FA_isFollowRequested($gang['id'], $member['id'])) {
+            $query_one = "UPDATE " . DB_FOLLOWERS . " SET active=1 WHERE follower_id=" . $member['id'] . " AND following_id=" . $gang['id'] . " AND active=0";
+            $sql_query_one = mysqli_query($dbConnect, $query_one);
+
+            if ($sql_query_one) {
+                $notification_data_array = array(
+                    'recipient_id' => $member['id'],
+                    'text' => str_replace('{group_name}', '[b weight=500]'. $gang['name'] .'[/b]', $lang['accepted_gang_join_request']),
+                    'type' => 'accepted_group_member',
+                    'url' => 'index.php?tab1=timeline&id=' . $gang['username']
+                );
+                FA_registerNotification($notification_data_array);
+
+                return true;
+            }
+        } else {
+            $query_one = "INSERT INTO " . DB_FOLLOWERS . " (active,follower_id,following_id,time) VALUES (1," . $member['id'] . "," . $gang['id'] . "," . time() . ")";
+            $sql_query_one = mysqli_query($dbConnect, $query_one);
+
+            if ($sql_query_one) {
+                $notification_data_array = array(
+                    'recipient_id' => $member['id'],
+                    'text' => str_replace('{group_name}', '[b weight=500]'. $gang['name'] .'[/b]', $lang['added_to_gang']),
+                    'type' => 'made_group_member',
+                    'url' => 'index.php?tab1=timeline&id=' . $gang['username']
+                );
+                FA_registerNotification($notification_data_array);
+
+                return true;
+            }
+        }
+    }
+}
+
 function FA_registerGroupAdmin($group_id=0, $admin_id=0) {
     if ($GLOBALS['logged'] !== true) {
         return false;
@@ -3965,6 +4255,64 @@ function FA_registerGroupAdmin($group_id=0, $admin_id=0) {
         );
         FA_registerNotification($notification_data_array);
         
+        return true;
+    }
+}
+
+
+function FA_registerGangAdmin($group_id=0, $admin_id=0) {
+    if ($GLOBALS['logged'] !== true) {
+        return false;
+    }
+
+    global $dbConnect, $user, $lang;
+
+    if (!isset($group_id) or empty($group_id) or !is_numeric($group_id) or $group_id < 1) {
+        return false;
+    }
+
+    if (!isset($admin_id) or empty($admin_id) or !is_numeric($admin_id) or $admin_id < 1) {
+        return false;
+    }
+
+    $group_id = FA_secureEncode($group_id);
+    $admin_id = FA_secureEncode($admin_id);
+    $group = FA_getUser($group_id);
+
+    if (!isset($group['id']) or $group['type'] != "group") {
+        return false;
+    }
+
+    if ($admin_id == $user['id']) {
+        $admin = $user;
+    } else {
+        $admin = FA_getUser($admin_id);
+    }
+
+    if (!isset($admin['id']) or $admin['type'] != "user") {
+        return false;
+    }
+
+    if (!FA_isGangAdmin($group['id'])) {
+        return false;
+    }
+
+    if (FA_isGangAdmin($group['id'], $admin['id'])) {
+        return false;
+    }
+
+    $query_one = "INSERT INTO " . DB_GANG_ADMINS . " (active,admin_id,group_id) VALUES (1," . $admin['id'] . "," . $group['id'] . ")";
+    $sql_query_one = mysqli_query($dbConnect, $query_one);
+
+    if ($sql_query_one) {
+        $notification_data_array = array(
+            'recipient_id' => $admin['id'],
+            'text' => str_replace('{group_name}', '[b weight=500]'. $group['name'] .'[/b]', $lang['made_gang_admin']),
+            'type' => 'made_group_admin',
+            'url' => 'index.php?tab1=timeline&id=' . $group['username']
+        );
+        FA_registerNotification($notification_data_array);
+
         return true;
     }
 }
@@ -4707,9 +5055,10 @@ function FA_updateTimeline($data=array()) {
     } elseif ($timeline['type'] == "page" && !FA_isPageAdmin($timeline['id'])) {
         return false;
     } elseif ($timeline['type'] == "group" && !FA_isGroupAdmin($timeline['id'])) {
-        return false;
+       // return false;
+
     }
-    
+
     $update_query_one = "UPDATE " . DB_ACCOUNTS . " SET ";
     
     if (!empty($data['name'])) {
@@ -4788,6 +5137,7 @@ function FA_updateTimeline($data=array()) {
     }
     
     $update_query_one .= "active=1 WHERE id=" . $timeline['id'];
+
     $sql_query_one = mysqli_query($dbConnect, $update_query_one);
     
     if (!$sql_query_one) {
@@ -5344,6 +5694,52 @@ function FA_deleteGroupMember($group_id=0, $member_id=0) {
     }
 }
 
+function FA_deleteGangMember($group_id=0, $member_id=0) {
+    if ($GLOBALS['logged'] !== true) {
+        return false;
+    }
+
+    global $dbConnect, $user;
+
+    if (!isset($group_id) or empty($group_id) or !is_numeric($group_id) or $group_id < 1) {
+        return false;
+    }
+
+    if (!isset($member_id) or empty($member_id) or !is_numeric($member_id) or $member_id < 1) {
+        return false;
+    }
+
+    $group_id = FA_secureEncode($group_id);
+    $member_id = FA_secureEncode($member_id);
+    $group = FA_getUser($group_id);
+
+    if (!isset($group['id']) or $group['type'] != "group") {
+        return false;
+    }
+
+    if ($member_id == $user['id']) {
+        $member = $user;
+    } else {
+        $member = FA_getUser($member_id);
+    }
+
+    if (!isset($member['id']) or $member['type'] != "user") {
+        return false;
+    }
+
+    if ($member['id'] == $user['id'] or FA_isGroupAdmin($group['id'])) {
+        $query_one = "DELETE FROM " . DB_FOLLOWERS . " WHERE follower_id=" . $member['id'] . " AND following_id=" . $group['id'];
+        $sql_query_one = mysqli_query($dbConnect, $query_one);
+
+        if ($sql_query_one) {
+            $query_two = "DELETE FROM " . DB_GANG_ADMINS . " WHERE admin_id=" . $member['id'] . " AND group_id=" . $group['id'];
+            $sql_query_two = mysqli_query($dbConnect, $query_two);
+
+            return true;
+        }
+    }
+}
+
 function FA_deleteGroupAdmin($group_id=0, $admin_id=0) {
     if ($GLOBALS['logged'] !== true) {
         return false;
@@ -5384,6 +5780,51 @@ function FA_deleteGroupAdmin($group_id=0, $admin_id=0) {
     $query_one = "DELETE FROM " . DB_GROUP_ADMINS . " WHERE admin_id=" . $admin['id'] . " AND group_id=" . $group['id'];
     $sql_query_one = mysqli_query($dbConnect, $query_one);
     
+    if ($sql_query_one) {
+        return true;
+    }
+}
+
+function FA_deleteGangAdmin($group_id=0, $admin_id=0) {
+    if ($GLOBALS['logged'] !== true) {
+        return false;
+    }
+
+    global $dbConnect, $user;
+
+    if (!isset($group_id) or empty($group_id) or !is_numeric($group_id) or $group_id < 1) {
+        return false;
+    }
+
+    if (!isset($admin_id) or empty($admin_id) or !is_numeric($admin_id) or $admin_id < 1) {
+        return false;
+    }
+
+    $group_id = FA_secureEncode($group_id);
+    $admin_id = FA_secureEncode($admin_id);
+    $group = FA_getUser($group_id);
+
+    if (!isset($group['id']) or $group['type'] != "gang") {
+        return false;
+    }
+
+    if ($admin_id == $user['id']) {
+        $admin = $user;
+    } else {
+        $admin = FA_getUser($admin_id);
+    }
+
+    if (!isset($admin['id']) or $admin['type'] != "user") {
+        return false;
+    }
+
+    if (!FA_isGroupAdmin($group['id'])) {
+        return false;
+    }
+
+    $query_one = "DELETE FROM " . DB_GANG_ADMINS . " WHERE admin_id=" . $admin['id'] . " AND group_id=" . $group['id'];
+    $sql_query_one = mysqli_query($dbConnect, $query_one);
+
     if ($sql_query_one) {
         return true;
     }

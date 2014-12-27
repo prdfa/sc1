@@ -20,13 +20,15 @@ if (!empty($_GET['id'])) {
         if (is_array($timeline) && isset($timeline['id'])) {
             $sk['timeline'] = $timeline;
             $sk['config']['site_title'] = $sk['timeline']['name'];
-            
+
             if ($sk['timeline']['type'] == "user") {
                 include('user_timeline.php');
             } elseif ($sk['timeline']['type'] == "page") {
                 include('page_timeline.php');
             } elseif ($sk['timeline']['type'] == "group") {
                 include('group_timeline.php');
+            }  elseif ($sk['timeline']['type'] == "gang") {
+                include('gang_timeline.php');
             }
         }
     }

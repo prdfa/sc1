@@ -44,44 +44,46 @@
                 <div class="float-clear"></div>
             </div>
             
-            <div class="form-input-wrapper">
+            <!--<div class="form-input-wrapper">
                 <label class="float-left span20">
-                    <?php echo $lang['privacy_label']; ?>:
+                    <?php /*echo $lang['privacy_label']; */?>:
                 </label>
                 
                 <div class="input float-left span70">
                     <div style="margin-bottom: 15px;">
                         <input valign="top" type="radio" name="group_privacy" value="open">
-                        <label><i class="icon-globe"></i> <?php echo $lang['open_group']; ?></label>
+                        <label><i class="icon-globe"></i> <?php /*echo $lang['open_group']; */?></label>
                         <div class="short-descr">
-                            <?php echo $lang['open_group_description']; ?>.
+                            <?php /*echo $lang['open_group_description']; */?>.
                         </div>
                     </div>
                     
                     <div style="margin-bottom: 15px;">
                         <input valign="top" type="radio" name="group_privacy" value="closed" checked>
-                        <label><i class="icon-lock"></i> <?php echo $lang['closed_group']; ?></label>
+                        <label><i class="icon-lock"></i> <?php /*echo $lang['closed_group']; */?></label>
                         <div class="short-descr">
                             <?php
-                            echo $lang['closed_group_description'];
-                            ?>.
+/*                            echo $lang['closed_group_description'];
+                            */?>.
                         </div>
                     </div>
                     
                     <div style="margin-bottom: 10px;">
                         <input valign="top" type="radio" name="group_privacy" value="secret">
-                        <label><i class="icon-shield"></i> <?php echo $lang['secret_group']; ?></label>
+                        <label><i class="icon-shield"></i> <?php /*echo $lang['secret_group']; */?></label>
                         <div class="short-descr">
                             <?php
-                            echo $lang['secret_group_description'];
-                            ?>.
+/*                            echo $lang['secret_group_description'];
+                            */?>.
                         </div>
                     </div>
                 </div>
                 
                 <div class="float-clear"></div>
-            </div>
-            
+            </div>-->
+            <input type="hidden" name="group_privacy" value="secret">
+            <input type="hidden" name="add_privacy" value="admins">
+            <input type="hidden" name="timeline_post_privacy" value="members">
             <div class="form-input-wrapper">
                 <button class="active">
                     <?php

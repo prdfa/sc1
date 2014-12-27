@@ -74,7 +74,7 @@ function FA_getStories_recent($data=array( 'type' => 'all', 'after_post_id' => 0
         $data['limit'] = 10;
     }
 
-    $query_text .= " AND active=1 and activity_text='' and hidden=0 and type2 in ".$default_type."  GROUP BY post_id ORDER BY id DESC LIMIT " . $data['limit'];
+    $query_text .= " AND active=1 and activity_text='' AND recipient_id NOT IN (SELECT id FROM " . DB_GROUPS . " WHERE group_privacy='secret') and hidden=0 and type2 in ".$default_type."  GROUP BY post_id ORDER BY id DESC LIMIT " . $data['limit'];
 
     //  echo $query_text;die();
     //  echo $query_text;die();
@@ -99,7 +99,7 @@ function FA_getStories_most_like($data=array( 'type' => 'all', 'after_post_id' =
     global $dbConnect, $sk, $user;
 
     $post_id=array();
-    $query="select count(`post_id`) as post_id_count,`post_id` from posts where `type2` ='like' and `type1`='story' and active=1 order by post_id_count desc";
+    $query="select count(`post_id`) as post_id_count,`post_id` from posts where `type2` ='like' and `type1`='story' and active=1 AND recipient_id NOT IN (SELECT id FROM " . DB_GROUPS . " WHERE group_privacy='secret') order by post_id_count desc";
     $query_lik=mysqli_query($dbConnect,$query);
 
     while($query_lik_res=mysqli_fetch_array($query_lik)){
