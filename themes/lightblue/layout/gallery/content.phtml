@@ -1,14 +1,21 @@
 <div class="page-margin"></div>
+<?php 
+//die($_SESSION['user_id'] . $_GET['tab2']);
+?>
 <div class="float-left span63">
     <div class="e-album-upload-container" align="center">
         <?php
         if ($sk['album']['timeline_id'] == $sk['user']['id']) {
         ?>
-        <div class="left-side e-album-uploader" onclick="javascript:$('.e-album-fileinput').click();">
+        <!-- >div class="left-side e-album-uploader" onclick="javascript:$('.e-album-fileinput').click();">
             <i class="icon-cloud-upload progress-icon"></i> 
             <span>Upload Photos</span>
+        </div -->
+        
+				<div class="left-side e-album-uploader">
+            <i class="icon-step-backward progress-icon"></i> 
+            <a data-href="?tab1=more" title="My Pages & Groups" href="http://www.se.com/more"><span>Back to Gallery</span></a>
         </div>
-
         <div class="right-side album-delete-btn" onclick="FA_deleteAlbumWindow(<?php echo $sk['album']['id']; ?>);">
             <i class="icon-remove progress-icon"></i> 
             Delete Gallery
@@ -36,7 +43,27 @@
             <?php echo $sk['album']['descr']; ?>
         </p>
 
-        <div class="album-photos">
+        
+        <div>
+        
+        <div class="stories-container">
+            <div class="stories-wrapper">
+                <?php
+                $stories = FA_getStories_for_gallery();
+                //var_dump($stories);die('<hr>');
+                if (is_array($stories) && count($stories) > 0) {
+
+                    foreach($stories as $sk['story']) {
+                        echo FA_getPage('story/content-home');
+                    }
+                }
+                ?>
+            </div>
+
+        </div>
+    </div>
+        
+        <!-- >div class="album-photos">
             <?php
             foreach (FA_getAlbumPhotos($sk['album']['id']) as $photo) {
             ?>
@@ -56,7 +83,7 @@
             }
             ?>
             <div class="float-clear"></div>
-        </div>
+        </div -->
     </div>
 </div>
 

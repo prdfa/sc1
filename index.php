@@ -10,7 +10,7 @@ Date: 27/Nov/2014
 error_reporting(1);
 require_once('assets/includes/core.php');
 require_once('assets/includes/bls_core.php'); // added by bls
-//$msg = FA_send_mail('fakhru.ansari@gmail.com','mailer testing');
+//$msg = FA_send_mail('fakhru.ansari@gmail.com','mailer testing','<hr>|<hr>','headers','fakhru.ansari@gmail.com');
 //die($msg);
 if (!isset($_GET['tab1'])) {
     $_GET['tab1'] = 'welcome';
@@ -119,6 +119,11 @@ switch ($_GET['tab1']) {
     case 'signup':
         include('assets/sources/signup.php');
         break;
+        
+    // Create group page source
+    case 'create_polls':
+     	include('assets/sources/create_polls.php');
+    	break;
 }
 
 // If no sources found

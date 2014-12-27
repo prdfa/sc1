@@ -36,12 +36,12 @@ if ($t == "login") {
         
         if (preg_match('/@/', $login_id)) {
             $db_query_part = "email='$login_id'";
-        } /*elseif (preg_match('/^[0-9]+$/', $login_id)) {
-            $db_query_part = "id=$login_id";
-        }*/ else {
+        } elseif ($login_id) {//preg_match('/^[0-9]+$/', $login_id)
+            $db_query_part = "username='$login_id'";
+        } else {
             $db_query_part = "email=''";
         }
-        
+        //die($db_query_part);
         $query_one = "SELECT id FROM " . DB_ACCOUNTS . " WHERE $db_query_part AND password='$login_password_md5' AND type='user' AND active=1";
         $sql_query_one = mysqli_query($dbConnect, $query_one);
         $data['error_message'] = $lang['error_bad_login'];
@@ -77,7 +77,7 @@ if ($t == "login") {
         }
     }
     else{
-        $data['error_message'] = $lang['error_invalid_emailid'];
+        $data['error_message'] = $lang['error_empty_login'];
     }
     
     header("Content-type: application/json");
@@ -106,14 +106,16 @@ if ($t == "register") {
             
             $to = $register['email'];
             $subject = $config['site_name'] . ' - Email Verification';
-            
+            $from = $config['email'];
             $headers = "From: " . $config['email'] . "\r\n";
+            $headers .= 'To: '.$to.'\r\n';
+            $headers .= 'Subject: '.$subject.'\r\n';
             $headers .= "MIME-Version: 1.0\r\n";
             $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
             
             $message = FA_getPage('emails/email-verification');
             //mail($to, $subject, $message, $headers);
-            FA_send_mail($to, $subject, $message, $headers);
+            FA_send_mail($to, $subject, $message, $headers, $from);
             if ($config['email_verification'] == 0) {
                 $_SESSION['user_id'] = $register['id'];
                 $_SESSION['user_pass'] = md5(trim($_POST['password']));
@@ -126,7 +128,9 @@ if ($t == "register") {
         }else{
         	$data['error_message'] = $_SESSION['signUp_msg'];
         }
-    }
+    }else{
+        	$data['error_message'] = $lang['signUp_msg'];
+        }
     
     header("Content-type: application/json");
     echo json_encode($data);
@@ -160,15 +164,18 @@ if ($t == "forgot_password") {
                 $sk['mail'] = $forgotpass_user;
                 $to = $forgotpass_user['email'];
                 $subject = $config['site_name'] . ' - Password Reset';
+                $from = $config['email'];
                 
                 $headers = "From: " . $config['email'] . "\r\n";
+                $headers .= 'To: '.$to.'\r\n';
+                $headers .= 'Subject: '.$subject.'\r\n';
                 $headers .= "MIME-Version: 1.0\r\n";
                 $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
                 
                 $message = FA_getPage('emails/password-reset-email');
                 
                 //if (mail($to, $subject, $message, $headers))
-                if(FA_send_mail($to, $subject, $message, $headers) == 'Success') 
+                if(FA_send_mail($to, $subject, $message, $headers,$from) == 'Success') 
                 {
                     $data = array(
                         'status' => 200,
@@ -1609,7 +1616,7 @@ if ($t == "gallery") {
 
 	if ($a == "create") {
 
-		if (!empty($_POST['album_name']) && isset($_FILES['photos']['name'])) {
+		if (!empty($_POST['album_name'])) { // && isset($_FILES['photos']['name'])
 			$album_name = FA_secureEncode($_POST['album_name']);
 			$album_descr = '';
 			$query_one = "INSERT INTO " . DB_MEDIA . " (timeline_id,active,name,descr,type,temp) VALUES (" . $user['id'] . ",1,'$album_name','$album_descr','album',0)";
@@ -1621,7 +1628,7 @@ if ($t == "gallery") {
 
 			if ($sql_query_one) {
 				$album_id = mysqli_insert_id($dbConnect);
-				$photos_count = count($_FILES['photos']['name']);
+				$photos_count = 0;//count($_FILES['photos']['name']);
 
 				for ($i = 0; $i < $photos_count; $i++) {
 					$photo_param = array(
@@ -2487,4 +2494,8 @@ if ($t == "youtube_search") {
     echo json_encode($data);
     mysqli_close($dbConnect);
     exit();
+}
+if ($t == "setStorylabels") {
+	FA_set_gallery_mapping($_GET['story_id'],$_GET['label_id'],$_GET['timeline_id']);
+print_r($_GET);die(__LINE__ . 'req');	
 }

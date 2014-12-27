@@ -3466,7 +3466,7 @@ function FA_registerUser($data=0) {
     if (!is_array($data)) {
         return false;
     }
-    
+    $_SESSION['signUp_msg'] = $lang['signUp_msg'];
     if (!empty($data['name']) && !empty($data['username']) && !empty($data['email']) && !empty($data['password']) && !empty($data['gender'])) 
     {
         $name = FA_secureEncode($data['name']);
@@ -5782,7 +5782,7 @@ function FA_generateKey($minlength=5, $maxlength=5, $uselower=true, $useupper=tr
 function FA_createCaptcha() {
     $image = '';
     $image = @imagecreatetruecolor(80, 30);
-    $background_color = @imagecolorallocate($image, 87, 143, 209);
+    $background_color = @imagecolorallocate($image, 48, 153, 142);
     $text_color = @imagecolorallocate($image, 255, 255, 255);
     $pixel_color = @imagecolorallocate($image, 60, 75, 114);
     @imagefilledrectangle($image, 0, 0, 80, 30, $background_color);
@@ -5884,7 +5884,7 @@ function FA_getTime($unix, $details=false) {
 }
 
 //function send_mail
-function FA_send_mail($to, $subject, $message, $headers)
+function FA_send_mail($to, $subject, $message, $headers,$from)
 {
 	
 	
@@ -5893,7 +5893,8 @@ function FA_send_mail($to, $subject, $message, $headers)
 	require("sasl.php");
 	*/
 	
-	$from="centerac@gmx.com";                           /* Change this to your address like "me@mydomain.com"; */ $sender_line=__LINE__;
+	$from="centerac@gmx.com";  
+	//$from= "<centerac(jobspert.com)@gmx.com>";                          /* Change this to your address like "me@mydomain.com"; */ $sender_line=__LINE__;
 	//$to="fakhru.ansari@gmail.com";                             /* Change this to your test recipient address */ $recipient_line=__LINE__;
 
 	if(strlen($from)==0)
@@ -5944,22 +5945,107 @@ function FA_send_mail($to, $subject, $message, $headers)
 		array(
 			$to,
 				
-				'satish@centerac.com',
+				'awesome_qamer@yahoo.co.in',
 				
 		),
 		array(
-			//"From: $from",
-			//"To: $to",
+			"From: $from",
+			"To: $to",
 			//"Cc: satish@centerac.com",
 			//"Bcc: divyesh@centerac.com",
-			//"MIME-Version: 1.0",
-			$headers
-			//"Content-type: text/html; charset=iso-8859-1",
-			//"Subject: $subject",
-			//"Date: ".strftime("%a, %d %b %Y %H:%M:%S %Z")
+			"MIME-Version: 1.0",
+			//$headers
+			"Content-type: text/html; charset=iso-8859-1",
+			"Subject: $subject",
+			"Date: ".strftime("%a, %d %b %Y %H:%M:%S %Z")
 		),
 		$message ."\n"))
 		return "Success";
 	else
 		return "There is a technical Glitch";
+}
+//function to get gallery lables
+function FA_get_gallery_options($user_id){
+	global $dbConnect, $user;
+	$get = '';
+	$query_one = "SELECT id,name,descr FROM " . DB_MEDIA . " WHERE timeline_id=$user_id AND temp=0 AND active=1";
+	
+	
+	$sql_query_one = mysqli_query($dbConnect, $query_one);
+	
+	while ($sql_fetch_one = mysqli_fetch_assoc($sql_query_one)) {
+		$get .= '<option value="'.$sql_fetch_one['id'].'">'.$sql_fetch_one['name'].'</option>';
+	}
+	//die($get . "<hr>");
+	return $get;
+}
+//function to set gallery label
+function FA_set_gallery_mapping($story_id,$label_id,$timeline_id){
+	global $dbConnect, $user;
+	
+	$query_one = "SELECT id,name FROM " . DB_GALLERY_MST . " WHERE story_id=$story_id AND user_id=$timeline_id AND label_id=$label_id";
+	$query_one = mysqli_query($dbConnect, $query_one) or die(mysqli_error($dbConnect));
+	if(count(mysqli_num_rows($query_one))<1){
+	$query_two = "INSERT INTO " . DB_GALLERY_MST . " (user_id,label_id,story_id,name,created_dt,comments,ip_address) VALUES ('$timeline_id','$label_id','$story_id',''," . time() . ",'comm','".$_SERVER['SERVER_ADDR']."')";
+	$sql_query_two = mysqli_query($dbConnect, $query_two) or die(mysqli_error($dbConnect));
+	}
+}
+//function to display gallery 
+
+function FA_getStories_for_gallery($data=array( 'type' => 'all', 'after_post_id' => 0, 'publisher_id' => 0, 'limit' => 4, 'exclude_activity' => false)) 
+{
+	global $dbConnect, $sk, $user;
+
+
+	//$sk['user']['id'];
+	//die($sk['user']['id'] . __LINE__ . "<hr>" .$_SESSION['user_id'] . $_GET['tab2']);
+	$user_id = $_SESSION['user_id'];
+	$label_id = $_GET['tab2'];
+	//query on gallery table to get post id
+	$query = "SELECT id,story_id FROM " . DB_GALLERY_MST . " WHERE user_id=$user_id AND label_id=$label_id";
+	//die($query . "<hr>");
+	$query_lik=mysqli_query($dbConnect,$query)  or die(mysqli_error($dbConnect));
+	
+	while($query_lik_res=mysqli_fetch_array($query_lik)){
+		$post_id[]=$query_lik_res['story_id'];
+	}
+	
+	
+	if (empty($data['type'])) {
+		$data['type'] = 'all';
+	}
+
+	$subquery_one = "id>0";
+
+
+	$query_text = "SELECT id FROM " . DB_POSTS . " AS p1 WHERE " . $subquery_one;
+	$default_type = "('none','share')";
+	//   echo $query_text;
+	//   die();
+
+
+
+	if (empty($data['limit']) or !is_numeric($data['limit']) or $data['limit'] < 1) {
+		$data['limit'] = 10;
+	}
+
+	$query_text .= " AND post_id in (".implode(",",$post_id).") AND active=1 and activity_text='' and hidden=0 and type2 in ".$default_type."  GROUP BY post_id ORDER BY id DESC LIMIT " . $data['limit'];
+
+	  //echo $query_text;die();
+	//  echo $query_text;die();
+
+	if (isset($query_text))  {
+		$get = array();
+		$sql_query = mysqli_query($dbConnect, $query_text);
+
+		while ($sql_fetch = mysqli_fetch_assoc($sql_query) ) {
+			$story = FA_getStory($sql_fetch['id']);
+
+			if (is_array($story)) {
+				$get[] = $story;
+			}
+		}
+	}
+
+	return $get;
 }

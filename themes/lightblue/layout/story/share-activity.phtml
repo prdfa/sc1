@@ -4,8 +4,15 @@
     ?>
     <i class="icon-share-alt progress-icon" data-icon="share-alt"></i>
     
-    <span class="story-follow-btn opt-active" title="Stop notifications">
+    <span class="story-follow-btn opt-active" title="Stop notifications"></span>
 		
-		<i class="mydiv"></i>
-		</span>
+		
+		
+		
 </span>
+<?php //print_r($sk);
+    if($sk['user']['id']){
+?>
+<i class="mydiv"></i><i class="select">Move to<select onchange="FA_setStorylabels(<?php echo $sk['story']['id']; ?>,this.value,<?php echo $sk['user']['id']?>);"><?php echo FA_get_gallery_options($sk['user']['id']);?>
+</select></i>
+<?php }?>

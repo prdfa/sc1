@@ -1,12 +1,12 @@
 <div class="list-wrapper">
     <div class="list-header">
         <div class="float-left">
-            <?php echo $lang['manage_groups_header_label']; ?>
+            <?php echo $lang['manage_polls_header_label']; ?>
         </div>
 
         <div class="float-right">
-            <a class="hover-line" href="<?php echo FA_smoothLink('index.php?tab1=create_group'); ?>" data-href="?tab1=create_group">
-                <?php echo $lang['group_create_label']; ?>
+            <a class="hover-line" href="<?php echo FA_smoothLink('index.php?tab1=create_polls'); ?>" data-href="?tab1=create_polls">
+                <?php echo $lang['polls_create_label']; ?>
             </a>
         </div>
 
@@ -16,7 +16,7 @@
     if (($manages_groups_num = FA_countManagedGroups()) == 0) {
     ?>
     <div class="list-column">
-        <?php echo $lang['no_managed_groups_label']; ?>.
+        <?php echo $lang['no_managed_polls_label']; ?>.
     </div>
     <?php
     } else {

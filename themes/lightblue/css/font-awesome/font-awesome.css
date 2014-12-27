@@ -293,7 +293,7 @@ a .icon-rotate-90:before,a .icon-rotate-180:before,a .icon-rotate-270:before,a .
 .icon-expand-alt:before{content:"\f116";}
 .icon-collapse-alt:before{content:"\f117";}
 .icon-smile:before{content:"\f118";}
-.icon-frown:before{content:"\f119";}
+.icon-frown:before{content:"\f05b";}
 .icon-meh:before{content:"\f11a";}
 .icon-gamepad:before{content:"\f11b";}
 .icon-keyboard:before{content:"\f11c";}
@@ -402,3 +402,4 @@ a .icon-rotate-90:before,a .icon-rotate-180:before,a .icon-rotate-270:before,a .
 .icon-vk:before{content:"\f189";}
 .icon-weibo:before{content:"\f18a";}
 .icon-renren:before{content:"\f18b";}
+.icon-step-backward:before{content:"\f048";}

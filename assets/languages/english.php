@@ -121,7 +121,7 @@ $lang['pages_likes_label'] = 'Page Likes';
 
 $lang['pages_message_privacy'] = 'Allow people to send messages to Page';
 $lang['pages_timeline_post_privacy'] = 'Allow people to post on Page\'s timeline';
-
+$lang['polls_create_label'] = 'Create Polls';
 // Gallery (added by bls)
 $lang['gallery_name'] = 'Gallery';
 $lang['gallery_create_label'] = 'Create Gallery';
@@ -158,6 +158,8 @@ $lang['no_managed_galleries_label'] = 'You do not have any galleries to manage';
 $lang['manage_groups_header_label'] = 'Groups You Manage';
 $lang['no_managed_groups_label'] = 'You do not have any groups to manage';
 
+$lang['manage_polls_header_label'] = 'Polls You Manage';
+$lang['no_managed_polls_label'] = 'You do not have any Polls to manage';
 // Settings
 $lang['settings_label'] = 'Settings';
 $lang['general_settings_label'] = 'General Settings';
@@ -250,7 +252,7 @@ $lang['declining'] = 'Declining';
 $lang['edit_label'] = 'Edit';
 $lang['editor'] = 'Editor';
 $lang['error_bad_captcha'] = 'Your captcha is incorrect.';
-$lang['error_bad_login'] = 'Invalid username and/or password.';
+$lang['error_bad_login'] = 'Invalid username or password.';
 $lang['error_empty_login'] = 'Please fill in all login details.';
 $lang['error_empty_registration'] = 'Please fill in all registration details.';
 $lang['error_verify_email'] = 'Please verify your email first.';
@@ -382,5 +384,11 @@ $lang['go_mobile_description_paragraph'] = 'One website for all devices. Whether
 $lang['trending_description'] = 'Know what\'s happening!';
 $lang['trending_description_paragraph'] = 'Stay ahead of the world. Keep an eye on what\'s trending around!';
 
+//signup 
+$lang['signUp_msg'] = 'All Field are compulsory';
+
 //Gellery 
 $lang['gellary_create_error'] = 'All Fields Are Compulsory';
+
+$lang['polls_name_label'] = 'Title';
+$lang['polls_name_label_plcaeholder'] = 'Title of the pole';

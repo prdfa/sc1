@@ -679,3 +679,24 @@ function addEmoToInput(code,input) {
     
     inputTag.keyup();
 }
+
+//Show comment likes window (popup)
+function FA_setStorylabels(story_id,label_id,timeline_id) {
+    //alert(story_id + "|" + label_id +"|"+timeline_id);
+	//main_elem = $('.comment_' + comment_id);
+   // like_activity_btn = main_elem.find('.comment-like-activity');
+    //FA_progressIconLoader(like_activity_btn);
+    
+    $.get(FA_source(), {t: 'setStorylabels', 'story_id': story_id, 'label_id': label_id, 'timeline_id': timeline_id}, function(data) {
+        
+        if (data.status == 200) {
+            
+            
+            if ($('.header-wrapper').width() < 920) {
+                $('.window-wrapper').css('margin-top',($(document).scrollTop()+10)+'px');
+            }
+        }
+        else{alert('1');}
+        //FA_progressIconLoader(like_activity_btn);
+    });
+}
