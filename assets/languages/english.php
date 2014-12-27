@@ -384,3 +384,12 @@ $lang['trending_description_paragraph'] = 'Stay ahead of the world. Keep an eye 
 
 //Gellery 
 $lang['gellary_create_error'] = 'All Fields Are Compulsory';
+//GANG
+$lang['manage_gangs_header_label'] = 'Gangs You Manage';
+$lang['gang_create_label'] = 'Create Gang';
+$lang['no_managed_gangs_label'] = 'You do not have any gangs to manage';
+$lang['gang_name_label'] = 'Name';
+$lang['accepted_gang_join_request'] = 'accepted your request to join the gang {group_name}';
+$lang['added_to_gang'] = 'added you to the gang "{group_name}"';
+$lang['no_friends_to_add_to_gang'] = 'You do not have any friends to add to this gang.';
+$lang['made_gang_admin'] = 'made you an admin of the group "{group_name}"';

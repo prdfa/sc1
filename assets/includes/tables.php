@@ -23,3 +23,5 @@ define('DB_GALLERY_MST', 'gallery'); // added by bls
 define('DB_DARE_CATEGORIES_MST', 'dare_categories'); // added by SN
 define('DB_DARE_LEVEL_MST', 'dare_level'); // added by SN
 define('DB_DARE_CONDITION_MST', 'dare_condition'); // added by SN
+define('DB_GANGS', 'gangs'); // added by SN
+define('DB_GANG_ADMINS', 'gang_admins'); // added by SN

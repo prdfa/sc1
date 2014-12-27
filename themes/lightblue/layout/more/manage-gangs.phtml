@@ -1,0 +1,34 @@
+<div class="list-wrapper">
+    <div class="list-header">
+        <div class="float-left">
+            <?php echo $lang['manage_gangs_header_label']; ?>
+        </div>
+
+        <div class="float-right">
+            <a class="hover-line" href="<?php echo FA_smoothLink('index.php?tab1=create_gang'); ?>" data-href="?tab1=create_gang">
+                <?php echo $lang['gang_create_label']; ?>
+            </a>
+        </div>
+
+        <div class="float-clear"></div>
+    </div>
+    <?php
+    if (($manages_gangs_num = FA_countManagedGangs()) == 0) {
+        ?>
+        <div class="list-column">
+            <?php echo $lang['no_managed_gangs_label']; ?>.
+        </div>
+    <?php
+    } else {
+
+        foreach (FA_getManagedGangs() as $group) { ?>
+            <div class="list-column">
+                <a class="bold-500" href="<?php echo $group['url']; ?>" data-href="?tab1=timeline&id=<?php echo $group['username']; ?>">
+                    <?php echo $group['name']; ?>
+                </a>
+            </div>
+        <?php
+        }
+    }
+    ?>
+</div>

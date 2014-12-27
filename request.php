@@ -1245,10 +1245,10 @@ if ($t == "gallery") { // $t and $a are set in gallery/create.phtml
 
 // Group requests
 if ($t == "group") {
-    
+
     // Create group
     if ($a == "create") {
-        
+
         if (!empty($_POST['group_name']) && !empty($_POST['group_username']) && !empty($_POST['group_about']) && !empty($_POST['group_privacy'])) {
             $registerArray = array(
                 'name' => $_POST['group_name'],
@@ -1257,7 +1257,7 @@ if ($t == "group") {
                 'privacy' => $_POST['group_privacy']
             );
             $register = FA_registerGroup($registerArray);
-            
+
             if ($register) {
                 $group = FA_getUser($register['id']);
                 $data = array(
@@ -1266,21 +1266,22 @@ if ($t == "group") {
                 );
             }
         }
-        
+
         header("Content-type: application/json");
         echo json_encode($data);
         mysqli_close($dbConnect);
         exit();
     }
-    
+
     // Update group settings & info
     if ($a == "update_settings") {
-        
+
         if (!empty($_POST['timeline_id']) && is_numeric($_POST['timeline_id']) && $_POST['timeline_id'] > 0) {
-            
+
             if (FA_updateTimeline($_POST)) {
+
                 $group = FA_getUser($_POST['timeline_id']);
-                
+
                 if (!empty($group['id']) && $group['type'] == "group") {
                     $data = array(
                         'status' => 200,
@@ -1289,97 +1290,241 @@ if ($t == "group") {
                 }
             }
         }
-        
+
         header("Content-type: application/json");
         echo json_encode($data);
         mysqli_close($dbConnect);
         exit();
     }
-    
+
     // Add group member
     if ($a == "add_member") {
-        
+
         if (!empty($_POST['group_id']) && is_numeric($_POST['group_id']) && !empty($_POST['member_id']) && is_numeric($_POST['member_id'])) {
-            
+
             if (FA_registerGroupMember($_POST['group_id'], $_POST['member_id'])) {
                 $data = array(
                     'status' => 200
                 );
             }
         }
-        
+
         header("Content-type: application/json");
         echo json_encode($data);
         mysqli_close($dbConnect);
         exit();
     }
-    
+
     // Add group admin
     if ($a == "add_admin") {
-        
+
         if (!empty($_POST['group_id']) && is_numeric($_POST['group_id']) && !empty($_POST['admin_id']) && is_numeric($_POST['admin_id'])) {
-            
+
             if (FA_registerGroupAdmin($_POST['group_id'], $_POST['admin_id'])) {
                 $data = array(
                     'status' => 200
                 );
             }
         }
-        
+
         header("Content-type: application/json");
         echo json_encode($data);
         mysqli_close($dbConnect);
         exit();
     }
-    
+
     // Accept group member
     if ($a == "accept_member") {
-        
+
         if(!empty($_POST['group_id']) && is_numeric($_POST['group_id']) && !empty($_POST['member_id']) && is_numeric($_POST['member_id'])) {
-            
+
             if (FA_registerGroupMember($_POST['group_id'], $_POST['member_id'])) {
                 $data = array(
                     'status' => 200
                 );
             }
         }
-        
+
         header("Content-type: application/json");
         echo json_encode($data);
         mysqli_close($dbConnect);
         exit();
     }
-    
+
     // Remove group member
     if ($a == "remove_member") {
-        
+
         if (!empty($_POST['group_id']) && is_numeric($_POST['group_id']) && !empty($_POST['member_id']) && is_numeric($_POST['member_id'])) {
-            
+
             if (FA_deleteGroupMember($_POST['group_id'], $_POST['member_id'])) {
                 $data = array(
                     'status' => 200
                 );
             }
         }
-        
+
         header("Content-type: application/json");
         echo json_encode($data);
         mysqli_close($dbConnect);
         exit();
     }
-    
+
     // Remove group admin
     if ($a == "remove_admin") {
-        
+
         if (!empty($_POST['group_id']) && is_numeric($_POST['group_id']) && !empty($_POST['admin_id']) && is_numeric($_POST['admin_id'])) {
-            
+
             if (FA_deleteGroupAdmin($_POST['group_id'], $_POST['admin_id'])) {
                 $data = array(
                     'status' => 200
                 );
             }
         }
-        
+
+        header("Content-type: application/json");
+        echo json_encode($data);
+        mysqli_close($dbConnect);
+        exit();
+    }
+}
+     //GANG
+if ($t == "gang") {
+
+    // Create gang
+    if ($a == "create") {
+
+        if (!empty($_POST['gang_name']) && !empty($_POST['gang_username']) && !empty($_POST['gang_about']) && !empty($_POST['gang_privacy'])) {
+            $registerArray = array(
+                'name' => $_POST['gang_name'],
+                'username' => $_POST['gang_username'],
+                'about' => $_POST['gang_about'],
+                'privacy' => $_POST['gang_privacy']
+            );
+            $register = FA_registerGang($registerArray);
+
+            if ($register) {
+                $gang = FA_getUser($register['id']);
+                $data = array(
+                    'status' => 200,
+                    'url' => $gang['url']
+                );
+            }
+        }
+
+        header("Content-type: application/json");
+        echo json_encode($data);
+        mysqli_close($dbConnect);
+        exit();
+    }
+
+    // Update group settings & info
+    if ($a == "update_settings") {
+
+        if (!empty($_POST['timeline_id']) && is_numeric($_POST['timeline_id']) && $_POST['timeline_id'] > 0) {
+
+            if (FA_updateTimeline($_POST)) {
+
+                $group = FA_getUser($_POST['timeline_id']);
+
+                if (!empty($group['id']) && $group['type'] == "gang") {
+                    $data = array(
+                        'status' => 200,
+                        'url' => $group['url']
+                    );
+                }
+            }
+        }
+
+        header("Content-type: application/json");
+        echo json_encode($data);
+        mysqli_close($dbConnect);
+        exit();
+    }
+
+    // Add group member
+    if ($a == "add_member") {
+
+        if (!empty($_POST['gang_id']) && is_numeric($_POST['gang_id']) && !empty($_POST['member_id']) && is_numeric($_POST['member_id'])) {
+
+            if (FA_registerGangMember($_POST['gang_id'], $_POST['member_id'])) {
+                $data = array(
+                    'status' => 200
+                );
+            }
+        }
+
+        header("Content-type: application/json");
+        echo json_encode($data);
+        mysqli_close($dbConnect);
+        exit();
+    }
+
+    // Add group admin
+    if ($a == "add_admin") {
+
+        if (!empty($_POST['gang_id']) && is_numeric($_POST['gang_id']) && !empty($_POST['admin_id']) && is_numeric($_POST['admin_id'])) {
+
+            if (FA_registerGangAdmin($_POST['gang_id'], $_POST['admin_id'])) {
+                $data = array(
+                    'status' => 200
+                );
+            }
+        }
+
+        header("Content-type: application/json");
+        echo json_encode($data);
+        mysqli_close($dbConnect);
+        exit();
+    }
+
+    // Accept group member
+    if ($a == "accept_member") {
+
+        if(!empty($_POST['gang_id']) && is_numeric($_POST['gang_id']) && !empty($_POST['member_id']) && is_numeric($_POST['member_id'])) {
+
+            if (FA_registerGangMember($_POST['gang_id'], $_POST['member_id'])) {
+                $data = array(
+                    'status' => 200
+                );
+            }
+        }
+
+        header("Content-type: application/json");
+        echo json_encode($data);
+        mysqli_close($dbConnect);
+        exit();
+    }
+
+    // Remove group member
+    if ($a == "remove_member") {
+
+        if (!empty($_POST['gang_id']) && is_numeric($_POST['gang_id']) && !empty($_POST['member_id']) && is_numeric($_POST['member_id'])) {
+
+            if (FA_deleteGangMember($_POST['gang_id'], $_POST['member_id'])) {
+                $data = array(
+                    'status' => 200
+                );
+            }
+        }
+
+        header("Content-type: application/json");
+        echo json_encode($data);
+        mysqli_close($dbConnect);
+        exit();
+    }
+
+    // Remove group admin
+    if ($a == "remove_admin") {
+
+        if (!empty($_POST['gang_id']) && is_numeric($_POST['gang_id']) && !empty($_POST['admin_id']) && is_numeric($_POST['admin_id'])) {
+
+            if (FA_deleteGangAdmin($_POST['gang_id'], $_POST['admin_id'])) {
+                $data = array(
+                    'status' => 200
+                );
+            }
+        }
+
         header("Content-type: application/json");
         echo json_encode($data);
         mysqli_close($dbConnect);

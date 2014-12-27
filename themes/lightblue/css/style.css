@@ -1455,7 +1455,7 @@ word-break: break-all;
 .timeline-header-wrapper .timeline-name-wrapper .verified-badge {
 display: inline-block;
 vertical-align: middle;
-background: #4f82ca;
+background: #25ad9f;
 color: white;
 text-shadow: 0 0 0 white;
 font-size: 9px;
@@ -1511,10 +1511,12 @@ cursor: pointer;
 margin-right: 3px;
 }
 .timeline-buttons .active {
-background: #25ad9f;
-background: linear-gradient(#4a8ac2, #2e74a6);
-color: white;
-border-color: #25618c;
+
+	background: #25ad9f;
+	background: linear-gradient(#33aa9e, #2f9288);
+	color: white;
+	border-color: #296b64;
+
 }
 .cover-resize-buttons {
 display: none;
@@ -1735,6 +1737,9 @@ width: 25%;
 }
 .span30 {
 width: 30%;
+}
+.span32 {
+	width: 32%;
 }
 .span35 {
 width: 35%;

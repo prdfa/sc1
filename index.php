@@ -81,6 +81,10 @@ switch ($_GET['tab1']) {
     case 'create_group':
         include('assets/sources/create_group.php');
     break;
+    // Create gang page source
+    case 'create_gang':
+        include('assets/sources/create_gang.php');
+        break;
     
     // Hashtag page source
     case 'hashtag':

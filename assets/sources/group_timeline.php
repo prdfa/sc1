@@ -1,5 +1,6 @@
 <?php
 if (FA_isBlocked($sk['timeline']['id'])) {
+
     header('Location: index.php?t=home');
 }
 
