@@ -118,9 +118,15 @@ if ($sk['timeline']['post_privacy'] == "following") {
                     <?php echo FA_countPageLikes($sk['timeline']['id']) . ' ' .$lang['likes_label']; ?>
                 </a>
             </td>
+
             <td class="statistic" align="center" valign="middle">
                 <a href="<?php echo FA_smoothLink('index.php?tab1=timeline&tab2=groups&id='.$sk['timeline']['username']); ?>" data-href="?tab1=timeline&tab2=groups&id=<?php echo $sk['timeline']['username']; ?>">
                     <?php echo FA_countGroupJoined($sk['timeline']['id']) . ' ' .$lang['groups_label']; ?>
+                </a>
+            </td>
+            <td class="statistic" align="center" valign="middle">
+                <a href="<?php echo FA_smoothLink('index.php?tab1=timeline&tab2=gangs&id='.$sk['timeline']['username']); ?>" data-href="?tab1=timeline&tab2=gangs&id=<?php echo $sk['timeline']['username']; ?>">
+                    <?php echo FA_countGangJoined($sk['timeline']['id']) . ' ' .$lang['gangs_label']; ?>
                 </a>
             </td>
         </tr>
@@ -600,6 +606,46 @@ if ($sk['timeline']['post_privacy'] == "following") {
             }
             ?>
         </div>
+        <?php
+        } elseif (isset($_GET['tab2']) && $_GET['tab2'] == "gangs") {
+            ?>
+            <div class="list-wrapper">
+                <div class="list-header">
+                    <?php echo $lang['gangs_joined_label']; ?>
+                </div>
+                <?php
+                if (FA_countGangJoined($sk['timeline']['id']) == 0) {
+                    echo '<div class="no-wrapper">' . $sk['timeline']['name'] . ' ' . $lang['no_gangs_joined'] . '</div>';
+                } else {
+
+                    foreach (FA_getGangsJoined($sk['timeline']['id']) as $group) {
+                        ?>
+                        <div class="list-column">
+                            <table border="0" width="100%" cellspacing="0" cellpadding="0">
+                                <tr>
+                                    <td width="42px" align="left" valign="middle">
+                                        <a href="<?php echo $group['url']; ?>" data-href="?tab1=timeline&id=<?php echo $group['username']; ?>">
+                                            <img width="36px" height="36px" class="radius3" src="<?php echo $group['thumbnail_url']; ?>" alt="<?php echo $group['name']; ?>">
+                                        </a>
+                                    </td>
+                                    <td align="left" valign="middle">
+                                        <a class="bold-500" href="<?php echo $group['url']; ?>" data-href="?tab1=timeline&id=<?php echo $group['username']; ?>">
+                                            <?php
+                                            echo $group['name'];
+                                            ?>
+                                        </a>
+                                    </td>
+                                    <td class="column-btn" align="right" valign="middle">
+                                        <?php echo FA_getFollowButton($group['id']); ?>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    <?php
+                    }
+                }
+                ?>
+            </div>
         <?php
         } else {
             

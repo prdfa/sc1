@@ -403,4 +403,9 @@ $lang['accepted_gang_join_request'] = 'accepted your request to join the gang {g
 $lang['added_to_gang'] = 'added you to the gang "{group_name}"';
 $lang['no_friends_to_add_to_gang'] = 'You do not have any friends to add to this gang.';
 $lang['made_gang_admin'] = 'made you an admin of the group "{group_name}"';
+$lang['gangs_label'] = 'Gangs';
+$lang['gangs_joined_label'] = 'Gangs Joined';
+$lang['no_gangs_joined'] = 'has not joined any gangs yet.';
+$lang['gang_search'] = 'Gang Search';
+$lang['gang_search_result'] = 'Gang Search Results';
 

@@ -61,10 +61,16 @@
                         <?php echo FA_countPosts($sk['timeline']['id']) . ' ' . $lang['posts_label']; ?>
                     </a>
                 </td>
+                <td class="statistic" align="center" valign="middle">
+                    <a href="<?php echo FA_smoothLink('index.php?tab1=timeline&tab2=gang_search&id='.$sk['timeline']['username']); ?>" data-href="?tab1=timeline&tab2=gang_search&id=<?php echo $sk['timeline']['username']; ?>">
+                        <?php echo $lang['gang_search']; ?>
+                    </a>
+                </td>
             </tr>
         </table>
     </div>
 </div>
+
 
 <div class="float-left span35">
 
@@ -133,6 +139,8 @@ Joined </a>";
         <input class="cover-image-input hidden" type="file" name="image" accept="image/jpeg,image/png" onchange="javascript:$('form.cover-form').submit();">
         <input name="timeline_id" value="<?php echo $sk['timeline']['id']; ?>" type="hidden">
     </form>
+
+
 
     <div class="timeline-sidebar">
         <!--<div class="sidebar-div">
@@ -546,7 +554,7 @@ Joined </a>";
                 </div>
                 <div class="float-clear"></div>
             </div>-->
-                    <input type="hidden" name="group_privacy" value="secret">
+                    <input type="hidden" name="group_privacy" value="closed">
                     <!-- <div class="form-input-wrapper">
                 <label class="float-left span20">
                     <?php
@@ -612,7 +620,7 @@ Joined </a>";
                 </div>
                 <div class="float-clear"></div>
             </div>-->
-                    <input type="hidden" name="timeline_post_privacy" value="members">
+                    <input type="hidden" name="timeline_post_privacy" value="admins">
                     <div class="form-input-wrapper">
                         <button class="active">
                             <?php
@@ -640,7 +648,35 @@ Joined </a>";
                 });
             </script>
         <?php
-        } else {
+        } elseif (isset($_GET['tab2']) && $_GET['tab2'] == "gang_search") {
+            ?>
+            <div class="story-publisher-box">
+                <div class="box-header-wrapper">
+                    Gangs Search
+                </div>
+                <div class="inputs-container">
+                    <div class="input-wrapper_cat ">
+                        <div class="float-left span65">
+                            <input type="text" name="gang_search" id="gang_search"  placeholder="Gang Search" >
+                        </div>
+                        <div class="float-right span30">
+                            <button class="submit-btn active" name="search_submit_btn" onclick="FA_GangSearch();" >
+                                <i class="icon-search progress-icon"></i>
+                                <span>Search</span>
+                            </button>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="list-wrapper" id="gang_result" style="display: none;">
+                <div class="list-header"><?php echo $lang['gang_search_result']; ?></div>
+                <div class="list-column"  id="gang_search_detail"></div>
+            </div>
+        <?php
+        }else {
+
             echo FA_getStoryPublisherBox(0, $sk['timeline']['id']);
             ?>
             <div class="stories-container" data-story-type="all" data-story-timeline="<?php echo $sk['timeline']['id']; ?>">
@@ -814,6 +850,8 @@ if ($sk['logged'] == true && FA_isGroupAdmin($sk['timeline']['id'])) {
             });
         });
 
+
+
         function FA_repositionCover() {
             cover_wrapper = $('.cover-wrapper');
             cover_resize_wrapper = $('.cover-resize-wrapper');
@@ -880,3 +918,19 @@ if ($sk['logged'] == true && FA_isGroupAdmin($sk['timeline']['id'])) {
 <?php
 }
 ?>
+<script>
+    function FA_GangSearch(){
+        var gang_search=$('#gang_search').val();
+        $.get(FA_source(), {t: 'gang_search', a: 'header', q: gang_search}, function (data) {
+             if(data['status']==200){
+                 $('#gang_result').show();
+                 if(data['html']==""){
+                     $('#gang_search_detail').html('<div class="no-wrapper"><?php echo $lang['no_result_found']; ?></div>');
+                 } else {
+                     $('#gang_search_detail').html(data['html']);
+                 }
+
+             }
+        });
+    }
+</script>

@@ -1192,6 +1192,41 @@ function FA_getGroupsJoined($timeline_id=0, $search_query='') {
     return $get;
 }
 
+function FA_getGangsJoined($timeline_id=0, $search_query='') {
+    global $dbConnect, $user;
+    $get = array();
+
+    if (empty($timeline_id) or $timeline_id == 0) {
+
+        if ($GLOBALS['logged'] !== true) {
+            return false;
+        }
+
+        $timeline_id = $user['id'];
+    }
+
+    if (!is_numeric($timeline_id) or $timeline_id < 1) {
+        return false;
+    }
+
+    $timeline_id = FA_secureEncode($timeline_id);
+    $query_text = "SELECT id FROM " . DB_ACCOUNTS . " WHERE id IN (SELECT following_id FROM " . DB_FOLLOWERS . " WHERE follower_id=$timeline_id AND following_id<>$timeline_id AND active=1) AND type='gang' AND active=1";
+
+    if (!empty($search_query)) {
+        $search_query = FA_secureEncode($search_query);
+        $query_text .= " AND name LIKE '%$search_query%'";
+    }
+
+    $query_text .= " ORDER BY RAND()";
+    $sql_query = mysqli_query($dbConnect, $query_text);
+
+    while ($sql_fetch = mysqli_fetch_assoc($sql_query)) {
+        $get[] = FA_getUser($sql_fetch['id']);
+    }
+
+    return $get;
+}
+
 function FA_getFollowRequests($timeline_id=0, $search_query='') {
     if ($GLOBALS['logged'] !== true) {
         return false;
@@ -1529,6 +1564,47 @@ function FA_getSearch($search_query='', $from_row=0, $limit=10) {
         }
     }
     
+    return $get;
+}
+
+function FA_getGangSearch($search_query='', $from_row=0, $limit=10) {
+    global $dbConnect;
+    $get = array();
+
+    if (!isset($search_query) or empty($search_query)) {
+        return $get;
+    }
+
+    if (!isset($from_row) or empty($from_row)) {
+        $from_row = 0;
+    }
+
+    if (!is_numeric($from_row) or $from_row < 0) {
+        return $get;
+    }
+
+    if (!isset($limit) or empty($limit)) {
+        $limit = 10;
+    }
+
+    if (!is_numeric($limit) or $limit < 1) {
+        return $get;
+    }
+
+    $search_query = FA_secureEncode($search_query);
+    $from_row = FA_secureEncode($from_row);
+    $limit = FA_secureEncode($limit);
+    $query_one = "SELECT id FROM " . DB_ACCOUNTS . " WHERE name LIKE '%$search_query%' AND (id IN (SELECT id FROM " . DB_GANGS . " WHERE group_privacy IN ('open','closed'))) AND type IN ('gang') AND active=1 ORDER BY name ASC LIMIT $from_row,$limit";
+
+    $sql_query_one = mysqli_query($dbConnect, $query_one);
+
+    if (mysqli_num_rows($sql_query_one) > 0) {
+
+        while ($sql_fetch_one = mysqli_fetch_assoc($sql_query_one)) {
+            $get[] = FA_getUser($sql_fetch_one['id']);
+        }
+    }
+
     return $get;
 }
 
@@ -3058,23 +3134,45 @@ function FA_countPageLikes($timeline_id=0) {
 
 function FA_countGroupJoined($timeline_id=0) {
     global $dbConnect, $user;
-    
+
     if (empty($timeline_id) or $timeline_id == 0) {
-        
+
         if ($GLOBALS['logged'] == true) {
             $timeline_id = $user['id'];
         }
     }
-    
+
     if (!is_numeric($timeline_id) or $timeline_id < 1) {
         return false;
     }
-    
+
     $timeline_id = FA_secureEncode($timeline_id);
     $query = "SELECT COUNT(id) AS count FROM " . DB_ACCOUNTS . " WHERE id IN (SELECT following_id FROM " . DB_FOLLOWERS . " WHERE follower_id=$timeline_id AND following_id<>$timeline_id AND active=1) AND type='group' AND active=1";
     $sql_query = mysqli_query($dbConnect, $query);
     $sql_fetch = mysqli_fetch_assoc($sql_query);
-    
+
+    return $sql_fetch['count'];
+}
+
+function FA_countGangJoined($timeline_id=0) {
+    global $dbConnect, $user;
+
+    if (empty($timeline_id) or $timeline_id == 0) {
+
+        if ($GLOBALS['logged'] == true) {
+            $timeline_id = $user['id'];
+        }
+    }
+
+    if (!is_numeric($timeline_id) or $timeline_id < 1) {
+        return false;
+    }
+
+    $timeline_id = FA_secureEncode($timeline_id);
+    $query = "SELECT COUNT(id) AS count FROM " . DB_ACCOUNTS . " WHERE id IN (SELECT following_id FROM " . DB_FOLLOWERS . " WHERE follower_id=$timeline_id AND following_id<>$timeline_id AND active=1) AND type='gang' AND active=1";
+    $sql_query = mysqli_query($dbConnect, $query);
+    $sql_fetch = mysqli_fetch_assoc($sql_query);
+
     return $sql_fetch['count'];
 }
 
@@ -3744,7 +3842,7 @@ function FA_registerGroup($data=0) {
                 $query_three = "INSERT INTO " . DB_GROUP_ADMINS . " (active,admin_id,group_id) VALUES (1," . $user['id'] . ",$group_id)";
                 $sql_query_three = mysqli_query($dbConnect, $query_three);
                 
-                $query_four = "UPDATE " . DB_GROUPS . " SET group_privacy='$privacy', add_privacy='admins', timeline_post_privacy='members' WHERE id=$group_id";
+                $query_four = "UPDATE " . DB_GROUPS . " SET group_privacy='$privacy', add_privacy='admins', timeline_post_privacy='admins' WHERE id=$group_id";
                 $sql_query_four = mysqli_query($dbConnect, $query_four);
                 $get = array(
                     'id' => $group_id,
@@ -5695,6 +5793,7 @@ function FA_deleteGroupMember($group_id=0, $member_id=0) {
 }
 
 function FA_deleteGangMember($group_id=0, $member_id=0) {
+
     if ($GLOBALS['logged'] !== true) {
         return false;
     }
@@ -5713,7 +5812,7 @@ function FA_deleteGangMember($group_id=0, $member_id=0) {
     $member_id = FA_secureEncode($member_id);
     $group = FA_getUser($group_id);
 
-    if (!isset($group['id']) or $group['type'] != "group") {
+    if (!isset($group['id']) or $group['type'] != "gang") {
         return false;
     }
 
@@ -5727,7 +5826,8 @@ function FA_deleteGangMember($group_id=0, $member_id=0) {
         return false;
     }
 
-    if ($member['id'] == $user['id'] or FA_isGroupAdmin($group['id'])) {
+
+    if ($member['id'] == $user['id'] or FA_isGangAdmin($group['id'])) {
         $query_one = "DELETE FROM " . DB_FOLLOWERS . " WHERE follower_id=" . $member['id'] . " AND following_id=" . $group['id'];
         $sql_query_one = mysqli_query($dbConnect, $query_one);
 

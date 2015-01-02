@@ -388,6 +388,40 @@ if ($t == "search") {
     }
 }
 
+//Gang Search
+if ($t == "gang_search") {
+
+    // Header search
+    if ($a == "header") {
+        $search_query = '';
+        $html = '';
+
+        if (!empty($_GET['q'])) {
+            $search_query = FA_secureEncode($_GET['q']);
+        }
+
+        $user_results = FA_getGangSearch($search_query, 0, 7);
+
+        if (is_array($user_results)) {
+
+            foreach ($user_results as $sk['list']) {
+                $html .= FA_getPage('header/search-result');
+            }
+        }
+
+        $data = array(
+            'status' => 200,
+            'html' => $html,
+            'link' => FA_smoothLink('index.php?tab1=search&query=' . $search_query)
+        );
+
+        header("Content-type: application/json");
+        echo json_encode($data);
+        mysqli_close($dbConnect);
+        exit();
+    }
+}
+
 if ($t == "announcements") {
 
     if ($a == "read") {
@@ -1502,7 +1536,7 @@ if ($t == "gang") {
         exit();
     }
 
-    // Remove group member
+    // Remove gang member
     if ($a == "remove_member") {
 
         if (!empty($_POST['gang_id']) && is_numeric($_POST['gang_id']) && !empty($_POST['member_id']) && is_numeric($_POST['member_id'])) {
