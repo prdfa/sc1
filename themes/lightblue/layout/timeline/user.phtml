@@ -670,7 +670,7 @@ if ($sk['timeline']['post_privacy'] == "following") {
             }
             ?>
             </div>
-            <div align="center">
+            <div align="left">
                 <div class="load-btn" onclick="FA_loadOldStories();">
                     <i class="icon-reorder progress-icon hide"></i>
                     <?php echo $lang['view_previous_posts_label']; ?>
@@ -718,7 +718,7 @@ if ($sk['timeline']['post_privacy'] == "following") {
             ?>
         </div>
         
-        <div class="filter music-wrapper" onclick="FA_filterStories('music',<?php echo $sk['timeline']['id']; ?>);">
+        <?php /*?><div class="filter music-wrapper" onclick="FA_filterStories('music',<?php echo $sk['timeline']['id']; ?>);">
             <i class="icon-music progress-icon" data-icon="music"></i> 
             <?php
             echo $lang['filter_label_music'];
@@ -730,7 +730,7 @@ if ($sk['timeline']['post_privacy'] == "following") {
             <?php
             echo $lang['filter_label_places'];
             ?>
-        </div>
+        </div><?php */?>
         
         <div class="filter likes-wrapper" onclick="FA_filterStories('likes',<?php echo $sk['timeline']['id']; ?>);">
             <i class="icon-thumbs-up progress-icon" data-icon="thumbs-up"></i> 

@@ -36,7 +36,7 @@
                     <?php echo $notification_alert; ?>
                 </span>
             </a>
-            <a class="message-nav header-nav float-left" href="<?php echo FA_smoothLink('index.php?tab1=messages'); ?>" title="<?php echo $lang['message_label']; ?>" data-href="?tab1=messages">
+            <?php /*?><a class="message-nav header-nav float-left" href="<?php echo FA_smoothLink('index.php?tab1=messages'); ?>" title="<?php echo $lang['message_label']; ?>" data-href="?tab1=messages">
                 <i class="icon icon-comments"></i>
                 <?php
                 $message_alert = FA_countMessages(
@@ -54,7 +54,7 @@
                 <span class="new-update-alert<?php echo $hidden_class; ?>">
                     <?php echo $message_alert; ?>
                 </span>
-            </a>
+            </a><?php */?>
             <?php
             $new_follow_requests = FA_countFollowRequests();
             $hidden_class = '';
@@ -112,7 +112,7 @@
             <input value="<?php echo $lang['header_search_textarea_label']; ?>" placeholder="<?php echo $lang['header_search_textarea_label']; ?>" data-placeholder="<?php echo $lang['header_search_textarea_label']; ?>" type="text" onkeyup="FA_headerSearch(this.value);">
             <button name="story_search_btn" class="submit-btn active">
                 <i class="icon-search progress-icon"></i>
-                <span>Search</span>
+                <!--<span>Search</span>-->
             </button>
         </div>
     </div>

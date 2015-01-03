@@ -13,6 +13,6 @@
 <?php //print_r($sk);
     if($sk['user']['id']){
 ?>
-<i class="mydiv"></i><i class="select">Move to<select onchange="FA_setStorylabels(<?php echo $sk['story']['id']; ?>,this.value,<?php echo $sk['user']['id']?>);"><?php echo FA_get_gallery_options($sk['user']['id']);?>
-</select></i>
+<!--<i class="mydiv"></i>--><abbr class="space6">·</abbr><a href=""><i class="icon-facebook"></i></a><abbr class="space6">·</abbr><a href=""><i class="icon-twitter"></i></a><abbr class="space6">·</abbr><a href=""><i class="icon-google-plus"></i></a><abbr class="space6">·</abbr><a href=""><i class="icon-pinterest"></i></a>&nbsp;<div class="moveto"><i class="icon-move"></i> Move to &nbsp; <select onchange="FA_setStorylabels(<?php echo $sk['story']['id']; ?>,this.value,<?php echo $sk['user']['id']?>);"><?php echo FA_get_gallery_options($sk['user']['id']);?>
+</select></div> 
 <?php }?>

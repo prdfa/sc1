@@ -1,67 +1,6 @@
 <div class="page-margin"></div>
-<div class="float-left span63">
-    <?php
-    $announcement_count = FA_countAnnouncements();
 
-    if ($announcement_count > 0) {
-    ?>
-    <div class="announcement-container">
-        <div class="announcement-header">
-            <div class="float-left">
-                Announcements
-            </div>
-
-            <div class="float-right">
-                <a href="javascript:void(0);" onclick="javascript:closeAnnouncements();">Close</a>
-            </div>
-
-            <div class="float-clear"></div>
-        </div>
-    <?php
-        $announcements = FA_getAnnouncements();
-
-        foreach ($announcements as $announcement) {
-        ?>
-        <div class="announcement-wrapper">
-            <div class="text">
-                <?php echo $announcement['text']; ?>
-            </div>
-        </div>
-        <?php
-        }
-        ?>
-    </div>
-    <?php
-    }
-    
-    if ($sk['logged'] == true) {
-        echo FA_getStoryPublisherBox();
-    }
-    ?>
-    <div class="stories-container">
-        <div class="stories-wrapper">
-            <?php
-            $stories = FA_getStories();
-
-            if (is_array($stories) && count($stories) > 0) {
-                
-                foreach($stories as $sk['story']) {
-                    echo FA_getPage('story/content');
-                }
-            }
-            ?>
-        </div>
-        <div align="center">
-            <div class="load-btn" onclick="FA_loadOldStories();">
-                <i class="icon-reorder progress-icon hide"></i>
-                <?php
-                echo $lang['view_previous_posts_label'];
-                ?>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="float-right span35">
+<div class="float-left span35">
     <div class="short-profile-wrapper">
         <div class="short-cover">
             <img src="<?php echo $sk['user']['cover_url']; ?>" width="100%" alt="<?php echo $sk['user']['name']; ?>">
@@ -113,7 +52,7 @@
             ?>
         </div>
         
-        <div class="filter music-wrapper" onclick="FA_filterStories('music',0);">
+       <?php /*?> <div class="filter music-wrapper" onclick="FA_filterStories('music',0);">
             <i class="icon-music progress-icon" data-icon="music"></i> 
             <?php
             echo $lang['filter_label_music'];
@@ -125,7 +64,8 @@
             <?php
             echo $lang['filter_label_places'];
             ?>
-        </div>
+        </div><?php */?>
+        
     </div>
     
     <div class="list-wrapper suggestions-wrapper">
@@ -179,6 +119,71 @@
     
     <?php echo $sk['config']['ad_place_home']; ?>
 </div>
+
+
+<div class="float-right span63">
+    <?php
+    $announcement_count = FA_countAnnouncements();
+
+    if ($announcement_count > 0) {
+    ?>
+    <div class="announcement-container">
+        <div class="announcement-header">
+            <div class="float-left">
+                Announcements
+            </div>
+
+            <div class="float-right">
+                <a href="javascript:void(0);" onclick="javascript:closeAnnouncements();">Close</a>
+            </div>
+
+            <div class="float-clear"></div>
+        </div>
+    <?php
+        $announcements = FA_getAnnouncements();
+
+        foreach ($announcements as $announcement) {
+        ?>
+        <div class="announcement-wrapper">
+            <div class="text">
+                <?php echo $announcement['text']; ?>
+            </div>
+        </div>
+        <?php
+        }
+        ?>
+    </div>
+    <?php
+    }
+    
+    if ($sk['logged'] == true) {
+        echo FA_getStoryPublisherBox();
+    }
+    ?>
+    <div class="stories-container">
+        <div class="stories-wrapper">
+            <?php
+            $stories = FA_getStories();
+
+            if (is_array($stories) && count($stories) > 0) {
+                
+                foreach($stories as $sk['story']) {
+                    echo FA_getPage('story/content');
+                }
+            }
+            ?>
+        </div>
+        <div align="left">
+            <div class="load-btn" onclick="FA_loadOldStories();">
+                <i class="icon-reorder progress-icon hide"></i>
+                <?php
+                echo $lang['view_previous_posts_label'];
+                ?>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <div class="float-clear"></div>
 

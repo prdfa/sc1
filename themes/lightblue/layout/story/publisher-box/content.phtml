@@ -12,46 +12,45 @@
             <input class="story-text-input" type="hidden" name="text" value="">
 
             <div class="input-wrapper_cat">
-
-                <div class="float-left span30">
-                    <div>Category</div>
-                    <div class="float-left">
-                        <select name="dare_categories" id="dare_categories">
+                <div class="float-left span32">
+                    <div class="post_comment">
+                    <div class="post_comment_label">Category&nbsp;&nbsp;</div>
+                    <div class="post_comment_value"><select name="dare_categories" id="dare_categories">
                             <?php
                             $dare_categories=FA_get_dare_categories();
                             foreach($dare_categories as $dare_categories_k=>$dare_categories_v){
                                 echo "<option value='".$dare_categories_k."'>".$dare_categories_v."</option>";
                             }
                             ?>
-                        </select>
+                        </select></div>
                     </div>
                 </div>
 
-                <div class="float-left span30">
-                    <div>Level</div>
-                    <div>
-                        <select name="dare_level" id="dare_level">
+                <div class="float-left span32">
+                    <div class="post_comment">
+                   <div class="post_comment_label"> Level</div>
+                   <div class="post_comment_value"><select name="dare_level" id="dare_level">
                             <?php
                             $dare_level=FA_get_dare_level();
                             foreach($dare_level as $dare_level_k=>$dare_level_v){
                                 echo "<option value='".$dare_level_k."'>".$dare_level_v."</option>";
                             }
                             ?>
-                        </select>
+                        </select></div>
                     </div>
                 </div>
 
-                <div class="float-left span30">
-                    <div>Category</div>
-                    <div>
-                        <select name="dare_condition" id="dare_condition">
+                <div class="float-left span32">
+                    <div class="post_comment">
+                    <div class="post_comment_label">Category</div>
+                    <div class="post_comment_value"><select name="dare_condition" id="dare_condition">
                             <?php
                             $dare_condition=FA_get_dare_condition();
                             foreach($dare_condition as $dare_condition_k=>$dare_condition_v){
                                 echo "<option value='".$dare_condition_k."'>".$dare_condition_v."</option>";
                             }
                             ?>
-                        </select>
+                        </select></div>
                     </div>
                 </div>
 

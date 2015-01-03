@@ -1,4 +1,15 @@
-<div id="story_<?php echo $sk['story']['id']; ?>" class="story-wrapper-home story_<?php echo $sk['story']['id']; ?>" data-story-id="<?php echo $sk['story']['id']; ?>">
+<?php
+$current_page_uri = $_SERVER['REQUEST_URI'];
+$part_url = explode("/", $current_page_uri);
+$page_name = end($part_url);
+
+if ($page_name=='welcome' || $page_name=='home')
+$class_name1='story-wrapper-home1';
+else
+$class_name='story-wrapper-home';
+?> 
+
+<div id="story_<?php echo $sk['story']['id']; ?>"  class="<?php echo $class_name; ?> <?php echo $class_name1; ?>   story_<?php echo $sk['story']['id']; ?>" data-story-id="<?php echo $sk['story']['id']; ?>">
 <div class="publisher-wrapper">
     <table border="0" width="100%" cellspacing="0" cellpadding="0">
         <tr>
@@ -173,6 +184,17 @@ if ($sk['story']['media_exists'] == true) {
                         <?php
                         echo FA_getPostShareActivityButton($sk['story']['id']);
                         ?>
+                    </span>
+                    <span class="story-share-activity">
+                    <abbr class="space6">·</abbr><a href=""><i class="icon-facebook"></i></a><abbr class="space6">·</abbr><a href=""><i class="icon-twitter"></i></a><abbr class="space6">·</abbr><a href=""><i class="icon-google-plus"></i></a><abbr class="space6">·</abbr><a href=""><i class="icon-pinterest"></i></a>
+                    <?php 
+					if ($sk['logged'] == true) {
+					?>
+                    <div class="moveto"><i class="icon-move"></i> Move to &nbsp; <select onchange="FA_setStorylabels(<?php echo $sk['story']['id']; ?>,this.value,<?php echo $sk['user']['id']?>);"><?php echo FA_get_gallery_options($sk['user']['id']);?>
+</select></div> 
+<?php
+					}
+?>
                     </span>
             </td>
 

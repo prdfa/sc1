@@ -185,8 +185,8 @@ a .icon-rotate-90:before,a .icon-rotate-180:before,a .icon-rotate-270:before,a .
 .icon-unchecked:before,.icon-check-empty:before{content:"\f096";}
 .icon-bookmark-empty:before{content:"\f097";}
 .icon-phone-sign:before{content:"\f098";}
-.icon-twitter:before{content:"\f099";}
-.icon-facebook:before{content:"\f09a";}
+.icon-twitter:before{content:"\f099"; color:#0084b4;}
+.icon-facebook:before{content:"\f09a"; color:#3b5998;}
 .icon-github:before{content:"\f09b";}
 .icon-unlock:before{content:"\f09c";}
 .icon-credit-card:before{content:"\f09d";}
@@ -226,10 +226,10 @@ a .icon-rotate-90:before,a .icon-rotate-180:before,a .icon-rotate-270:before,a .
 .icon-table:before{content:"\f0ce";}
 .icon-magic:before{content:"\f0d0";}
 .icon-truck:before{content:"\f0d1";}
-.icon-pinterest:before{content:"\f0d2";}
+.icon-pinterest:before{content:"\f0d2"; color:#cb2027;}
 .icon-pinterest-sign:before{content:"\f0d3";}
 .icon-google-plus-sign:before{content:"\f0d4";}
-.icon-google-plus:before{content:"\f0d5";}
+.icon-google-plus:before{content:"\f0d5"; color:#d73d32;}
 .icon-money:before{content:"\f0d6";}
 .icon-caret-down:before{content:"\f0d7";}
 .icon-caret-up:before{content:"\f0d8";}
