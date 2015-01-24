@@ -192,6 +192,7 @@ Joined </a>";
                         foreach (FA_getFollowers($sk['user']['id']) as $follower) {
 
                             if (!FA_isFollowing($sk['timeline']['id'], $follower['id'])) {
+                                if(empty(FA_Gangname($follower['id']))){
                                 ?>
                                 <div class="list-column follower-id-<?php echo $follower['id']; ?>">
                                     <table border="0" width="100%" cellspacing="0" cellpadding="0">
@@ -215,6 +216,7 @@ Joined </a>";
                                     </table>
                                 </div>
                             <?php
+                                }
                             }
                         }
                     }
@@ -648,7 +650,7 @@ Joined </a>";
                 });
             </script>
         <?php
-        } elseif (isset($_GET['tab2']) && $_GET['tab2'] == "gang_search") {
+        } elseif (isset($_GET['tab2']) && $_GET['tab2'] == "gang_search" && FA_isGangAdmin($sk['timeline']['id'])) {
             ?>
             <div class="story-publisher-box">
                 <div class="box-header-wrapper">
@@ -675,9 +677,13 @@ Joined </a>";
                 <div class="list-column"  id="gang_search_detail"></div>
             </div>
         <?php
-        }else {
+        } else {
+           // echo FA_isGangAdmin_other($sk['timeline']['id']);
+            if(FA_isGangAdmin_other($sk['timeline']['id'])) {
+                echo FA_getStoryPublisherBox(0, $sk['timeline']['id']);
+            }
 
-            echo FA_getStoryPublisherBox(0, $sk['timeline']['id']);
+            if(FA_isGangmember($sk['timeline']['id'])){
             ?>
             <div class="stories-container" data-story-type="all" data-story-timeline="<?php echo $sk['timeline']['id']; ?>">
                 <div class="stories-wrapper">
@@ -691,7 +697,7 @@ Joined </a>";
                     if (is_array($stories) && count($stories) > 0) {
 
                         foreach ($stories as $sk['story']) {
-                            echo FA_getPage('story/content');
+                            echo FA_getPage('story/content-gang');
                         }
                     }
                     ?>
@@ -704,6 +710,7 @@ Joined </a>";
                 </div>
             </div>
         <?php
+        }
         }
         ?>
     </div>
@@ -848,7 +855,12 @@ if ($sk['logged'] == true && FA_isGroupAdmin($sk['timeline']['id'])) {
                 $('.cover-progress').css('line-height', $('.cover-resize-wrapper').height() + 'px');
                 $('.screen-width').val(cover_width);
             });
+
+
+
         });
+
+
 
 
 

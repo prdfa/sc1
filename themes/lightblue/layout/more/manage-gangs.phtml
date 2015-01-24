@@ -5,9 +5,11 @@
         </div>
 
         <div class="float-right">
+            <?php if(FA_Gangcount($_SESSION['user_id'])==0){ ?>
             <a class="hover-line" href="<?php echo FA_smoothLink('index.php?tab1=create_gang'); ?>" data-href="?tab1=create_gang">
                 <?php echo $lang['gang_create_label']; ?>
             </a>
+            <?php } ?>
         </div>
 
         <div class="float-clear"></div>
@@ -16,7 +18,12 @@
     if (($manages_gangs_num = FA_countManagedGangs()) == 0) {
         ?>
         <div class="list-column">
-            <?php echo $lang['no_managed_gangs_label']; ?>.
+
+            <?php $gang_name=FA_Gangname($_SESSION['user_id']); if($gang_name){ ?>
+                <a class="bold-500" href="http://<?php echo $_SERVER['HTTP_HOST'] ?>/@<?php echo $gang_name['username'] ?>" data-href="?tab1=timeline&id=<?php echo $gang_name['username']; ?>">
+                    <?php echo $gang_name['name']; ?>
+                </a>
+            <?php } else { echo $lang['no_managed_gangs_label']."."; } ?>
         </div>
     <?php
     } else {

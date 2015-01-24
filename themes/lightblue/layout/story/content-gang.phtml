@@ -1,0 +1,299 @@
+<div id="story_<?php echo $sk['story']['id']; ?>" class="story-wrapper story_<?php echo $sk['story']['id']; ?>" data-story-id="<?php echo $sk['story']['id']; ?>">
+    <div class="publisher-wrapper">
+        <table border="0" width="100%" cellspacing="0" cellpadding="0">
+        <tr>
+            <td width="48px" align="left" valign="top">
+                <a href="<?php echo $sk['story']['publisher']['url']; ?>" data-href="?tab1=timeline&id=<?php echo $sk['story']['publisher']['username']; ?>">
+                    <img class="avatar" src="<?php echo $sk['story']['publisher']['thumbnail_url']; ?>" width="40px" height="40px" alt="<?php echo $sk['story']['publisher']['name']; ?>">
+                </a>
+            </td>
+            <td align="left" valign="top">
+                <?php $gang_detail=FA_Gangname($sk['story']['publisher']['id']); ?>
+                <a class="name" href="<?php echo "http://".$_SERVER['HTTP_HOST']."/@".$gang_detail['username']; ?>" data-href="?tab1=timeline&id=<?php echo $gang_detail['username']; ?>">
+                    <?php echo $gang_detail['name']; ?>
+</a>
+<?php
+if ($sk['story']['recipient_exists'] == true) {
+    ?>
+    <i class="icon-arrow-right recipient-indicator-icon"></i> <a class="name" href="<?php echo $sk['story']['recipient']['url']; ?>" data-href="?tab1=timeline&id=<?php echo $sk['story']['recipient']['username']; ?>">
+        <?php echo $sk['story']['recipient']['name']; ?>
+    </a>
+<?php
+}
+
+echo $sk['story']['activity_text'];
+?>
+<div class="other-data">
+                    <span class="time-wrapper ajax-time" title="<?php echo date('c', $sk['story']['time']); ?>">
+                        <?php echo date('c', $sk['story']['time']); ?>
+                    </span>
+    <?php
+    if ($sk['story']['location_exists'] == true) {
+        ?>
+        <abbr class="space3">&#183;</abbr>
+        <span class="location-wrapper" title="<?php echo $sk['story']['location']['name']; ?>">
+                        <i class="icon-map-marker"></i>
+            <?php echo $sk['story']['location']['name']; ?>
+                    </span>
+    <?php
+    }
+    ?>
+</div>
+</td>
+</tr>
+</table>
+<?php
+if ($sk['logged'] == true) {
+    ?>
+    <div class="setting-buttons">
+        <?php
+        if ($sk['story']['admin'] == true) {
+            ?>
+            <span class="remove-btn cursor-hand" title="<?php echo $lang['remove']; ?>" onclick="FA_deletePostWindow(<?php echo $sk['story']['id']; ?>);">
+                <i class="icon-remove progress-icon"></i>
+            </span>
+        <?php
+        } elseif (!FA_isPostReported($sk['story']['id'])) {
+            ?>
+            <span class="report-btn cursor-hand" title="<?php echo $lang['report']; ?>" onclick="FA_reportPost(<?php echo $sk['story']['id']; ?>);">
+                <i class="icon-flag progress-icon"></i>
+            </span>
+        <?php
+        }
+        ?>
+    </div>
+<?php
+}
+?>
+</div>
+
+<?php
+if ($sk['logged'] == true) {
+    ?>
+    <div class="options-wrapper">
+        <?php echo FA_getPostLikeButton($sk['story']['id']); ?>
+
+        <abbr class="space6">&#183;</abbr>
+
+        <?php echo FA_getPostShareButton($sk['story']['id']); ?>
+
+        <abbr class="space6">&#183;</abbr>
+
+        <?php echo FA_getPostFollowButton($sk['story']['id']); ?>
+    </div>
+<?php
+}
+
+if (!empty($sk['story']['text'])) {
+    ?>
+    <a href="/index.php?tab1=story&id=<?php echo $sk['story']['id']; ?>" >
+        <div class="text-wrapper">
+            <?php echo $sk['story']['text']; ?>
+        </div>
+    </a>
+<?php
+}
+
+if ($sk['story']['media_exists'] == true) {
+
+    // If it is photos
+    if ($sk['story']['media_type'] == "photo") {
+        ?>
+        <div class="photos-wrapper">
+            <?php
+            $photo_class = 'width-' . $sk['story']['media_num'];
+
+            if ($sk['story']['media_num'] >= 3) {
+                $photo_class = 'width-3';
+            }
+
+            foreach ($sk['story']['media'] as $photo) {
+                ?>
+                <a href="javascript:void(0);">
+                    <img class="<?php echo $photo_class; ?>" src="<?php echo $photo['url']; ?>" alt="Photo" onclick="javascript:FA_openLightbox(<?php echo $photo['post_id']; ?>);">
+                </a>
+            <?php
+            }
+            ?>
+        </div>
+    <?php
+    } elseif ($sk['story']['media_type'] == "soundcloud") {
+        ?>
+        <div class="soundcloud-wrapper" align="center">
+            <iframe frameborder="0" src="https://w.soundcloud.com/player/?url=<?php echo $sk['story']['media']['url']; ?>&amp;color=f07b22" width="100%"></iframe>
+        </div>
+    <?php
+    } elseif ($sk['story']['media_type'] == "video") {
+        ?>
+        <div class="youtube-wrapper" align="center">
+            <!-- <iframe src="https://www.youtube.com/embed/<?php echo $sk['story']['media']['id']; ?>?ap=%2526fmt%3D18&disablekb=1&rel=0" width="100%" height="300px" frameborder="0" allowfullscreen></iframe>-->
+            <?php
+            foreach ($sk['story']['media'] as $video) {
+                //echo $video['url'];
+                ?>
+                <a  href="<?php  echo $video['url']?>"  style="display:block;width:100%; height:200px" class="player" id="player"></a>
+            <?php
+            }?>
+            <!--<iframe src="https://www.youtube.com/embed/<?php /*echo $sk['story']['media']['id']; */?>?ap=%2526fmt%3D18&disablekb=1&rel=0" width="100%" height="300px" frameborder="0" allowfullscreen></iframe>-->
+            <!-- <div class="js-lazyYT" data-youtube-id="<?php echo $sk['story']['media']['id']; ?>" data-width="100%" data-height="300px" data-parameters="rel=0" allowfullscreen="1" frameborder="1" ></div>-->
+        </div>
+    <?php
+    }
+} elseif ($sk['story']['location_exists'] == true) {
+    ?>
+    <div class="google-map-viewer-wrapper" align="center">
+        <img src="https://maps.googleapis.com/maps/api/staticmap?center=<?php echo $sk['story']['location']['name']; ?>&zoom=13&size=600x300&maptype=roadmap&markers=color:red%7C<?php echo $sk['story']['location']['name']; ?>" width="100%" alt="<?php echo $sk['story']['location']['name']; ?>">
+    </div>
+<?php
+}
+?>
+<div class="activity-wrapper">
+    <table border="0" width="100%" cellspacing="0" cellpadding="0">
+        <tr>
+            <td align="left" valign="middle">
+                    <span class="story-like-activity">
+                        <?php
+                        echo FA_getPostLikeActivityButton($sk['story']['id']);
+                        ?>
+                    </span>
+
+                <abbr class="space6">&#183;</abbr>
+
+                    <span class="story-comment-activity">
+                        <?php
+                        echo FA_getPostCommentActivityButton($sk['story']['id']);
+                        ?>
+                    </span>
+
+                <abbr class="space6">&#183;</abbr>
+
+                    <span class="story-share-activity">
+                        <?php
+                        echo FA_getPostShareActivityButton($sk['story']['id']);
+                        ?>
+                    </span>
+                <abbr class="space6">&#183;</abbr>
+
+                    <span class="story-share-activity">
+                <?php
+
+                if(FA_isGangAdmin($sk['timeline']['id'])){
+                    $member_list=FA_getgangmember_list($sk['timeline']['id'],$sk['story']['type4']);
+                    ?>
+
+                        <?php if($sk['story']['type4']=="-1"){ ?>
+                         Dare Rejected
+                        <?php } else { ?>
+                        Dare performer
+                        <select name="gang_members" id="gang_members" onchange="dare_member(<?php echo $sk['story']['id'] ?>)">
+                            <option value="">----SELECT----</option>
+                             <?php echo $member_list; ?>
+                        </select>
+                        <input type="hidden" id="pre_member" name="pre_member" value="<?php echo $sk['story']['type4']; ?>">
+                        <?php } ?>
+
+                <?php } else { ?>
+                        <?php if($sk['story']['type4']=="-1"){ ?>
+                            Dare Rejected
+                        <?php } else { ?>
+                    Dare performer is <?php echo FA_getUser_Name($sk['story']['type4']); ?>
+
+                <?php } } ?>
+                        </span>
+            </td>
+
+            <td align="right" valign="middle">
+                <?php if ($sk['story']['via_type'] == "like") {
+                    ?>
+                    <a class="via-name" href="<?php echo $sk['story']['via']['url']; ?>" data-href="?tab1=timeline&id=<?php echo $sk['story']['via']['username']; ?>">
+                        <?php echo $sk['story']['via']['name']; ?>
+                    </a> <?php echo $lang['likes_this_label']; ?>
+                <?php
+                } elseif ($sk['story']['via_type'] == "share") {
+                    ?>
+                    <a class="via-name" href="<?php echo $sk['story']['via']['url']; ?>" data-href="?tab1=timeline&id=<?php echo $sk['story']['via']['username']; ?>">
+                        <?php echo $sk['story']['via']['name']; ?>
+                    </a> <?php echo $lang['shared_this_label']; ?>
+                <?php
+                } elseif ($sk['story']['via_type'] == "tag") {
+                    ?>
+                    <a class="via-name" href="<?php echo $sk['story']['via']['url']; ?>" data-href="?tab1=timeline&id=<?php echo $sk['story']['via']['username']; ?>">
+                        <?php echo $sk['story']['via']['name']; ?>
+                    </a> <?php echo $lang['tagged_on_this_label']; ?>sdasd
+                <?php
+                }
+                ?>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div class="comments-container hidden">
+    <?php
+    if ($sk['story']['view_all_comments'] == true) {
+        ?>
+        <div class="view-more-wrapper" align="center" onclick="FA_loadAllComments(<?php echo $sk['story']['id']; ?>);">
+            <i class="icon-lightbulb progress-icon hide"></i>
+            <?php
+            echo $lang['view_all_comments_label'];
+            ?>
+        </div>
+    <?php
+    }
+    ?>
+
+    <div class="comments-wrapper">
+        <?php
+        echo $sk['story']['comments'];
+        ?>
+    </div>
+
+    <?php
+    echo $sk['story']['comment']['publisher_box'];
+    ?>
+</div>
+</div>
+<script>
+    function dare_member(x){
+
+            var pre_member=$('#pre_member').val();
+            var gang_members=$('#gang_members').val();
+        if(pre_member!=0 && gang_members=="")
+        {
+            alert("Please select a Gang member to perform the Dare!");
+        } else if(pre_member=="-1"){
+            alert("Dare has been rejected!");
+        } else {
+            if (gang_members == "reject") {
+                var r = confirm("Are you sure you want to reject the dare");
+                if (r == true) {
+                    $.getJSON(FA_source() + '?t=post&a=performer&member_id=' + gang_members + '&post_id=' + x, function (data) {
+                       if(data['status']=="success"){
+                           $('#pre_member').val(data['id']);
+                           alert("Dare has been rejected successfully!");
+                       } else {
+                           alert("Error while rejecting the Dare!");
+                       }
+                    });
+                } else {
+                    return false;
+                }
+            } else if (gang_members != "") {
+                var member_name = $("#gang_members option:selected").text();
+                var r = confirm("Dare Performer will be " + member_name);
+                if (r == true) {
+                    $.getJSON(FA_source() + '?t=post&a=performer&member_id=' + gang_members + '&post_id=' + x, function (data) {
+                        if(data['status']=="success"){
+                            $('#pre_member').val(data['id']);
+                            alert("Dare performer has been set successfully!");
+                        } else {
+                            alert("Error while set the performer for the Dare!");
+                        }
+                    });
+                } else {
+                    return false;
+                }
+            }
+        }
+    }
+</script>
