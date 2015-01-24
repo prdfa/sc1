@@ -395,7 +395,7 @@ $lang['polls_name_label'] = 'Title';
 $lang['polls_name_label_plcaeholder'] = 'Title of the pole';
 
 //GANG
-$lang['manage_gangs_header_label'] = 'Gangs You Manage';
+$lang['manage_gangs_header_label'] = 'Manage Gangs';
 $lang['gang_create_label'] = 'Create Gang';
 $lang['no_managed_gangs_label'] = 'You do not have any gangs to manage';
 $lang['gang_name_label'] = 'Name';

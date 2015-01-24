@@ -520,6 +520,12 @@ if ($t == "post") {
         if (isset($_FILES['videos']['name'])) {
             $array['videos'] = $_FILES['videos'];
         }
+       if(empty($array['recipient_id'])){
+           $array['type3']="open";
+       } else {
+           $array['type3']=FA_check_user_type($array['recipient_id']);
+       }
+
 
         if($array['text']!=""){
             $post_id = FA_registerPost($array);
@@ -879,6 +885,19 @@ if ($t == "post") {
                 mysqli_close($dbConnect);
                 exit();
             }
+        }
+    }
+
+    if($a=="performer"){
+        $member_id=FA_secureEncode($_GET['member_id']);
+        $post_id=FA_secureEncode($_GET['post_id']);
+        if($member_id=="reject"){
+            $member_id="-1";
+        }
+        if(FA_add_gangmember_dare($member_id,$post_id)){
+            echo json_encode(array('status'=>"success",'id'=>$member_id));
+        } else {
+            echo json_encode(array('status'=>"failed"));
         }
     }
 }

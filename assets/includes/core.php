@@ -1917,6 +1917,19 @@ function FA_getStoryPublisherBox($timeline_id=0, $recipient_id=0, $placeholder='
                     $continue = false;
                 }
             }
+        }  elseif ($recipient['type'] == "gang") {
+
+            if ($recipient['timeline_post_privacy'] == "members") {
+
+                if (!FA_isFollowing($recipient_id)) {
+                   // $continue = false;
+                }
+            } elseif ($recipient['timeline_post_privacy'] == "admins") {
+
+                if (!FA_isGangAdmin($recipient_id)) {
+                 //   $continue = false;
+                }
+            }
         }
         
         $sk['input']['recipient'] = $recipient;
@@ -1976,134 +1989,160 @@ function FA_getStories($data=array( 'type' => 'all', 'after_post_id' => 0, 'publ
 
                 switch ($data['type']) {
                     case 'texts':
-                        $query_text .= " AND timeline_id=" . $user['id'] . " AND recipient_id=" . $data['publisher_id'] . " AND google_map_name='' AND media_id=0 AND soundcloud_uri='' AND youtube_video_id='' AND hidden=0 AND type1='story' AND type2='none'";
+                        $query_text .= " AND timeline_id=" . $user['id'] . " AND recipient_id=" . $data['publisher_id'] . " AND google_map_name='' AND media_id=0 AND soundcloud_uri='' AND youtube_video_id='' AND hidden=0 AND type1='story' AND type2='none' AND type3 IN ('open','friend')";
                     break;
                     
                     case 'photos':
-                        $query_text .= " AND timeline_id=" . $user['id'] . " AND recipient_id=" . $data['publisher_id'] . " AND media_id>0 AND hidden=0 AND type1='story' AND type2='none'";
+                        $query_text .= " AND timeline_id=" . $user['id'] . " AND recipient_id=" . $data['publisher_id'] . " AND media_id>0 AND hidden=0 AND type1='story' AND type2='none' AND type3 IN ('open','friend')";
                     break;
                     
                     case 'videos':
-                        $query_text .= " AND timeline_id=" . $user['id'] . " AND recipient_id=" . $data['publisher_id'] . " AND youtube_video_id<>'' AND hidden=0 AND type1='story' AND type2='none'";
+                        $query_text .= " AND timeline_id=" . $user['id'] . " AND recipient_id=" . $data['publisher_id'] . " AND youtube_video_id<>'' AND hidden=0 AND type1='story' AND type2='none' AND type3 IN ('open','friend')";
                     break;
                     
                     case 'music':
-                        $query_text .= " AND timeline_id=" . $user['id'] . " AND recipient_id=" . $data['publisher_id'] . " AND soundcloud_uri<>'' AND hidden=0 AND type1='story' AND type2='none'";
+                        $query_text .= " AND timeline_id=" . $user['id'] . " AND recipient_id=" . $data['publisher_id'] . " AND soundcloud_uri<>'' AND hidden=0 AND type1='story' AND type2='none' AND type3 IN ('open','friend')";
                     break;
                     
                     case 'places':
-                        $query_text .= " AND timeline_id=" . $user['id'] . " AND recipient_id=" . $data['publisher_id'] . " AND google_map_name<>'' AND hidden=0 AND type1='story' AND type2='none'";
+                        $query_text .= " AND timeline_id=" . $user['id'] . " AND recipient_id=" . $data['publisher_id'] . " AND google_map_name<>'' AND hidden=0 AND type1='story' AND type2='none' AND type3 IN ('open','friend')";
                     break;
                     
                     case 'likes':
-                        $query_text .= " AND timeline_id=" . $user['id'] . " AND recipient_id=" . $data['publisher_id'] . " AND hidden=0 AND type1='story' AND type2='like'";
+                        $query_text .= " AND timeline_id=" . $user['id'] . " AND recipient_id=" . $data['publisher_id'] . " AND hidden=0 AND type1='story' AND type2='like' AND type3 IN ('open','friend')";
                     break;
                     
                     case 'shares':
-                        $query_text .= " AND timeline_id=" . $user['id'] . " AND recipient_id=" . $data['publisher_id'] . " AND hidden=0 AND type1='story' AND type2='share'";
+                        $query_text .= " AND timeline_id=" . $user['id'] . " AND recipient_id=" . $data['publisher_id'] . " AND hidden=0 AND type1='story' AND type2='share' AND type3 IN ('open','friend')";
                     break;
                     
                     case 'timeline_post_by_others':
-                        $query_text .= " AND timeline_id=" . $user['id'] . " AND recipient_id=" . $data['publisher_id'] . " AND type1='story' AND type2='none'";
+                        $query_text .= " AND timeline_id=" . $user['id'] . " AND recipient_id=" . $data['publisher_id'] . " AND type1='story' AND type2='none' AND type3 IN ('open','friend')";
                     break;
                     
                     default:
-                        $query_text .= " AND timeline_id=" . $user['id'] . " AND recipient_id=" . $data['publisher_id'] . " AND hidden=0 AND type1='story' AND type2 IN ('none','share')";
+                        $query_text .= " AND timeline_id=" . $user['id'] . " AND recipient_id=" . $data['publisher_id'] . " AND hidden=0 AND type1='story' AND type2 IN ('none','share') AND type3 IN ('open','friend') AND type3 IN ('open','friend')";
                 }
             } else {
                 
                 switch ($data['type']) {
                     case 'texts':
-                        $query_text .= " AND timeline_id=" . $data['publisher_id'] . " AND recipient_id IN (0," . $data['publisher_id'] . ") AND google_map_name='' AND media_id=0 AND soundcloud_uri='' AND youtube_video_id='' AND hidden=0 AND type1='story' AND type2='none'";
+                        $query_text .= " AND timeline_id=" . $data['publisher_id'] . " AND recipient_id IN (0," . $data['publisher_id'] . ") AND google_map_name='' AND media_id=0 AND soundcloud_uri='' AND youtube_video_id='' AND hidden=0 AND type1='story' AND type2='none' AND type3 IN ('open','friend')";
                     break;
                     
                     case 'photos':
-                        $query_text .= " AND timeline_id=" . $data['publisher_id'] . " AND recipient_id=0 AND media_id>0 AND hidden=0 AND type1='story' AND type2='none'";
+                        $query_text .= " AND timeline_id=" . $data['publisher_id'] . " AND recipient_id=0 AND media_id>0 AND hidden=0 AND type1='story' AND type2='none' AND type3 IN ('open','friend')";
                     break;
                     
                     case 'videos':
-                        $query_text .= " AND timeline_id=" . $data['publisher_id'] . " AND recipient_id=0 AND youtube_video_id<>'' AND hidden=0 AND type1='story' AND type2='none'";
+                        $query_text .= " AND timeline_id=" . $data['publisher_id'] . " AND recipient_id=0 AND youtube_video_id<>'' AND hidden=0 AND type1='story' AND type2='none' AND type3 IN ('open','friend')";
                     break;
                     
                     case 'music':
-                        $query_text .= " AND timeline_id=" . $data['publisher_id'] . " AND recipient_id=0 AND soundcloud_uri<>'' AND hidden=0 AND type1='story' AND type2='none'";
+                        $query_text .= " AND timeline_id=" . $data['publisher_id'] . " AND recipient_id=0 AND soundcloud_uri<>'' AND hidden=0 AND type1='story' AND type2='none' AND type3 IN ('open','friend')";
                     break;
                     
                     case 'places':
-                        $query_text .= " AND timeline_id=" . $data['publisher_id'] . " AND recipient_id=0 AND google_map_name<>'' AND hidden=0 AND type1='story' AND type2='none'";
+                        $query_text .= " AND timeline_id=" . $data['publisher_id'] . " AND recipient_id=0 AND google_map_name<>'' AND hidden=0 AND type1='story' AND type2='none' AND type3 IN ('open','friend')";
                     break;
                     
                     case 'likes':
-                        $query_text .= " AND timeline_id=" . $data['publisher_id'] . " AND recipient_id=0 AND hidden=0 AND type1='story' AND type2='like'";
+                        $query_text .= " AND timeline_id=" . $data['publisher_id'] . " AND recipient_id=0 AND hidden=0 AND type1='story' AND type2='like' AND type3 IN ('open','friend')";
                     break;
                     
                     case 'shares':
-                        $query_text .= " AND timeline_id=" . $data['publisher_id'] . " AND recipient_id=0 AND hidden=0 AND type1='story' AND type2='share'";
+                        $query_text .= " AND timeline_id=" . $data['publisher_id'] . " AND recipient_id=0 AND hidden=0 AND type1='story' AND type2='share' AND type3 IN ('open','friend')";
                     break;
                     
                     case 'timeline_post_by_others':
-                        $query_text .= " AND recipient_id=" . $data['publisher_id'] . " AND hidden=0 AND type1='story' AND type2='none'";
+                        $query_text .= " AND recipient_id=" . $data['publisher_id'] . " AND hidden=0 AND type1='story' AND type2='none' AND type3 IN ('open','friend')";
                     break;
                     
                     default:
-                        $query_text .= " AND (timeline_id=" . $data['publisher_id'] . " OR recipient_id=" . $data['publisher_id'] . ") AND recipient_id NOT IN (SELECT id FROM " . DB_GROUPS . " WHERE group_privacy='secret') AND hidden=0 AND type1='story' AND type2 IN ('none','share')";
+                        $query_text .= " AND (timeline_id=" . $data['publisher_id'] . " OR recipient_id=" . $data['publisher_id'] . ") AND recipient_id NOT IN (SELECT id FROM " . DB_GROUPS . " WHERE group_privacy='secret') AND hidden=0 AND type1='story' AND type2 IN ('none','share') AND type3 IN ('open','friend')";
                 }
             }
         } elseif ($sk_publisher['type'] == "page") {
             
             switch ($data['type']) {
                 case 'texts':
-                    $query_text .= " AND timeline_id=" . $data['publisher_id'] . " AND google_map_name='' AND media_id=0 AND soundcloud_uri='' AND youtube_video_id='' AND hidden=0 AND type1='story' AND type2='none'";
+                    $query_text .= " AND timeline_id=" . $data['publisher_id'] . " AND google_map_name='' AND media_id=0 AND soundcloud_uri='' AND youtube_video_id='' AND hidden=0 AND type1='story' AND type2='none' AND type3 IN ('page')";
                 break;
                 
                 case 'photos':
-                    $query_text .= " AND timeline_id=" . $data['publisher_id'] . " AND media_id>0 AND hidden=0 AND type1='story' AND type2='none'";
+                    $query_text .= " AND timeline_id=" . $data['publisher_id'] . " AND media_id>0 AND hidden=0 AND type1='story' AND type2='none' AND type3 IN ('page')";
                 break;
                 
                 case 'videos':
-                    $query_text .= " AND timeline_id=" . $data['publisher_id'] . " AND youtube_video_id<>'' AND hidden=0 AND type1='story' AND type2='none'";
+                    $query_text .= " AND timeline_id=" . $data['publisher_id'] . " AND youtube_video_id<>'' AND hidden=0 AND type1='story' AND type2='none' AND type3 IN ('page')";
                 break;
                 
                 case 'music':
-                    $query_text .= " AND timeline_id=" . $data['publisher_id'] . " AND soundcloud_uri<>'' AND hidden=0 AND type1='story' AND type2='none'";
+                    $query_text .= " AND timeline_id=" . $data['publisher_id'] . " AND soundcloud_uri<>'' AND hidden=0 AND type1='story' AND type2='none' AND type3 IN ('page')";
                 break;
                 
                 case 'places':
-                    $query_text .= " AND timeline_id=" . $data['publisher_id'] . " AND google_map_name<>'' AND hidden=0 AND type1='story' AND type2='none'";
+                    $query_text .= " AND timeline_id=" . $data['publisher_id'] . " AND google_map_name<>'' AND hidden=0 AND type1='story' AND type2='none' AND type3 IN ('page')";
                 break;
                 
                 case 'timeline_post_by_others':
-                    $query_text .= " AND recipient_id=" . $data['publisher_id'] . " AND hidden=0 AND type1='story' AND type2='none'";
+                    $query_text .= " AND recipient_id=" . $data['publisher_id'] . " AND hidden=0 AND type1='story' AND type2='none' AND type3 IN ('page')";
                 break;
                 
                 default:
-                    $query_text .= " AND timeline_id=" . $data['publisher_id'] . " AND hidden=0 AND type1='story' AND type2='none'";
+                    $query_text .= " AND timeline_id=" . $data['publisher_id'] . " AND hidden=0 AND type1='story' AND type2='none' AND type3 IN ('page')";
             }
         } elseif ($sk_publisher['type'] == "group") {
             
             switch ($data['type']) {
                 case 'texts':
-                    $query_text .= " AND recipient_id=" . $data['publisher_id'] . " AND google_map_name='' AND media_id=0 AND soundcloud_uri='' AND youtube_video_id='' AND hidden=0 AND type1='story' AND type2='none'";
+                    $query_text .= " AND recipient_id=" . $data['publisher_id'] . " AND google_map_name='' AND media_id=0 AND soundcloud_uri='' AND youtube_video_id='' AND hidden=0 AND type1='story' AND type2='none' AND type3 IN ('group')";
                 break;
                 
                 case 'photos':
-                    $query_text .= " AND recipient_id=" . $data['publisher_id'] . " AND media_id>0 AND hidden=0 AND type1='story' AND type2='none'";
+                    $query_text .= " AND recipient_id=" . $data['publisher_id'] . " AND media_id>0 AND hidden=0 AND type1='story' AND type2='none' AND type3 IN ('group')";
                 break;
                 
                 case 'videos':
-                    $query_text .= " AND recipient_id=" . $data['publisher_id'] . " AND youtube_video_id<>'' AND hidden=0 AND type1='story' AND type2='none'";
+                    $query_text .= " AND recipient_id=" . $data['publisher_id'] . " AND youtube_video_id<>'' AND hidden=0 AND type1='story' AND type2='none' AND type3 IN ('group')";
                 break;
                 
                 case 'music':
-                    $query_text .= " AND recipient_id=" . $data['publisher_id'] . " AND soundcloud_uri<>'' AND hidden=0 AND type1='story' AND type2='none'";
+                    $query_text .= " AND recipient_id=" . $data['publisher_id'] . " AND soundcloud_uri<>'' AND hidden=0 AND type1='story' AND type2='none' AND type3 IN ('group')";
                 break;
                 
                 case 'places':
-                    $query_text .= " AND recipient_id=" . $data['publisher_id'] . " AND google_map_name<>'' AND hidden=0 AND type1='story' AND type2='none'";
+                    $query_text .= " AND recipient_id=" . $data['publisher_id'] . " AND google_map_name<>'' AND hidden=0 AND type1='story' AND type2='none' AND type3 IN ('group')";
                 break;
                 
                 default:
-                    $query_text .= " AND recipient_id=" . $data['publisher_id'] . " AND hidden=0 AND type1='story' AND type2='none'";
+                    $query_text .= " AND recipient_id=" . $data['publisher_id'] . " AND hidden=0 AND type1='story' AND type2='none' AND type3 IN ('group')";
+            }
+        }  elseif ($sk_publisher['type'] == "gang") {
+
+            switch ($data['type']) {
+                case 'texts':
+                    $query_text .= " AND recipient_id=" . $data['publisher_id'] . " AND google_map_name='' AND media_id=0 AND soundcloud_uri='' AND youtube_video_id='' AND hidden=0 AND type1='story' AND type2='none' AND type3 IN ('gang')";
+                    break;
+
+                case 'photos':
+                    $query_text .= " AND recipient_id=" . $data['publisher_id'] . " AND media_id>0 AND hidden=0 AND type1='story' AND type2='none' AND type3 IN ('gang')";
+                    break;
+
+                case 'videos':
+                    $query_text .= " AND recipient_id=" . $data['publisher_id'] . " AND youtube_video_id<>'' AND hidden=0 AND type1='story' AND type2='none' AND type3 IN ('gang')";
+                    break;
+
+                case 'music':
+                    $query_text .= " AND recipient_id=" . $data['publisher_id'] . " AND soundcloud_uri<>'' AND hidden=0 AND type1='story' AND type2='none' AND type3 IN ('gang')";
+                    break;
+
+                case 'places':
+                    $query_text .= " AND recipient_id=" . $data['publisher_id'] . " AND google_map_name<>'' AND hidden=0 AND type1='story' AND type2='none' AND type3 IN ('gang')";
+                    break;
+
+                default:
+                    $query_text .= " AND recipient_id=" . $data['publisher_id'] . " AND hidden=0 AND type1='story' AND type2='none' AND type3 IN ('gang')";
             }
         }
     } else {
@@ -2120,35 +2159,35 @@ function FA_getStories($data=array( 'type' => 'all', 'after_post_id' => 0, 'publ
         
         switch ($data['type']) {
             case 'texts':
-                $query_text .= " AND (timeline_id IN (SELECT following_id FROM " . DB_FOLLOWERS . " WHERE follower_id=" . $user['id'] . " AND active=1) OR recipient_id IN (SELECT following_id FROM " . DB_FOLLOWERS . " WHERE follower_id=" . $user['id'] . " AND following_id IN (SELECT id FROM " . DB_GROUPS . "))) AND recipient_id NOT IN (SELECT id FROM " . DB_GROUPS . " WHERE group_privacy='secret') AND google_map_name='' AND media_id=0 AND soundcloud_uri='' AND youtube_video_id='' AND hidden=0 AND type1='story' AND type2='none'";
+                $query_text .= " AND (timeline_id IN (SELECT following_id FROM " . DB_FOLLOWERS . " WHERE follower_id=" . $user['id'] . " AND active=1) OR recipient_id IN (SELECT following_id FROM " . DB_FOLLOWERS . " WHERE follower_id=" . $user['id'] . " AND following_id IN (SELECT id FROM " . DB_GROUPS . "))) AND recipient_id NOT IN (SELECT id FROM " . DB_GROUPS . " WHERE group_privacy='secret') AND google_map_name='' AND media_id=0 AND soundcloud_uri='' AND youtube_video_id='' AND hidden=0 AND type1='story' AND type2='none' AND type3 IN ('open','friend')";
             break;
             
             case 'photos':
-                $query_text .= " AND (timeline_id IN (SELECT following_id FROM " . DB_FOLLOWERS . " WHERE follower_id=" . $user['id'] . " AND active=1) OR recipient_id IN (SELECT following_id FROM " . DB_FOLLOWERS . " WHERE follower_id=" . $user['id'] . " AND following_id IN (SELECT id FROM " . DB_GROUPS . "))) AND recipient_id NOT IN (SELECT id FROM " . DB_GROUPS . " WHERE group_privacy='secret') AND media_id>0 AND hidden=0 AND type1='story' AND type2='none'";
+                $query_text .= " AND (timeline_id IN (SELECT following_id FROM " . DB_FOLLOWERS . " WHERE follower_id=" . $user['id'] . " AND active=1) OR recipient_id IN (SELECT following_id FROM " . DB_FOLLOWERS . " WHERE follower_id=" . $user['id'] . " AND following_id IN (SELECT id FROM " . DB_GROUPS . "))) AND recipient_id NOT IN (SELECT id FROM " . DB_GROUPS . " WHERE group_privacy='secret') AND media_id>0 AND hidden=0 AND type1='story' AND type2='none' AND type3 IN ('open','friend')";
             break;
             
             case 'videos':
-                $query_text .= " AND (timeline_id IN (SELECT following_id FROM " . DB_FOLLOWERS . " WHERE follower_id=" . $user['id'] . " AND active=1) OR recipient_id IN (SELECT following_id FROM " . DB_FOLLOWERS . " WHERE follower_id=" . $user['id'] . " AND following_id IN (SELECT id FROM " . DB_GROUPS . "))) AND recipient_id NOT IN (SELECT id FROM " . DB_GROUPS . " WHERE group_privacy='secret') AND youtube_video_id<>'' AND hidden=0 AND type1='story' AND type2='none'";
+                $query_text .= " AND (timeline_id IN (SELECT following_id FROM " . DB_FOLLOWERS . " WHERE follower_id=" . $user['id'] . " AND active=1) OR recipient_id IN (SELECT following_id FROM " . DB_FOLLOWERS . " WHERE follower_id=" . $user['id'] . " AND following_id IN (SELECT id FROM " . DB_GROUPS . "))) AND recipient_id NOT IN (SELECT id FROM " . DB_GROUPS . " WHERE group_privacy='secret') AND youtube_video_id<>'' AND hidden=0 AND type1='story' AND type2='none' AND type3 IN ('open','friend')";
             break;
             
             case 'music':
-                $query_text .= " AND (timeline_id IN (SELECT following_id FROM " . DB_FOLLOWERS . " WHERE follower_id=" . $user['id'] . " AND active=1) OR recipient_id IN (SELECT following_id FROM " . DB_FOLLOWERS . " WHERE follower_id=" . $user['id'] . " AND following_id IN (SELECT id FROM " . DB_GROUPS . "))) AND recipient_id NOT IN (SELECT id FROM " . DB_GROUPS . " WHERE group_privacy='secret') AND soundcloud_uri<>'' AND hidden=0 AND type1='story' AND type2='none'";
+                $query_text .= " AND (timeline_id IN (SELECT following_id FROM " . DB_FOLLOWERS . " WHERE follower_id=" . $user['id'] . " AND active=1) OR recipient_id IN (SELECT following_id FROM " . DB_FOLLOWERS . " WHERE follower_id=" . $user['id'] . " AND following_id IN (SELECT id FROM " . DB_GROUPS . "))) AND recipient_id NOT IN (SELECT id FROM " . DB_GROUPS . " WHERE group_privacy='secret') AND soundcloud_uri<>'' AND hidden=0 AND type1='story' AND type2='none' AND type3 IN ('open','friend')";
             break;
             
             case 'places':
-                $query_text .= " AND (timeline_id IN (SELECT following_id FROM " . DB_FOLLOWERS . " WHERE follower_id=" . $user['id'] . " AND active=1) OR recipient_id IN (SELECT following_id FROM " . DB_FOLLOWERS . " WHERE follower_id=" . $user['id'] . " AND following_id IN (SELECT id FROM " . DB_GROUPS . "))) AND recipient_id NOT IN (SELECT id FROM " . DB_GROUPS . " WHERE group_privacy='secret') AND google_map_name<>'' AND hidden=0 AND type1='story' AND type2='none'";
+                $query_text .= " AND (timeline_id IN (SELECT following_id FROM " . DB_FOLLOWERS . " WHERE follower_id=" . $user['id'] . " AND active=1) OR recipient_id IN (SELECT following_id FROM " . DB_FOLLOWERS . " WHERE follower_id=" . $user['id'] . " AND following_id IN (SELECT id FROM " . DB_GROUPS . "))) AND recipient_id NOT IN (SELECT id FROM " . DB_GROUPS . " WHERE group_privacy='secret') AND google_map_name<>'' AND hidden=0 AND type1='story' AND type2='none' AND type3 IN ('open','friend')";
             break;
             
             case 'likes':
-                $query_text .= " AND (timeline_id IN (SELECT following_id FROM " . DB_FOLLOWERS . " WHERE follower_id=" . $user['id'] . " AND active=1) OR recipient_id IN (SELECT following_id FROM " . DB_FOLLOWERS . " WHERE follower_id=" . $user['id'] . " AND following_id IN (SELECT id FROM " . DB_GROUPS . "))) AND recipient_id NOT IN (SELECT id FROM " . DB_GROUPS . " WHERE group_privacy='secret') AND hidden=0 AND type1='story' AND type2='like'";
+                $query_text .= " AND (timeline_id IN (SELECT following_id FROM " . DB_FOLLOWERS . " WHERE follower_id=" . $user['id'] . " AND active=1) OR recipient_id IN (SELECT following_id FROM " . DB_FOLLOWERS . " WHERE follower_id=" . $user['id'] . " AND following_id IN (SELECT id FROM " . DB_GROUPS . "))) AND recipient_id NOT IN (SELECT id FROM " . DB_GROUPS . " WHERE group_privacy='secret') AND hidden=0 AND type1='story' AND type2='like' AND type3 IN ('open','friend')";
             break;
             
             case 'shares':
-                $query_text .= " AND (timeline_id IN (SELECT following_id FROM " . DB_FOLLOWERS . " WHERE follower_id=" . $user['id'] . " AND active=1) OR recipient_id IN (SELECT following_id FROM " . DB_FOLLOWERS . " WHERE follower_id=" . $user['id'] . " AND following_id IN (SELECT id FROM " . DB_GROUPS . "))) AND recipient_id NOT IN (SELECT id FROM " . DB_GROUPS . " WHERE group_privacy='secret') AND hidden=0 AND type1='story' AND type2='share'";
+                $query_text .= " AND (timeline_id IN (SELECT following_id FROM " . DB_FOLLOWERS . " WHERE follower_id=" . $user['id'] . " AND active=1) OR recipient_id IN (SELECT following_id FROM " . DB_FOLLOWERS . " WHERE follower_id=" . $user['id'] . " AND following_id IN (SELECT id FROM " . DB_GROUPS . "))) AND recipient_id NOT IN (SELECT id FROM " . DB_GROUPS . " WHERE group_privacy='secret') AND hidden=0 AND type1='story' AND type2='share' AND type3 IN ('open','friend')";
             break;
             
             default:
-                $query_text .= " AND (timeline_id IN (SELECT following_id FROM " . DB_FOLLOWERS . " WHERE follower_id=" . $user['id'] . " AND active=1) OR recipient_id IN (SELECT following_id FROM " . DB_FOLLOWERS . " WHERE follower_id=" . $user['id'] . " AND following_id IN (SELECT id FROM " . DB_GROUPS . "))) AND recipient_id NOT IN (SELECT id FROM " . DB_GROUPS . " WHERE group_privacy='secret') AND hidden=0 AND type1='story' AND type2 IN $default_type";
+                $query_text .= " AND (timeline_id IN (SELECT following_id FROM " . DB_FOLLOWERS . " WHERE follower_id=" . $user['id'] . " AND active=1) OR recipient_id IN (SELECT following_id FROM " . DB_FOLLOWERS . " WHERE follower_id=" . $user['id'] . " AND following_id IN (SELECT id FROM " . DB_GROUPS . "))) AND recipient_id NOT IN (SELECT id FROM " . DB_GROUPS . " WHERE group_privacy='secret') AND hidden=0 AND type1='story' AND type2 IN $default_type AND type3 IN ('open','friend')";
         }
     }
     
@@ -2183,7 +2222,7 @@ function FA_getStory($story_id=0, $view_all_comments=false) {
     }
     
     $story_id = FA_secureEncode($story_id);
-    $query_one = "SELECT id,active,activity_text,google_map_name,hidden,link_title,link_url,media_id,post_id,recipient_id,soundcloud_title,soundcloud_uri,text,time,timeline_id,type1,type2,youtube_video_id,youtube_title FROM " . DB_POSTS . " WHERE id=$story_id AND type1='story' AND active=1";
+    $query_one = "SELECT id,active,activity_text,google_map_name,hidden,link_title,link_url,media_id,post_id,recipient_id,soundcloud_title,soundcloud_uri,text,time,timeline_id,type1,type2,type3,type4,youtube_video_id,youtube_title FROM " . DB_POSTS . " WHERE id=$story_id AND type1='story' AND active=1";
     $sql_query_one = mysqli_query($dbConnect, $query_one);
     
     if (mysqli_num_rows($sql_query_one) == 1) {
@@ -4464,6 +4503,7 @@ function FA_registerPost($data=array()) {
     $category_id=$data['dare_categories'];
     $condition_id=$data['dare_condition'];
     $level_id=$data['dare_level'];
+    $type3=$data['type3'];
 
     if ($type1 == "comment") {
         $type1 = 'story';
@@ -4693,7 +4733,7 @@ function FA_registerPost($data=array()) {
                     $video_data = FA_registervideoMedia($video_param, $media_id);
 
                     if (!empty($video_data['id'])) {
-                        $query_one = "INSERT INTO " . DB_POSTS . " (active,condition_id,category_id,level_id,google_map_name,hidden,media_id,time,timeline_id,recipient_id,type1,type2) VALUES (1,'$category_id','$condition_id','$level_id','$google_map_name',1," . $video_data['id'] . "," . time() . "," . $timeline['id'] . ",$recipient_id,'$type1','$type2')";
+                        $query_one = "INSERT INTO " . DB_POSTS . " (active,condition_id,category_id,level_id,google_map_name,hidden,media_id,time,timeline_id,recipient_id,type1,type2,type3) VALUES (1,'$category_id','$condition_id','$level_id','$google_map_name',1," . $video_data['id'] . "," . time() . "," . $timeline['id'] . ",$recipient_id,'$type1','$type2','$type3')";
                         $sql_query_one = mysqli_query($dbConnect, $query_one);
 
                         if ($sql_query_one) {
@@ -4749,7 +4789,7 @@ function FA_registerPost($data=array()) {
     }
     
     if ($post_ability == true) {
-        $query_one = "INSERT INTO " . DB_POSTS . " (active,condition_id,category_id,level_id,google_map_name,media_id,soundcloud_title,soundcloud_uri,text,time,timeline_id,recipient_id,type1,type2,youtube_video_id,youtube_title) VALUES (1,'$category_id','$condition_id','$level_id','$google_map_name',$media_id,'$soundcloud_title','$soundcloud_uri','$text'," . time() . "," . $timeline['id'] . ",$recipient_id,'$type1','$type2','$youtube_video_id','$youtube_title')";
+        $query_one = "INSERT INTO " . DB_POSTS . " (active,condition_id,category_id,level_id,google_map_name,media_id,soundcloud_title,soundcloud_uri,text,time,timeline_id,recipient_id,type1,type2,type3,youtube_video_id,youtube_title) VALUES (1,'$category_id','$condition_id','$level_id','$google_map_name',$media_id,'$soundcloud_title','$soundcloud_uri','$text'," . time() . "," . $timeline['id'] . ",$recipient_id,'$type1','$type2','$type3','$youtube_video_id','$youtube_title')";
         $sql_query_one = mysqli_query($dbConnect, $query_one);
         
         if ($sql_query_one) {

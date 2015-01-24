@@ -25,4 +25,5 @@ define('DB_DARE_LEVEL_MST', 'dare_level'); // added by SN
 define('DB_DARE_CONDITION_MST', 'dare_condition'); // added by SN
 define('DB_GANGS', 'gangs'); // added by SN
 define('DB_GANG_ADMINS', 'gang_admins'); // added by SN
+define('DB_GANGPOST_MEMBER_MAPPING', 'gangpost_member_mapping'); // added by SN
 
