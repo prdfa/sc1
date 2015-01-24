@@ -24,6 +24,90 @@ $data = array(
     'status' => 417
 );
 
+// autoLogin & Verify User
+if ($t == "auto_login") {
+	$data['error_message'] = $lang['error_empty_login'];
+
+	if (!empty($_GET['login_id']) && !empty($_GET['login_password'])) {
+
+		$login_id = FA_secureEncode($_GET['login_id']);
+		$email = FA_secureEncode($_GET['email']);
+		$login_password= trim($_GET['login_password']);
+		$login_password_md5 = md5($login_password);
+
+		if (preg_match('/@/', $login_id)) {
+			$db_query_part = "email='$login_id'";
+		} elseif ($login_id) {//preg_match('/^[0-9]+$/', $login_id)
+			$db_query_part = "username='$login_id'";
+		} else {
+			$db_query_part = "email=''";
+		}
+		//die($db_query_part);
+		$query_one = "SELECT id FROM " . DB_ACCOUNTS . " WHERE $db_query_part AND password='$login_password_md5' AND type='user' AND active=1";
+		$sql_query_one = mysqli_query($dbConnect, $query_one);
+		$data['error_message'] = $lang['error_bad_login'];
+
+		if (($sql_numrows_one = mysqli_num_rows($sql_query_one)) == 1) {
+			$sql_fetch_one = mysqli_fetch_assoc($sql_query_one);
+
+			$query_two = "SELECT username,email_verified FROM " . DB_ACCOUNTS . " WHERE id=" . $sql_fetch_one['id'] . " AND password='$login_password_md5' AND type='user' AND active=1";
+			$sql_query_two = mysqli_query($dbConnect, $query_two);
+
+			if (($sql_numrows_two = mysqli_num_rows($sql_query_two)) == 1) {
+				$sql_fetch_two = mysqli_fetch_assoc($sql_query_two);
+				$continue = true;
+
+				if ($config['email_verification'] == 1 && $sql_fetch_two['email_verified'] == 0) {
+					$continue = false;
+					$data['error_message'] = $lang['error_verify_email'];
+				}
+
+				if ($continue == true) {
+					$_SESSION['user_id'] = $sql_fetch_one['id'];
+					$_SESSION['user_pass'] = $login_password_md5;
+
+					if (!empty($_POST['keep_logged_in']) && $_POST['keep_logged_in'] == 1) {
+						setcookie('sk_u_i', $_SESSION['user_id'], time() + (60 * 60 * 24 * 7));
+						setcookie('sk_u_p', $_SESSION['user_pass'], time() + (60 * 60 * 24 * 7));
+					}
+
+					$data['status'] = 200;
+					//$data['redirect_url'] = FA_smoothLink('index.php?tab1=home');
+					$to = $email;
+					$subject = $config['site_name'] . ' - Login credential details';
+					$from = $config['email'];
+					$headers = "From: " . $config['email'] . "\r\n";
+					$headers .= 'To: '.$to.'\r\n';
+					$headers .= 'Subject: '.$subject.'\r\n';
+					$headers .= "MIME-Version: 1.0\r\n";
+					$headers .= "Content-Type: text/html; charset=UTF-8\r\n";
+					 
+					$message = 'Hello User, how are you? Thanks for joining '.$config['site_name'].'.
+					<br><br>
+					Below is your login Credential,
+					<br>
+					Username: '.$login_id.'
+					<br>
+					Username: '.$login_password.'
+					<br><br>
+					See you at '.$config['site_name'].', have a good day. :)
+					<br><br>
+					Sincerely,
+					<br>' .$config['site_name']. '';
+					//mail($to, $subject, $message, $headers);
+					FA_send_mail($to, $subject, $message, $headers, $from);
+					printf('<script type="text/javascript">window.location = "%s";</script>','index.php?tab1=home');
+				}
+			}
+		}
+	}
+	else{
+		$data['error_message'] = $lang['error_empty_login'];
+	}
+
+	
+}
+
 // Login & Verify User
 if ($t == "login") { 
     $data['error_message'] = $lang['error_empty_login'];
@@ -2677,4 +2761,35 @@ if ($t == "youtube_search") {
 if ($t == "setStorylabels") {
 	FA_set_gallery_mapping($_GET['story_id'],$_GET['label_id'],$_GET['timeline_id']);
 print_r($_GET);die(__LINE__ . 'req');	
+}
+
+// polls requests
+if ($t == "polls") {
+
+	// Create group
+	if ($a == "create") {
+//print_r($_POST);die('<hr>');
+		if (!empty($_POST['group_name']) && !empty($_POST['group_username']) && !empty($_POST['group_about']) && !empty($_POST['group_privacy'])) {
+			$registerArray = array(
+					'name' => $_POST['group_name'],
+					'username' => $_POST['group_username'],
+					'about' => $_POST['group_about'],
+					'privacy' => $_POST['group_privacy']
+			);
+			$register = FA_registerGroup($registerArray);
+
+			if ($register) {
+				$group = FA_getUser($register['id']);
+				$data = array(
+						'status' => 200,
+						'url' => $group['url']
+				);
+			}
+		}
+
+		header("Content-type: application/json");
+		echo json_encode($data);
+		mysqli_close($dbConnect);
+		exit();
+	}
 }

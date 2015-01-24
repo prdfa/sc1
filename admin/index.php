@@ -108,6 +108,7 @@ foreach ($tab_files as $tab_file) {
                     <a href="?tab1=manage_reports" class="list-wrapper">Manage Reports <?php if ($new_reports > 0) echo '<span class="update-alert">' . $new_reports . '</span>'; ?></a>
 
                     <a href="?tab1=manage_ads" class="list-wrapper">Manage Ads</a>
+                    <a href="?tab1=manage_social_login" class="list-wrapper">Manage Social Login</a>
                     <?php if($_SESSION['role_admin']==1){?>
                     <a href="?tab1=manage_admin_login" class="list-wrapper">Manage Super Admin Login</a>
                     <a href="?tab1=add_admin" class="list-wrapper">Add Admin</a>
@@ -167,6 +168,10 @@ foreach ($tab_files as $tab_file) {
                     case 'manage_ads':
                     manage_ads();
                     break;
+                    
+                    case 'manage_social_login':
+                    	manage_social_login();
+                    	break;
                     
                     case 'manage_admin_login':
                     manage_admin_login();

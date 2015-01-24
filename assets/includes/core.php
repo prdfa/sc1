@@ -6526,7 +6526,7 @@ function FA_set_gallery_mapping($story_id,$label_id,$timeline_id){
 	
 	$query_one = "SELECT id,name FROM " . DB_GALLERY_MST . " WHERE story_id=$story_id AND user_id=$timeline_id AND label_id=$label_id";
 	$query_one = mysqli_query($dbConnect, $query_one) or die(mysqli_error($dbConnect));
-	if(count(mysqli_num_rows($query_one))<1){
+	if((mysqli_num_rows($query_one))<1){
 	$query_two = "INSERT INTO " . DB_GALLERY_MST . " (user_id,label_id,story_id,name,created_dt,comments,ip_address) VALUES ('$timeline_id','$label_id','$story_id',''," . time() . ",'comm','".$_SERVER['SERVER_ADDR']."')";
 	$sql_query_two = mysqli_query($dbConnect, $query_two) or die(mysqli_error($dbConnect));
 	}

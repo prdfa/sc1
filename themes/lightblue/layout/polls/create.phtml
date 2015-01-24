@@ -1,37 +1,20 @@
 <style type="text/css">
 
-body.dragging, body.dragging * {
-  cursor: move !important;
+
+* {
+  .border-radius(0) !important;
 }
 
-.dragged {
-  position: absolute;
-  opacity: 0.5;
-  z-index: 2000;
+#field {
+    margin-bottom:20px;
 }
-
-ol.example li.placeholder {
-  position: relative;
-  /** More li styles **/
-}
-ol.example li.placeholder:before {
-  position: absolute;
-  /** Define arrowhead **/
-}
-
 </style>
-<div class="page-margin"></div>
-<ol class='example'>
-  <li>First</li>
-  <li>Second</li>
-  <li>Third</li>
-</ol>
-
 
 <div class="float-left span59">
-    <form class="create-group-form" method="post">
+
+    <form class="create-group-form" method="post" id="form">
         <div class="form-container">
-            <div class="form-header"><?php echo $lang['group_create_label']; ?></div>
+            <div class="form-header"><?php echo $lang['polls_create_label']; ?></div>
             <div class="form-input-wrapper">
                 <label class="float-left span20"><?php echo $lang['polls_name_label']; ?>:</label>
                 
@@ -54,45 +37,27 @@ ol.example li.placeholder:before {
                 </label>
                 
                 <div class="input float-left span70">
-                    <textarea class="auto-grow-input" valign="top" name="group_about" placeholder="<?php echo $lang['group_description_textarea_label']; ?>" data-placeholder="<?php echo $lang['group_description_textarea_label']; ?>"><?php echo $lang['group_description_textarea_label']; ?></textarea>
+                    <textarea class="auto-grow-input" valign="top" name="group_about" placeholder="<?php echo $lang['polls_description_textarea_label']; ?>" data-placeholder="<?php echo $lang['group_description_textarea_label']; ?>"><?php echo $lang['group_description_textarea_label']; ?></textarea>
                 </div>
                 
                 <div class="float-clear"></div>
             </div>
             
             <div class="form-input-wrapper">
-                <label class="float-left span20">
-                    <?php echo $lang['privacy_label']; ?>:
-                </label>
+                <label class="float-left span20">Options(s):</label>
                 
                 <div class="input float-left span70">
-                    <div style="margin-bottom: 15px;">
-                        <input valign="top" type="radio" name="group_privacy" value="open">
-                        <label><i class="icon-globe"></i> <?php echo $lang['open_group']; ?></label>
-                        <div class="short-descr">
-                            <?php echo $lang['open_group_description']; ?>.
-                        </div>
-                    </div>
-                    
-                    <div style="margin-bottom: 15px;">
-                        <input valign="top" type="radio" name="group_privacy" value="closed" checked>
-                        <label><i class="icon-lock"></i> <?php echo $lang['closed_group']; ?></label>
-                        <div class="short-descr">
-                            <?php
-                            echo $lang['closed_group_description'];
-                            ?>.
-                        </div>
-                    </div>
-                    
-                    <div style="margin-bottom: 10px;">
-                        <input valign="top" type="radio" name="group_privacy" value="secret">
-                        <label><i class="icon-shield"></i> <?php echo $lang['secret_group']; ?></label>
-                        <div class="short-descr">
-                            <?php
-                            echo $lang['secret_group_description'];
-                            ?>.
-                        </div>
-                    </div>
+                    <div id="field"><input autocomplete="off" class="input" id="field1" name="prof1" type="text" placeholder="Type something" data-items="8"/><button id="b1" class="btn add-more" type="button">+</button></div>
+                </div>
+                
+                <div class="float-clear"></div>
+            </div>
+            
+            <div class="form-input-wrapper">
+               
+                
+                <div class="input float-left span70">
+                    <input type="hidden" value="closed" name="group_privacy" valign="top">
                 </div>
                 
                 <div class="float-clear"></div>
@@ -101,9 +66,11 @@ ol.example li.placeholder:before {
             <div class="form-input-wrapper">
                 <button class="active">
                     <?php
-                    echo $lang['group_create_label'];
+                    echo $lang['polls_create_label'];
                     ?>
                 </button>
+                <div class="post-message" style="display: block;"></div>
+                <div class="float-clear"></div>
             </div>
         </div>
     </form>
@@ -133,22 +100,16 @@ ol.example li.placeholder:before {
     </div>
 </div>
 <div class="float-clear"></div>
-<script src="<?php echo $sk['config']['theme_url']; ?>/javascript/jquery-sortable.js"></script>
-<script type="text/javascript">
-$(function  () {
-	  $("ol.example").sortable()
-	})
 
-</script>
 <script>
 $(function () {
+	//var form_data = $('#form').serialize();
     $('form.create-group-form').ajaxForm({
-        url: FA_source() + '?t=group&a=create',
+        url: FA_source() + '?t=polls&a=create',
         
         beforeSend: function() {
             $('form.create-group-form')
-                .find('button')
-                    .removeClass()
+                .find('div.post-message')
                     .text('<?php echo $lang['creating']; ?>...');
         },
         
@@ -157,13 +118,41 @@ $(function () {
             if (responseText.status == 200) {
                 window.location = responseText.url;
             }
-            else {
+            else { alert(1);
                 $('form.create-group-form')
-                .find('button')
-                    .addClass('active')
-                    .text('<?php echo $lang['group_create_label']; ?>');
+                .find('div.post-message').html('Title, Options are required field');
             }
         }
     });
 });
+
+$(document).ready(function(){
+    var next = 1;
+    $(".add-more").click(function(e){
+        e.preventDefault();
+        var addto = "#field" + next;
+        var addRemove = "#field" + (next);
+        next = next + 1;
+        var newIn = '<input autocomplete="off" class="input form-control" id="field' + next + '" name="field' + next + '" type="text">';
+        var newInput = $(newIn);
+        var removeBtn = '<button id="remove' + (next - 1) + '" class="btn btn-danger remove-me" >-</button></div><div id="field">';
+        var removeButton = $(removeBtn);
+        $(addto).after(newInput);
+        $(addRemove).after(removeButton);
+        $("#field" + next).attr('data-source',$(addto).attr('data-source'));
+        $("#count").val(next);  
+        
+            $('.remove-me').click(function(e){
+                e.preventDefault();
+                var fieldNum = this.id.charAt(this.id.length-1);
+                var fieldID = "#field" + fieldNum;
+                $(this).remove();
+                $(fieldID).remove();
+            });
+    });
+    
+
+    
+});
+
 </script>

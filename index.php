@@ -6,12 +6,20 @@ Copyright (c) 2014
 Author Fa
 Date: 27/Nov/2014
 * * * * * * * * * * * * * */
-
+error_reporting(E_ALL);
+ini_set('display_errors','On');
 error_reporting(1);
 require_once('assets/includes/core.php');
 require_once('assets/includes/bls_core.php'); // added by bls
 //$msg = FA_send_mail('fakhru.ansari@gmail.com','mailer testing','<hr>|<hr>','headers','fakhru.ansari@gmail.com');
 //die($msg);
+//echo $res = file_get_contents('http://www.se.com/request.php?t=auto_login&login_id=user2&login_password=asasas');
+
+require_once( "Social/Auth.php" );
+require_once( "Social/Client.php" );
+
+Social_Client::handle();
+
 if (!isset($_GET['tab1'])) {
     $_GET['tab1'] = 'welcome';
 }

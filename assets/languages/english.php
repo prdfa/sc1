@@ -135,6 +135,7 @@ $lang['group_create_label'] = 'Create Group';
 $lang['group_name_textarea_label'] = 'Name of your group';
 $lang['group_username_textarea_label'] = 'Username, e.g. Germany_Supporters_Group';
 $lang['group_description_textarea_label'] = 'Write about your group...';
+$lang['polls_description_textarea_label'] = 'Write about your polls...';
 
 $lang['group_name_label'] = 'Name';
 $lang['group_add_members_label'] = 'Add Members';

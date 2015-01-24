@@ -3,6 +3,9 @@
 <div class="float-left span59">
     <form class="login-form1 signup-form" method="post">
         <div class="form-header"><?php echo $lang['sign_up_label']; ?></div>
+        <?php if(!empty($_SESSION['social_signUp_msg'])){?>
+        <div class="post-message" style="display: block;"><?php echo $_SESSION['social_signUp_msg']?></div>
+        <?php }?>
         <div class="form-content">
             <div class="input-wrapper">
                 <input type="text" name="name" placeholder="<?php echo $lang['fullname_label']; ?>" autocomplete="off">
@@ -143,7 +146,25 @@
                 </div>
             <?php } ?>
 
-            <button class="submit-btn active"><i class="icon-angle-right progress-icon"></i> <?php echo $lang['sign_up_label'] ;?></button>
+            <button class="submit-btn active"><i class="icon-angle-right progress-icon"></i><?php echo $lang['sign_up_label'] ;?></button>
+            <div>
+                        <div class="col-md-1 control">
+                            <a href="/login.php?network=facebook" class="btn btn-social-icon btn-facebook">Facebook</a>
+                        </div>
+                        <div class="col-md-1 control">
+                            <a href="/login.php?network=twitter" class="btn btn-social-icon btn-twitter">twitter</a>
+                        </div>
+                        <div class="col-md-1 control">
+                            <a href="/login.php?network=linkedin" class="btn btn-social-icon btn-linkedin">linkedin</a>
+                        </div>
+                        <div class="col-md-1 control">
+                            <a href="/login.php?network=google" class="btn btn-social-icon btn-google-plus">google-plus</i></a>
+                        </div>
+                        <div class="col-md-1 control">
+                            <a href="/login.php?network=yahoo" class="btn btn-social-icon btn-yahoo">yahoo</a>
+                        </div>
+                        
+                    </div>
         </div>
     </form>
 
